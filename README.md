@@ -1,4 +1,4 @@
-# HITMAN GO README
+# PIGEON GO README
 
 ## Overview
 ...
