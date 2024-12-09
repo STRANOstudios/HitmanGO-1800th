@@ -5,38 +5,13 @@ using UnityEngine.Audio;
 
 namespace Audio
 {
-    public class AudioManager : MonoBehaviour
+    public class AudioManager : Singleton<AudioManager>
     {
-        public static AudioManager Instance { get; private set; }
-
         [Title("Settings")]
-        [SerializeField, InlineEditor, Required] private AudioData audioData; // ScriptableObject reference
-        [SerializeField, Required] private GameObject audioSourcePrefab; // Prefab for AudioSource pooling
+        [SerializeField, InlineEditor, Required] private AudioData audioData;
 
         [Title("Debug")]
-        [Button]
-        public void PlayMusic()
-        {
-            PlayMusic("music");
-        }
-
-        [Button]
-        public void PlaySFX()
-        {
-            PlaySFX("shoot", transform);
-        }
-
-        private void Awake()
-        {
-            if (Instance != null && Instance != this)
-            {
-                Destroy(gameObject);
-                return;
-            }
-
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
+        [SerializeField] private bool _debug;
 
         /// <summary>
         /// Play a Music clip by its unique key.
@@ -62,6 +37,8 @@ namespace Audio
         {
             if (key is null or "") return;
 
+            if (_debug) Debug.Log($"Playing SFX: {key}");
+
             var clip = audioData.GetSFXClip(key);
             if (clip == null)
             {
@@ -73,11 +50,22 @@ namespace Audio
         }
 
         /// <summary>
+        /// Play an Sfx clip by its unique key.
+        /// </summary>
+        public void PlaySfx(string key)
+        {
+            if (_debug) Debug.Log($"Playing SFX: {key}");
+            PlaySFX(key);
+        }
+
+        /// <summary>
         /// Plays a given AudioClip using a pooled AudioSource.
         /// </summary>
         private void PlayAudio(AudioClip clip, AudioMixerGroup group, Transform parent = null)
         {
-            var pooledAudio = ObjectPooler.Instance.Get(audioSourcePrefab);
+            if (_debug) Debug.Log($"Playing Audio: {clip.name}");
+
+            var pooledAudio = ObjectPooler.Instance.Get("AudioSource", clip.length);
             var audioSource = pooledAudio.GetComponent<AudioSource>();
 
             if (parent != null) pooledAudio.transform.position = parent.position;
@@ -85,20 +73,6 @@ namespace Audio
             audioSource.clip = clip;
             audioSource.outputAudioMixerGroup = group ?? null;
             audioSource.Play();
-
-            // Return the object to the pool after the clip ends
-            StartCoroutine(ReturnToPool(audioSource, clip.length));
-        }
-
-        /// <summary>
-        /// Returns the AudioSource GameObject to the pool after playback.
-        /// </summary>
-        private IEnumerator ReturnToPool(AudioSource source, float duration)
-        {
-            yield return new WaitForSeconds(duration);
-
-            source.clip = null; // Clear the clip
-            ObjectPooler.Instance.ReturnToPool(source.gameObject);
         }
     }
 }

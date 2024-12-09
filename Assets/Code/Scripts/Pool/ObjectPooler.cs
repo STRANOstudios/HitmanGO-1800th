@@ -4,22 +4,10 @@ using Sirenix.OdinInspector;
 using System.Collections;
 using System;
 
-public class ObjectPooler : MonoBehaviour
+public class ObjectPooler : Singleton<ObjectPooler>
 {
-    public static ObjectPooler Instance { get; private set; }
-
     [ShowInInspector]
     private Dictionary<GameObject, Queue<GameObject>> poolDictionary = new();
-
-    private void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
-    }
 
     /// <summary>
     /// Initialize a pool for a given prefab with a specified amount.
@@ -35,47 +23,6 @@ public class ObjectPooler : MonoBehaviour
             newObject.SetActive(false);
             poolDictionary[prefab].Enqueue(newObject);
         }
-    }
-
-    /// <summary>
-    /// Get an object from the pool, or create a new one if the pool is empty.
-    /// </summary>
-    [Obsolete("Use Get(string) instead")]
-    public GameObject Get(GameObject prefab)
-    {
-        if (poolDictionary.ContainsKey(prefab) && poolDictionary[prefab].Count > 0)
-        {
-            var obj = poolDictionary[prefab].Dequeue();
-            obj.SetActive(true);
-            return obj;
-        }
-
-        // If pool is empty, create a new object
-        return CreateObject(prefab);
-    }
-
-    /// <summary>
-    /// Get an object from the pool, or create a new one if the pool is empty.
-    /// </summary>
-    [Obsolete("Use Get(string, float) instead")]
-    public GameObject Get(GameObject prefab, float delay)
-    {
-        GameObject obj;
-        if (poolDictionary.ContainsKey(prefab) && poolDictionary[prefab].Count > 0)
-        {
-            obj = poolDictionary[prefab].Dequeue();
-            obj.SetActive(true);
-
-            StartCoroutine(DisableObject(obj, delay));
-
-            return obj;
-        }
-
-        // If pool is empty, create a new object
-        obj = CreateObject(prefab);
-        StartCoroutine(DisableObject(obj, delay));
-
-        return obj;
     }
 
     /// <summary>
