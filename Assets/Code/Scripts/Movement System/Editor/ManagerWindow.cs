@@ -46,7 +46,7 @@ namespace PathSystem
 
             GameObject[] selectedObjects = Selection.gameObjects.Where(obj => obj.GetComponent<Node>() != null).ToArray();
 
-            if (selectedObjects.Length < 2)
+            if (selectedObjects.Length == 1)
             {
                 if (GUILayout.Button("Create Lincked Node"))
                 {
@@ -85,6 +85,14 @@ namespace PathSystem
                     }
                 }
             }
+
+            if (Selection.activeGameObject != null && Selection.activeGameObject.GetComponent<Connection>() is Connection selectedLink)
+            {
+                if (GUILayout.Button("Remove Link"))
+                {
+                    RemoveConnection(new[] { selectedLink.NodeFrom.gameObject, selectedLink.NodeTo.gameObject });
+                }
+            }
         }
 
         private void CreateConnection(GameObject[] selectedObjects)
@@ -103,44 +111,64 @@ namespace PathSystem
             node1.neighbours.Add(node);
         }
 
-        private void RemoveConnection(GameObject[] selectedObjects, bool destroySelt = true)
+        private void RemoveConnection(GameObject[] selectedObjects, bool destroySelf = true)
         {
-            selectedObjects[0].TryGetComponent(out Node node1);
-            selectedObjects[1].TryGetComponent(out Node node2);
+            // Check if the selected objects are null or destroyed
+            if (selectedObjects[0] == null || selectedObjects[1] == null) return;
 
+            // Get nodes from the selected GameObjects
+            if (!selectedObjects[0].TryGetComponent(out Node node1) || !selectedObjects[1].TryGetComponent(out Node node2))
+                return;
+
+            // Find all connections
+            Connection linkToRemove = null;
             Connection[] allLinks = FindObjectsOfType<Connection>();
 
             foreach (Connection link in allLinks)
             {
+                // Check if the connection matches either direction
                 if ((link.NodeFrom == node1.transform && link.NodeTo == node2.transform) ||
                     (link.NodeFrom == node2.transform && link.NodeTo == node1.transform))
                 {
-                    DestroyImmediate(link.gameObject);
-                    break;
+                    linkToRemove = link; // Store the connection to remove
+                    break; // Exit loop when connection is found
                 }
             }
 
+            // Destroy the connection if found
+            if (linkToRemove != null)
+            {
+                DestroyImmediate(linkToRemove.gameObject);
+            }
+
+            // Remove the nodes' connection
             node1.neighbours.Remove(node2);
-            if (destroySelt) node2.neighbours.Remove(node1);
+            if (destroySelf) node2.neighbours.Remove(node1);
         }
 
         private bool CheckConnectionExistence(GameObject[] selectedObjects)
         {
-            selectedObjects[0].TryGetComponent(out Node node1);
-            selectedObjects[1].TryGetComponent(out Node node2);
+            // Check if the selected objects are null or destroyed
+            if (selectedObjects[0] == null || selectedObjects[1] == null) return false;
 
+            // Get nodes from the selected GameObjects
+            if (!selectedObjects[0].TryGetComponent(out Node node1) || !selectedObjects[1].TryGetComponent(out Node node2))
+                return false;
+
+            // Find all connections and check if any match
             Connection[] allLinks = FindObjectsOfType<Connection>();
 
             foreach (Connection link in allLinks)
             {
+                // Check if the connection matches either direction
                 if ((link.NodeFrom == node1.transform && link.NodeTo == node2.transform) ||
                     (link.NodeFrom == node2.transform && link.NodeTo == node1.transform))
                 {
-                    return true;
+                    return true; // Connection found
                 }
             }
 
-            return false;
+            return false; // No connection found
         }
 
         private void CreateNode(Node selectedNode = null)
