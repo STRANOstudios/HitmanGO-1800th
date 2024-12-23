@@ -1,18 +1,12 @@
-using Sirenix.OdinInspector;
-using Sirenix.OdinInspector.Editor;
+using System;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
 namespace PathSystem
 {
-    public class ManagerWindow : OdinEditorWindow
+    public class ManagerWindow : EditorWindow
     {
-        // Path data to store the settings
-        private PathData path;
-
-        // Flag per verificare se i dati sono stati caricati
-        private bool isInitialized = false;
-
         // Show Window Function
         [MenuItem("Tools/Pathline System/Pathline Manager")]
         public static void ShowWindow()
@@ -20,142 +14,183 @@ namespace PathSystem
             GetWindow<ManagerWindow>("Pathline Manager");
         }
 
-        // Metodo per inizializzare e caricare i dati
-        private new void Initialize()
+        public Transform root;
+
+        private void OnGUI()
         {
-            Debug.Log("Initialize");
+            SerializedObject obj = new(this);
 
+            EditorGUILayout.PropertyField(obj.FindProperty("root"));
 
-            if (isInitialized) return;
+            if (root == null)
+            {
+                EditorGUILayout.HelpBox("root transform must be set", MessageType.Warning);
+            }
+            else
+            {
+                // Draw a vertical box containing the waypoint management buttons.
+                EditorGUILayout.BeginVertical("box");
+                DrawButtons();
+                EditorGUILayout.EndVertical();
+            }
 
-            path = SaveSystem.Load<PathData>("Settings") ?? new PathData();
-            LoadSettingsFromPathData();
-            isInitialized = true;
+            obj.ApplyModifiedProperties();
         }
 
-        // General Settings
-        [BoxGroup("General Settings")]
-        [LabelText("Y-Axis Offset")]
-        [Tooltip("Vertical offset (on the Y-axis) applied to the pathline.")]
-        public float YOffset;
-
-        // Line Settings
-        [BoxGroup("Line Settings")]
-        [LabelText("Row Color")]
-        [Tooltip("Color of the pathline rows")]
-        public Color RowColor;
-
-        [BoxGroup("Line Settings")]
-        [LabelText("Row Width"), MinValue(0f)]
-        [Tooltip("Width of the pathline rows")]
-        public float RowWidth;
-
-        [BoxGroup("Line Settings")]
-        [LabelText("Stopping Distance"), MinValue(0f)]
-        [Tooltip("Minimum distance to stop before reaching a node.")]
-        public float StoppingDistance;
-
-        // Nodes Settings
-        [BoxGroup("Nodes Settings")]
-        [LabelText("Node Sprite")]
-        [Tooltip("The graphical sprite that represents the nodes visible in the game")]
-        public Sprite SpriteNode;
-
-        [BoxGroup("Nodes Settings")]
-        [LabelText("Node Color")]
-        [Tooltip("Color of the pathline nodes")]
-        public Color PointColor;
-
-        [BoxGroup("Nodes Settings")]
-        [LabelText("Node Scale"), MinValue(0f)]
-        [Tooltip("Scale of the pathline nodes")]
-        public Vector2 PointScale;
-
-        // Direction Indicator Settings
-        [BoxGroup("Direction Indicator Settings")]
-        [LabelText("Indicator Sprite")]
-        [Tooltip("The graphical sprite that represents the direction indicator visible in the game")]
-        public Sprite IndicatorSprite;
-
-        [BoxGroup("Direction Indicator Settings")]
-        [LabelText("Color")]
-        [Tooltip("Color of the pathline direction")]
-        public Color DirectionColor;
-
-        [BoxGroup("Direction Indicator Settings")]
-        [LabelText("Scale"), MinValue(0f)]
-        [Tooltip("Scale of the pathline direction")]
-        public Vector2 DirectionScale;
-
-        [BoxGroup("Direction Indicator Settings")]
-        [LabelText("Rotation Offset"), Range(0f, 360f)]
-        [Tooltip("Angular rotation offset for the direction indicator around the node center.")]
-        public float RotationOffset;
-
-        private  void OnValidated()
+        private void DrawButtons()
         {
-            Debug.Log("saveing");
-            // Inizializza i dati alla prima chiamata di OnGUI
-            Initialize();
-
-            // Controlla se ci sono modifiche per salvare i dati
-            if (GUI.changed)
+            if (GUILayout.Button("Create Node"))
             {
-                SaveSettingsToPathData();
-                SaveSystem.Save(path, "Settings");
+                CreateNode();
+            }
+
+            GameObject[] selectedObjects = Selection.gameObjects.Where(obj => obj.GetComponent<Node>() != null).ToArray();
+
+            if (selectedObjects.Length < 2)
+            {
+                if (GUILayout.Button("Create Lincked Node"))
+                {
+                    CreateNode(selectedObjects[0].GetComponent<Node>());
+                }
+                if (GUILayout.Button("Remove Node"))
+                {
+                    RemoveNode(selectedObjects[0].GetComponent<Node>());
+                }
+            }
+            if (selectedObjects.Length > 1)
+            {
+                if (GUILayout.Button("Remove Nodes"))
+                {
+                    RemoveNodes(selectedObjects);
+                }
+                if (selectedObjects.Length > 2)
+                {
+                    EditorGUILayout.HelpBox("You can only connect or disconnect two nodes at a time", MessageType.Warning);
+                }
+                else
+                {
+                    if (CheckConnectionExistence(selectedObjects))
+                    {
+                        if (GUILayout.Button("Disconnect Nodes"))
+                        {
+                            RemoveConnection(selectedObjects);
+                        }
+                    }
+                    else
+                    {
+                        if (GUILayout.Button("Connect Nodes"))
+                        {
+                            CreateConnection(selectedObjects);
+                        }
+                    }
+                }
             }
         }
 
-        // Save settings from fields to the PathData instance
-        private void SaveSettingsToPathData()
+        private void CreateConnection(GameObject[] selectedObjects)
         {
-            if (path == null) path = new PathData();
+            GameObject link = new("Link " + root.childCount);
+            link.AddComponent<Connection>();
+            link.transform.SetParent(root, false);
 
-            path.YOffset = YOffset;
-            path.RowColor = RowColor;
-            path.RowWidth = RowWidth;
-            path.StoppingDistance = StoppingDistance;
-            path.SpriteNode = SpriteNode;
-            path.PointColor = PointColor;
-            path.PointScale = PointScale;
-            path.IndicatorSprite = IndicatorSprite;
-            path.DirectionColor = DirectionColor;
-            path.DirectionScale = DirectionScale;
-            path.RotationOffset = RotationOffset;
+            Connection connection = link.GetComponent<Connection>();
+            connection.NodeFrom = selectedObjects[0].transform;
+            connection.NodeTo = selectedObjects[1].transform;
+
+            Node node = selectedObjects[0].GetComponent<Node>();
+            Node node1 = selectedObjects[1].GetComponent<Node>();
+            node.neighbours.Add(node1);
+            node1.neighbours.Add(node);
         }
 
-        // Load settings from the PathData instance to fields
-        private void LoadSettingsFromPathData()
+        private void RemoveConnection(GameObject[] selectedObjects, bool destroySelt = true)
         {
-            if (path == null) return;
+            selectedObjects[0].TryGetComponent(out Node node1);
+            selectedObjects[1].TryGetComponent(out Node node2);
 
-            YOffset = path.YOffset;
-            RowColor = path.RowColor;
-            RowWidth = path.RowWidth;
-            StoppingDistance = path.StoppingDistance;
-            SpriteNode = path.SpriteNode;
-            PointColor = path.PointColor;
-            PointScale = path.PointScale;
-            IndicatorSprite = path.IndicatorSprite;
-            DirectionColor = path.DirectionColor;
-            DirectionScale = path.DirectionScale;
-            RotationOffset = path.RotationOffset;
+            Connection[] allLinks = FindObjectsOfType<Connection>();
+
+            foreach (Connection link in allLinks)
+            {
+                if ((link.NodeFrom == node1.transform && link.NodeTo == node2.transform) ||
+                    (link.NodeFrom == node2.transform && link.NodeTo == node1.transform))
+                {
+                    DestroyImmediate(link.gameObject);
+                    break;
+                }
+            }
+
+            node1.neighbours.Remove(node2);
+            if (destroySelt) node2.neighbours.Remove(node1);
         }
-    }
 
-    [System.Serializable]
-    public class PathData
-    {
-        public float YOffset;
-        public Color RowColor;
-        public float RowWidth;
-        public float StoppingDistance;
-        public Sprite SpriteNode;
-        public Color PointColor;
-        public Vector2 PointScale;
-        public Sprite IndicatorSprite;
-        public Color DirectionColor;
-        public Vector2 DirectionScale;
-        public float RotationOffset;
+        private bool CheckConnectionExistence(GameObject[] selectedObjects)
+        {
+            selectedObjects[0].TryGetComponent(out Node node1);
+            selectedObjects[1].TryGetComponent(out Node node2);
+
+            Connection[] allLinks = FindObjectsOfType<Connection>();
+
+            foreach (Connection link in allLinks)
+            {
+                if ((link.NodeFrom == node1.transform && link.NodeTo == node2.transform) ||
+                    (link.NodeFrom == node2.transform && link.NodeTo == node1.transform))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private void CreateNode(Node selectedNode = null)
+        {
+            GameObject newNode = new("Node " + root.childCount);
+            newNode.AddComponent<Node>();
+            newNode.transform.SetParent(root, false);
+
+
+            Transform position = root;
+
+            // link to selected newNode
+            if (selectedNode != null)
+            {
+                position = selectedNode.transform;
+
+                CreateConnection(new GameObject[] { newNode, selectedNode.gameObject });
+            }
+
+            newNode.transform.SetPositionAndRotation(position.position, Quaternion.identity);
+
+            Selection.activeGameObject = newNode;
+        }
+
+        private void RemoveNode(Node selectedNode)
+        {
+            Connection[] allLink = FindObjectsOfType<Connection>();
+
+            foreach (Connection link in allLink)
+            {
+                if (link.NodeFrom == selectedNode || link.NodeTo == selectedNode)
+                {
+                    DestroyImmediate(link.gameObject);
+                }
+            }
+
+            foreach (Node node in selectedNode.neighbours)
+            {
+                RemoveConnection(new GameObject[] { node.gameObject, selectedNode.gameObject }, false);
+            }
+
+            DestroyImmediate(selectedNode.gameObject);
+        }
+
+        private void RemoveNodes(GameObject[] selectedObjects)
+        {
+            foreach (GameObject obj in selectedObjects)
+            {
+                RemoveNode(obj.GetComponent<Node>());
+            }
+        }
     }
 }

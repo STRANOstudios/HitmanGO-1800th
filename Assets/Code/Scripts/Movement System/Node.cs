@@ -5,6 +5,6 @@ namespace PathSystem
 {
     public class Node : MonoBehaviour
     {
-        public List<Connection> connections = new(); 
+        public List<Node> neighbours = new();
     }
 }
