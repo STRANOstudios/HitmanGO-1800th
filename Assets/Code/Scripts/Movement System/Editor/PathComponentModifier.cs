@@ -29,11 +29,7 @@ namespace PathSystem
         private static void ApplyLinkChanges(Link connection, PathDesign pathDesign)
         {
             Vector3 direction = connection.NodeTo.position - connection.NodeFrom.position;
-            float distance = direction.magnitude;
-
             direction.Normalize();
-
-            float stopDistance = Mathf.Min(distance - 2 * pathDesign.StoppingDistance, distance);
 
             // Calculate the start and end stop positions 
             Vector3 startStopPosition = connection.NodeFrom.position + direction * pathDesign.StoppingDistance;
@@ -47,10 +43,13 @@ namespace PathSystem
             lineRenderer.positionCount = 2;
             lineRenderer.SetPosition(0, startStopPosition);
             lineRenderer.SetPosition(1, endStopPosition);
+
             lineRenderer.startWidth = pathDesign.Width;
             lineRenderer.endWidth = pathDesign.Width;
+
             lineRenderer.startColor = pathDesign.linkColor;
             lineRenderer.endColor = pathDesign.linkColor;
+
             lineRenderer.material = sharedMaterial;
             lineRenderer.alignment = LineAlignment.TransformZ;
 
@@ -59,7 +58,7 @@ namespace PathSystem
 
         private static void ApplyNodeChanges(Node node, PathDesign pathDesign)
         {
-            if (!node.TryGetComponent<SpriteRenderer>(out SpriteRenderer spriteRenderer))
+            if (!node.TryGetComponent(out SpriteRenderer spriteRenderer))
             {
                 spriteRenderer = node.AddComponent<SpriteRenderer>();
             }
@@ -69,7 +68,7 @@ namespace PathSystem
             spriteRenderer.color = pathDesign.nodeColor;
             spriteRenderer.transform.localScale = pathDesign.NodeScale;
 
-            node.transform.SetPositionAndRotation(new(node.transform.position.x, pathDesign.yOffset, node.transform.position.z), Quaternion.AngleAxis(90, Vector3.left));
+            node.transform.SetPositionAndRotation(new(node.transform.position.x, pathDesign.yOffset, node.transform.position.z), Quaternion.LookRotation(Vector3.down));
         }
 
         /// <summary>
