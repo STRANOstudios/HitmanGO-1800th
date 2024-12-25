@@ -35,7 +35,7 @@ namespace PathSystem
 
             float stopDistance = Mathf.Min(distance - 2 * pathDesign.StoppingDistance, distance);
 
-            // Calculate the start and end stop positions
+            // Calculate the start and end stop positions 
             Vector3 startStopPosition = connection.NodeFrom.position + direction * pathDesign.StoppingDistance;
             Vector3 endStopPosition = connection.NodeTo.position - direction * pathDesign.StoppingDistance;
 
