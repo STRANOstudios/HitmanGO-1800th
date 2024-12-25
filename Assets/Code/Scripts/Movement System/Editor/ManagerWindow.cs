@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -14,11 +13,44 @@ namespace PathSystem
             GetWindow<ManagerWindow>("Pathline Manager");
         }
 
+        private void OnEnable()
+        {
+            EditorApplication.update += UpdateWindow;
+        }
+
+        private void OnDisable()
+        {
+            EditorApplication.update -= UpdateWindow;
+        }
+
+        private void UpdateWindow()
+        {
+            Repaint();
+        }
+
         public Transform root;
+        public PathDesign pathDesign;
+
+        private Vector2 designScrollPosition;
+
+        private bool showDesignSettings = false;
+        private bool showLinkSettings = false;
+        private bool showNodeSettings = false;
+        private bool showDirectionSettings = false;
+
+        private void OnValidate()
+        {
+            if (pathDesign != null)
+            {
+                PathComponentModifier.ApplyChanges(pathDesign);
+            }
+        }
 
         private void OnGUI()
         {
             SerializedObject obj = new(this);
+
+            GUILayout.Label("Path System Manager", EditorStyles.boldLabel);
 
             EditorGUILayout.PropertyField(obj.FindProperty("root"));
 
@@ -34,8 +66,23 @@ namespace PathSystem
                 EditorGUILayout.EndVertical();
             }
 
+            pathDesign = (PathDesign)EditorGUILayout.ObjectField("Path Design", pathDesign, typeof(PathDesign), false);
+
+            if (pathDesign== null)
+            {
+                EditorGUILayout.HelpBox("Assign a PathDesign asset to modify its settings.", MessageType.Info);
+            }
+            else
+            {
+                EditorGUILayout.BeginVertical("box");
+                DrawDesign();
+                EditorGUILayout.EndVertical();
+            }
+
             obj.ApplyModifiedProperties();
         }
+
+        #region Node Management
 
         private void DrawButtons()
         {
@@ -86,7 +133,7 @@ namespace PathSystem
                 }
             }
 
-            if (Selection.activeGameObject != null && Selection.activeGameObject.GetComponent<Connection>() is Connection selectedLink)
+            if (Selection.activeGameObject != null && Selection.activeGameObject.GetComponent<Link>() is Link selectedLink)
             {
                 if (GUILayout.Button("Remove Link"))
                 {
@@ -98,10 +145,10 @@ namespace PathSystem
         private void CreateConnection(GameObject[] selectedObjects)
         {
             GameObject link = new("Link " + root.childCount);
-            link.AddComponent<Connection>();
+            link.AddComponent<Link>();
             link.transform.SetParent(root, false);
 
-            Connection connection = link.GetComponent<Connection>();
+            Link connection = link.GetComponent<Link>();
             connection.NodeFrom = selectedObjects[0].transform;
             connection.NodeTo = selectedObjects[1].transform;
 
@@ -121,10 +168,10 @@ namespace PathSystem
                 return;
 
             // Find all connections
-            Connection linkToRemove = null;
-            Connection[] allLinks = FindObjectsOfType<Connection>();
+            Link linkToRemove = null;
+            Link[] allLinks = FindObjectsOfType<Link>();
 
-            foreach (Connection link in allLinks)
+            foreach (Link link in allLinks)
             {
                 // Check if the connection matches either direction
                 if ((link.NodeFrom == node1.transform && link.NodeTo == node2.transform) ||
@@ -156,15 +203,15 @@ namespace PathSystem
                 return false;
 
             // Find all connections and check if any match
-            Connection[] allLinks = FindObjectsOfType<Connection>();
+            Link[] allLinks = FindObjectsOfType<Link>();
 
-            foreach (Connection link in allLinks)
+            foreach (Link link in allLinks)
             {
                 // Check if the connection matches either direction
                 if ((link.NodeFrom == node1.transform && link.NodeTo == node2.transform) ||
                     (link.NodeFrom == node2.transform && link.NodeTo == node1.transform))
                 {
-                    return true; // Connection found
+                    return true; // Link found
                 }
             }
 
@@ -195,9 +242,9 @@ namespace PathSystem
 
         private void RemoveNode(Node selectedNode)
         {
-            Connection[] allLink = FindObjectsOfType<Connection>();
+            Link[] allLink = FindObjectsOfType<Link>();
 
-            foreach (Connection link in allLink)
+            foreach (Link link in allLink)
             {
                 if (link.NodeFrom == selectedNode || link.NodeTo == selectedNode)
                 {
@@ -220,5 +267,59 @@ namespace PathSystem
                 RemoveNode(obj.GetComponent<Node>());
             }
         }
+
+        #endregion
+
+        #region Design
+
+        private void DrawDesign()
+        {
+            // draw the scrollview
+            designScrollPosition = EditorGUILayout.BeginScrollView(designScrollPosition, GUILayout.Height(400));
+
+            // change the values of the ScriptableObject
+            showDesignSettings = EditorGUILayout.Foldout(showDesignSettings, "Design Settings", true);
+            if (showDesignSettings)
+            {
+                pathDesign.yOffset = EditorGUILayout.FloatField("Y Offset", pathDesign.yOffset);
+            }
+
+            // Link Settings
+            showLinkSettings = EditorGUILayout.Foldout(showLinkSettings, "Link Settings", true);
+            if (showLinkSettings)
+            {
+                pathDesign.Width = EditorGUILayout.FloatField("Width", pathDesign.Width);
+                pathDesign.StoppingDistance = EditorGUILayout.FloatField("Stopping Distance", pathDesign.StoppingDistance);
+                pathDesign.linkColor = EditorGUILayout.ColorField("Link Color", pathDesign.linkColor);
+            }
+
+            // Node Settings
+            showNodeSettings = EditorGUILayout.Foldout(showNodeSettings, "Node Settings", true);
+            if (showNodeSettings)
+            {
+                pathDesign.spriteNode = (Sprite)EditorGUILayout.ObjectField("Node Sprite", pathDesign.spriteNode, typeof(Sprite), false);
+                pathDesign.NodeScale = EditorGUILayout.Vector2Field("Node Scale", pathDesign.NodeScale);
+                pathDesign.nodeColor = EditorGUILayout.ColorField("Node Color", pathDesign.nodeColor);
+            }
+
+            // Direction Settings
+            showDirectionSettings = EditorGUILayout.Foldout(showDirectionSettings, "Direction Settings", true);
+            if (showDirectionSettings)
+            {
+                pathDesign.spriteDirection = (Sprite)EditorGUILayout.ObjectField("Direction Sprite", pathDesign.spriteDirection, typeof(Sprite), false);
+                pathDesign.DirectionScale = EditorGUILayout.Vector2Field("Direction Scale", pathDesign.DirectionScale);
+                pathDesign.directionColor = EditorGUILayout.ColorField("Direction Color", pathDesign.directionColor);
+                pathDesign.DirectionDistance = EditorGUILayout.FloatField("Direction Distance", pathDesign.DirectionDistance);
+            }
+
+            // save the changes
+            EditorUtility.SetDirty(pathDesign);
+
+            // end the scrollview
+            EditorGUILayout.EndScrollView();
+        }
+
+        #endregion
+
     }
 }
