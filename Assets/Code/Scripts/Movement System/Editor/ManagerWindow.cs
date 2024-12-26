@@ -211,7 +211,7 @@ namespace PathSystem
                 if ((link.NodeFrom == node1.transform && link.NodeTo == node2.transform) ||
                     (link.NodeFrom == node2.transform && link.NodeTo == node1.transform))
                 {
-                    return true; // Link found
+                    return true; // Connection found
                 }
             }
 
@@ -223,7 +223,6 @@ namespace PathSystem
             GameObject newNode = new("Node " + root.childCount);
             newNode.AddComponent<Node>();
             newNode.transform.SetParent(root, false);
-
 
             Transform position = root;
 

@@ -1,7 +1,8 @@
 using PathSystem;
+using PathSystem.PathFinding;
 using Sirenix.OdinInspector;
+using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 namespace Agents
@@ -10,66 +11,123 @@ namespace Agents
     public class AgentFSM : MonoBehaviour
     {
         [Title("Settings")]
-        [SerializeField] protected Node currentNode;
+        [SerializeField, Required] protected Node currentNode;
+        [SerializeField] private bool _isPatrol = false;
+        [SerializeField, ShowIf("_isPatrol"), Required] protected Node _targetNode;
 
         [SerializeField] protected float speed = 1.0f;
         [SerializeField] protected float raycastDistance = 1.0f;
         [SerializeField] protected LayerMask raycastMask;
 
+        #region Debug
+
         [Title("Debug")]
-        [SerializeField, PropertyOrder(1)] protected bool _debug = false;
-        [FoldoutGroup("Debug"), ShowIf("_debug"), PropertyOrder(2)]
-        [ShowInInspector, ReadOnly] protected Node targetNode;
-        [FoldoutGroup("Debug"), ShowIf("_debug"), PropertyOrder(3)]
-        [ShowInInspector, ReadOnly] protected List<Node> path;
+        [SerializeField] protected bool _debug = false;
+        [FoldoutGroup("Debug"), ShowIf("_debug")]
+        [ShowInInspector, ReadOnly] protected Node _targetNodeDebug;
+        [FoldoutGroup("Debug"), ShowIf("_debug")]
+        [ShowInInspector, ReadOnly] protected List<Node> path = new();
 
-        [SerializeField, ShowIf("_debug"), PropertyOrder(4)] protected bool _drawGizmos = false;
+        [SerializeField, ShowIf("_debug")] protected bool _drawGizmos = false;
 
-        [FoldoutGroup("Gizmos"), ShowIf("ShowGizmos"), PropertyOrder(5)]
+        [FoldoutGroup("Gizmos"), ShowIf("ShowGizmos")]
         [SerializeField] protected float yOffet = 0.5f;
+        // raycast
+        [FoldoutGroup("Gizmos"), ShowIf("ShowGizmos")]
+        [SerializeField, ColorPalette] protected Color _raylineColor = Color.green;
         // destination
-        [FoldoutGroup("Gizmos"), ShowIf("ShowGizmos"), PropertyOrder(6)]
+        [FoldoutGroup("Gizmos"), ShowIf("ShowGizmos")]
         [SerializeField, ColorPalette] protected Color _targetNodeColor = Color.yellow;
         // pathfinder
-        [FoldoutGroup("Gizmos"), ShowIf("ShowGizmos"), PropertyOrder(7)]
+        [FoldoutGroup("Gizmos"), ShowIf("ShowGizmos")]
         [SerializeField, ColorPalette] protected Color _pathColor = Color.red;
         // in move
-        [FoldoutGroup("Gizmos"), ShowIf("ShowGizmos"), PropertyOrder(8)]
+        [FoldoutGroup("Gizmos"), ShowIf("ShowGizmos")]
         [SerializeField, ColorPalette] protected Color _nextPathColor = Color.magenta;
+
+        #endregion
 
         protected bool ShowGizmos => _drawGizmos && _debug;
 
-        protected FSMInterface currentState;
+        protected FSMInterface _currentState;
+
+        private PathFinder pathFinder;
 
         private void Start()
         {
+            _currentState = new Idle(this);
+        }
 
+        private void OnValidate()
+        {
+            if (_isPatrol && _targetNode != null)
+            {
+                Pathfinding();
+            }
         }
 
         private void OnEnable()
         {
-            // reach the turn signal
+            ShiftManager.OnEnemyTurn += Turn;
         }
 
         private void OnDisable()
         {
-
+            ShiftManager.OnEnemyTurn -= Turn;
         }
 
-        private void myTurn()
+        private void Turn()
         {
-            // before move
+            if (IsPlayerInSight())
+            {
+                _currentState = new Attack(this);
+            }
 
+            if (_targetNode != null)
+            {
+                _currentState.Update();
+            }
 
-            // check if see player
+            if (IsPlayerInSight())
+            {
+                _currentState = new Attack(this);
+            }
+        }
+
+        public bool IsPlayerInSight()
+        {
             Ray ray = new(transform.position, transform.forward);
+
             if (Physics.Raycast(ray, out RaycastHit hit, raycastDistance, raycastMask))
             {
                 if (_debug) Debug.Log(hit.transform.name);
 
-                // after see player
+                if (hit.transform.CompareTag("Player"))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private void Pathfinding()
+        {
+
+        }
+
+        #region Setters
+
+        public Node SetTargetNode
+        {
+            set
+            {
+                _targetNode = value;
+                Pathfinding();
             }
         }
+
+        #endregion
 
         #region Gizmos
 
@@ -77,10 +135,16 @@ namespace Agents
         {
             if (!ShowGizmos) return;
 
-            if(targetNode != null)
+            Gizmos.color = _raylineColor;
+
+            Vector3 pos = transform.position + transform.forward * raycastDistance;
+
+            Gizmos.DrawLine(PositionNormalize(transform.position), PositionNormalize(pos));
+
+            if (_targetNode != null)
             {
                 Gizmos.color = _targetNodeColor;
-                Gizmos.DrawSphere(PositionNormalize(targetNode.transform.position), 0.15f);
+                Gizmos.DrawSphere(PositionNormalize(_targetNode.transform.position), 0.15f);
             }
 
             if (path.Count > 0)

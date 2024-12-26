@@ -34,8 +34,8 @@ public class ShiftManager : MonoBehaviour
         }
     }
 
-    public static event Action ShiftEnemy;
-    public static event Action ShiftPlayer;
+    public static event Action OnEnemyTurn;
+    public static event Action OnPlayerTurn;
 
     private bool IsPlayerTurn = true;
     private float timerStart;
@@ -59,13 +59,13 @@ public class ShiftManager : MonoBehaviour
     {
         timerStart = Time.time;
         IsPlayerTurn = false;
-        ShiftEnemy?.Invoke();
+        OnEnemyTurn?.Invoke();
         StartCoroutine(EnemyTurnTimer());
     }
 
     private void BeginPlayerTurn()
     {
-        ShiftPlayer?.Invoke();
+        OnPlayerTurn?.Invoke();
         IsPlayerTurn = true;
     }
 

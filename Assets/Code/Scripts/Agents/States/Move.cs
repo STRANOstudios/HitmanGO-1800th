@@ -1,18 +1,15 @@
 namespace Agents
 {
-    public class Idle : FSMInterface
+    public class Move : FSMInterface
     {
         private AgentFSM _agentFSM;
 
-        public Idle(AgentFSM agentFSM)
+        public Move(AgentFSM agentFSM)
         {
             _agentFSM = agentFSM;
         }
 
-        public void Enter()
-        {
-            _agentFSM.SetTargetNode = null;
-        }
+        public void Enter() { }
 
         public void Exit() { }
 

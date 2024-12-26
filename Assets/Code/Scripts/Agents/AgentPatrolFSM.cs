@@ -12,6 +12,9 @@ namespace Agents
         [SerializeField] private Node nodeStart;
         [SerializeField] private Node nodeEnd;
 
+        [FoldoutGroup("Gizmos"), ShowIf("ShowGizmos"), PropertyOrder(10)]
+        [SerializeField, ColorPalette] private Color _patrolPathColor = Color.blue;
+
         private List<Node> patrolPath = new() { };
 
         private void OnValidate()
@@ -33,9 +36,6 @@ namespace Agents
                 }
             }
         }
-
-        [FoldoutGroup("Gizmos"), ShowIf("ShowGizmos"), PropertyOrder(9)]
-        [SerializeField, ColorPalette] private Color _patrolPathColor = Color.blue;
 
         #region Gizmos
 
