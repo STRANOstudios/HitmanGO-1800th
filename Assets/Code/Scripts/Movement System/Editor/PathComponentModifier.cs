@@ -9,12 +9,13 @@ namespace PathSystem
     {
         private static PathDesign localPathDesign = null;
 
-        private static Material sharedMaterial = new(Shader.Find("Sprites/Default"));
+        private static Material sharedMaterial;
 
         static PathComponentModifier()
         {
             EditorApplication.hierarchyChanged += OnHierarchyChanged;
             EditorApplication.update += OnHierarchyChanged;
+            sharedMaterial = new(Shader.Find("Sprites/Default"));
         }
 
         private static void OnHierarchyChanged()
