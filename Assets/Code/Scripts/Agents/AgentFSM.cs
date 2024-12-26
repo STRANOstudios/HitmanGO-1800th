@@ -1,10 +1,12 @@
 using PathSystem;
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace Agents
 {
+    [DisallowMultipleComponent]
     public class AgentFSM : MonoBehaviour
     {
         [Title("Settings")]
@@ -15,27 +17,27 @@ namespace Agents
         [SerializeField] protected LayerMask raycastMask;
 
         [Title("Debug")]
-        [SerializeField] private bool _debug = false;
-        [FoldoutGroup("Debug"), ShowIf("_debug")]
+        [SerializeField, PropertyOrder(1)] protected bool _debug = false;
+        [FoldoutGroup("Debug"), ShowIf("_debug"), PropertyOrder(2)]
         [ShowInInspector, ReadOnly] protected Node targetNode;
-        [FoldoutGroup("Debug"), ShowIf("_debug")]
+        [FoldoutGroup("Debug"), ShowIf("_debug"), PropertyOrder(3)]
         [ShowInInspector, ReadOnly] protected List<Node> path;
 
-        [SerializeField, ShowIf("_debug")] private bool _drawGizmos = false;
+        [SerializeField, ShowIf("_debug"), PropertyOrder(4)] protected bool _drawGizmos = false;
 
-        [FoldoutGroup("Gizmos"), ShowIf("ShowGizmos")]
-        [SerializeField] private float yOffet = 0.5f;
+        [FoldoutGroup("Gizmos"), ShowIf("ShowGizmos"), PropertyOrder(5)]
+        [SerializeField] protected float yOffet = 0.5f;
         // destination
-        [FoldoutGroup("Gizmos"), ShowIf("ShowGizmos")]
-        [SerializeField, ColorPalette] private Color _targetNodeColor = Color.yellow;
+        [FoldoutGroup("Gizmos"), ShowIf("ShowGizmos"), PropertyOrder(6)]
+        [SerializeField, ColorPalette] protected Color _targetNodeColor = Color.yellow;
         // pathfinder
-        [FoldoutGroup("Gizmos"), ShowIf("ShowGizmos")]
-        [SerializeField, ColorPalette] private Color _pathColor = Color.red;
+        [FoldoutGroup("Gizmos"), ShowIf("ShowGizmos"), PropertyOrder(7)]
+        [SerializeField, ColorPalette] protected Color _pathColor = Color.red;
         // in move
-        [FoldoutGroup("Gizmos"), ShowIf("ShowGizmos")]
-        [SerializeField, ColorPalette] private Color _nextPathColor = Color.magenta;
-                
-        private bool ShowGizmos => _drawGizmos && _debug;
+        [FoldoutGroup("Gizmos"), ShowIf("ShowGizmos"), PropertyOrder(8)]
+        [SerializeField, ColorPalette] protected Color _nextPathColor = Color.magenta;
+
+        protected bool ShowGizmos => _drawGizmos && _debug;
 
         protected FSMInterface currentState;
 
@@ -69,11 +71,47 @@ namespace Agents
             }
         }
 
-        private void OnDrawGizmos()
+        #region Gizmos
+
+        protected void OnDrawGizmos()
         {
-            if (!_drawGizmos || !_debug) return;
+            if (!ShowGizmos) return;
 
+            if(targetNode != null)
+            {
+                Gizmos.color = _targetNodeColor;
+                Gizmos.DrawSphere(PositionNormalize(targetNode.transform.position), 0.15f);
+            }
 
+            if (path.Count > 0)
+            {
+                Color _patrolPathColorEnds = Color.Lerp(_pathColor, Color.magenta, 0.5f);
+
+                Gizmos.color = _patrolPathColorEnds;
+
+                Gizmos.DrawSphere(PositionNormalize(path[0].transform.position), 0.15f);
+
+                if (path.Count > 1)
+                {
+                    Gizmos.DrawSphere(PositionNormalize(path[^1].transform.position), 0.15f);
+
+                    Gizmos.color = _pathColor;
+
+                    for (int i = 0; i < path.Count - 1; i++)
+                    {
+                        Gizmos.DrawLine(PositionNormalize(path[i].transform.position), PositionNormalize(path[i + 1].transform.position));
+                        if (i > 0 && i < path.Count - 1) Gizmos.DrawSphere(PositionNormalize(path[i].transform.position), 0.1f);
+                    }
+                }
+
+            }
         }
+
+        protected Vector3 PositionNormalize(Vector3 position)
+        {
+            return new Vector3(position.x, yOffet, position.z);
+        }
+
+        #endregion
     }
 }
