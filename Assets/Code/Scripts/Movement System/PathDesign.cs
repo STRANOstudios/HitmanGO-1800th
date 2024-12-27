@@ -19,6 +19,11 @@ namespace PathSystem
         private Vector2 _nodeScale = Vector2.one;
         public Color nodeColor = Color.black;
 
+        [Header("Exit Node Settings")]
+        public Sprite exitSpriteNode = null;
+        private Vector2 _exitNodeScale = Vector2.one;
+        public Color exitNodeColor = Color.black;
+
         public float Width
         {
             get { return _width; }
@@ -39,6 +44,17 @@ namespace PathSystem
                 // Applica la validazione manuale
                 _nodeScale.x = Mathf.Max(value.x, 0f);
                 _nodeScale.y = Mathf.Max(value.y, 0f);
+            }
+        }
+
+        public Vector2 ExitNodeScale
+        {
+            get { return _exitNodeScale; }
+            set
+            {
+                // Applica la validazione manuale
+                _exitNodeScale.x = Mathf.Max(value.x, 0f);
+                _exitNodeScale.y = Mathf.Max(value.y, 0f);
             }
         }
     }

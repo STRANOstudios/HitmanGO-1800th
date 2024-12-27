@@ -1,5 +1,7 @@
+using HUB;
 using Unity.VisualScripting;
 using UnityEditor;
+using UnityEditor.MemoryProfiler;
 using UnityEngine;
 
 namespace PathSystem
@@ -10,6 +12,9 @@ namespace PathSystem
         private static PathDesign localPathDesign = null;
 
         private static Material sharedMaterial;
+
+        private static HUBManager hubManager;
+        private static GameObject exitNode;
 
         static PathComponentModifier()
         {
@@ -25,19 +30,69 @@ namespace PathSystem
                 ApplyChangesToAllNodes(localPathDesign);
                 ApplyChangesToAllLinks(localPathDesign);
             }
+            if (hubManager == null)
+            {
+                hubManager = GameObject.FindObjectOfType<HUBManager>();
+            }
         }
 
-        private static void ApplyLinkChanges(Link connection, PathDesign pathDesign)
+        private static void CheckLinkType(Link connection, PathDesign pathDesign)
+        {
+            if (pathDesign is HUBPathDesign hubPathDesign && IsActive(connection.gameObject))
+            {
+                ApplyLinkChanges(connection, hubPathDesign.unlockLinkColor, hubPathDesign.UnlockWidth, hubPathDesign.UnlockStoppingDistance, hubPathDesign.yOffset);
+            }
+            else
+            {
+                ApplyLinkChanges(connection, pathDesign.linkColor, pathDesign.Width, pathDesign.StoppingDistance, pathDesign.yOffset);
+            }
+
+        }
+        private static void CheckNodeType(Node node, PathDesign pathDesign)
+        {
+            if (pathDesign is HUBPathDesign hubPathDesign && IsActive(node.gameObject))
+            {
+                ApplyNodeChanges(node, hubPathDesign.unlockSpriteNode, hubPathDesign.unlockNodeColor, hubPathDesign.UnlockNodeScale, hubPathDesign.yOffset);
+            }
+            else
+            {
+                if (exitNode != null && node.gameObject == exitNode)
+                {
+                    ApplyNodeChanges(node, pathDesign.exitSpriteNode, pathDesign.exitNodeColor, pathDesign.ExitNodeScale, pathDesign.yOffset);
+                }
+                else
+                {
+                    ApplyNodeChanges(node, pathDesign.spriteNode, pathDesign.nodeColor, pathDesign.NodeScale, pathDesign.yOffset);
+                }
+            }
+        }
+
+        private static void ApplyNodeChanges(Node node, Sprite sprite, Color color, Vector3 scale, float yOffset)
+        {
+            if (!node.TryGetComponent(out SpriteRenderer spriteRenderer))
+            {
+                spriteRenderer = node.AddComponent<SpriteRenderer>();
+            }
+
+            spriteRenderer.sprite = sprite;
+            spriteRenderer.material = sharedMaterial;
+            spriteRenderer.color = color;
+            spriteRenderer.transform.localScale = scale;
+
+            node.transform.SetPositionAndRotation(new(node.transform.position.x, yOffset + 0.1f, node.transform.position.z), Quaternion.LookRotation(Vector3.down));
+        }
+
+        private static void ApplyLinkChanges(Link connection, Color color, float width, float stoppingDistance, float yOffset)
         {
             Vector3 direction = connection.NodeTo.position - connection.NodeFrom.position;
             direction.Normalize();
 
             // Calculate the start and end stop positions 
-            Vector3 startStopPosition = connection.NodeFrom.position + direction * pathDesign.StoppingDistance;
-            Vector3 endStopPosition = connection.NodeTo.position - direction * pathDesign.StoppingDistance;
+            Vector3 startStopPosition = connection.NodeFrom.position + direction * stoppingDistance;
+            Vector3 endStopPosition = connection.NodeTo.position - direction * stoppingDistance;
 
-            startStopPosition = new(startStopPosition.x, pathDesign.yOffset, startStopPosition.z);
-            endStopPosition = new(endStopPosition.x, pathDesign.yOffset, endStopPosition.z);
+            startStopPosition = new(startStopPosition.x, yOffset, startStopPosition.z);
+            endStopPosition = new(endStopPosition.x, yOffset, endStopPosition.z);
 
             if (!connection.TryGetComponent(out LineRenderer lineRenderer))
             {
@@ -48,31 +103,16 @@ namespace PathSystem
             lineRenderer.SetPosition(0, startStopPosition);
             lineRenderer.SetPosition(1, endStopPosition);
 
-            lineRenderer.startWidth = pathDesign.Width;
-            lineRenderer.endWidth = pathDesign.Width;
+            lineRenderer.startWidth = width;
+            lineRenderer.endWidth = width;
 
-            lineRenderer.startColor = pathDesign.linkColor;
-            lineRenderer.endColor = pathDesign.linkColor;
+            lineRenderer.startColor = color;
+            lineRenderer.endColor = color;
 
             lineRenderer.material = sharedMaterial;
             lineRenderer.alignment = LineAlignment.TransformZ;
 
             connection.transform.rotation = Quaternion.LookRotation(Vector3.down);
-        }
-
-        private static void ApplyNodeChanges(Node node, PathDesign pathDesign)
-        {
-            if (!node.TryGetComponent(out SpriteRenderer spriteRenderer))
-            {
-                spriteRenderer = node.AddComponent<SpriteRenderer>();
-            }
-
-            spriteRenderer.sprite = pathDesign.spriteNode;
-            spriteRenderer.material = sharedMaterial;
-            spriteRenderer.color = pathDesign.nodeColor;
-            spriteRenderer.transform.localScale = pathDesign.NodeScale;
-
-            node.transform.SetPositionAndRotation(new(node.transform.position.x, pathDesign.yOffset + 0.1f, node.transform.position.z), Quaternion.LookRotation(Vector3.down));
         }
 
         /// <summary>
@@ -84,7 +124,7 @@ namespace PathSystem
             Node[] nodes = GameObject.FindObjectsOfType<Node>();
             foreach (var node in nodes)
             {
-                ApplyNodeChanges(node, pathDesign);
+                CheckNodeType(node, pathDesign);
             }
         }
 
@@ -97,7 +137,7 @@ namespace PathSystem
             Link[] links = GameObject.FindObjectsOfType<Link>();
             foreach (var link in links)
             {
-                ApplyLinkChanges(link, pathDesign);
+                CheckLinkType(link, pathDesign);
             }
         }
 
@@ -105,12 +145,26 @@ namespace PathSystem
         /// Applies changes to all nodes and links
         /// </summary>
         /// <param name="pathDesign"></param>
-        public static void ApplyChanges(PathDesign pathDesign)
+        public static void ApplyChanges(PathDesign pathDesign, GameObject exit = null)
         {
             ApplyChangesToAllNodes(pathDesign);
             ApplyChangesToAllLinks(pathDesign);
 
             localPathDesign = pathDesign;
+
+            if (hubManager == null)
+            {
+                hubManager = GameObject.FindObjectOfType<HUBManager>();
+            }
+
+            exitNode = exit;
+        }
+
+        private static bool IsActive(GameObject gameObject)
+        {
+            if (hubManager == null) return false;
+
+            return hubManager.ActiveObjects.Contains(gameObject);
         }
     }
 }

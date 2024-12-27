@@ -3,7 +3,6 @@ using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace HUB
 {
@@ -12,8 +11,15 @@ namespace HUB
         [Title("Settings")]
         [SerializeField] private string HUBName = "Level";
         [SerializeField] private List<LevelData> Levels = new();
-        
+
+        [Title("Debug")]
+        [SerializeField] private bool _debug = false;
+        [ShowIf("_debug")] 
+        [SerializeField]
+        private List<GameObject> activeObjects = new();
+
         private bool[] unlocked;
+
 
         private void Awake()
         {
@@ -47,6 +53,8 @@ namespace HUB
                 Levels[0].unlocked = true;
             }
         }
+
+        public List<GameObject> ActiveObjects => activeObjects;
     }
 
     [Serializable]
