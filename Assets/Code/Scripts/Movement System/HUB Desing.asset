@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: HUB Desing
   m_EditorClassIdentifier: 
   yOffset: 0.01
-  linkColor: {r: 0, g: 0, b: 0, a: 1}
+  linkColor: {r: 1, g: 1, b: 1, a: 1}
   spriteNode: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  nodeColor: {r: 0, g: 0, b: 0, a: 1}
+  nodeColor: {r: 1, g: 1, b: 1, a: 1}
   exitSpriteNode: {fileID: 0}
   exitNodeColor: {r: 0, g: 0, b: 0, a: 1}
   unlockLinkColor: {r: 0, g: 0, b: 0, a: 1}
-  unlockSpriteNode: {fileID: 0}
+  unlockSpriteNode: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
   unlockNodeColor: {r: 0, g: 0, b: 0, a: 1}

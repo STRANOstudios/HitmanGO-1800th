@@ -16,16 +16,23 @@ namespace PathSystem
         private void OnEnable()
         {
             EditorApplication.update += UpdateWindow;
+            EditorApplication.hierarchyChanged += FindStyleInScene;
         }
 
         private void OnDisable()
         {
             EditorApplication.update -= UpdateWindow;
+            EditorApplication.hierarchyChanged -= FindStyleInScene;
         }
 
         private void UpdateWindow()
         {
             Repaint();
+        }
+
+        private void FindStyleInScene()
+        {
+            pathDesign = FindAnyObjectByType<StyleManager>().PathDesign;
         }
 
         public Transform root;
@@ -47,6 +54,8 @@ namespace PathSystem
             if (pathDesign != null)
             {
                 PathComponentModifier.ApplyChanges(pathDesign, exitNode);
+
+                Debug.Log("Path Design has been updated");
             }
         }
 
@@ -72,18 +81,19 @@ namespace PathSystem
 
             #region Path Design Management
 
-            pathDesign = (PathDesign)EditorGUILayout.ObjectField("Path Design", pathDesign, typeof(PathDesign), false);
+            //pathDesign = (PathDesign)EditorGUILayout.ObjectField("Path Design", pathDesign, typeof(PathDesign), false);
+            FindStyleInScene();
 
             if (pathDesign == null)
             {
-                EditorGUILayout.HelpBox("Assign a PathDesign asset to modify its settings.", MessageType.Info);
+                EditorGUILayout.HelpBox("Make a Style Manager in the scene", MessageType.Warning);
             }
             else
             {
                 EditorGUILayout.BeginVertical("box");
 
                 // draw the scrollview
-                designScrollPosition = EditorGUILayout.BeginScrollView(designScrollPosition, GUILayout.Height(400));
+                designScrollPosition = EditorGUILayout.BeginScrollView(designScrollPosition, GUILayout.ExpandHeight(true));
 
                 DrawDesign();
                 if (pathDesign as HUBPathDesign)
@@ -91,8 +101,6 @@ namespace PathSystem
                     DrawHUBDesign();
                 }
 
-
-                // end the scrollview
                 EditorGUILayout.EndScrollView();
 
                 EditorGUILayout.EndVertical();
