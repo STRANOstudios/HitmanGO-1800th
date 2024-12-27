@@ -41,7 +41,7 @@ namespace Agents
 
         private new void OnDrawGizmos()
         {
-            if (!ShowGizmos) return;
+            if (!_drawGizmos) return;
 
             if (patrolPath.Count > 0)
             {

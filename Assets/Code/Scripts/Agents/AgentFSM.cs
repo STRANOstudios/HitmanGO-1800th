@@ -1,7 +1,6 @@
 using PathSystem;
 using PathSystem.PathFinding;
 using Sirenix.OdinInspector;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,50 +11,61 @@ namespace Agents
     {
         [Title("Settings")]
         [SerializeField, Required] protected Node currentNode;
-        [SerializeField] private bool _isPatrol = false;
+        [SerializeField] public bool _isPatrol = false;
         [SerializeField, ShowIf("_isPatrol"), Required] protected Node _targetNode;
 
-        [SerializeField] protected float speed = 1.0f;
+        [SerializeField] public float speed = 1.0f;
         [SerializeField] protected float raycastDistance = 1.0f;
         [SerializeField] protected LayerMask raycastMask;
 
         #region Debug
 
         [Title("Debug")]
-        [SerializeField] protected bool _debug = false;
+        [SerializeField] public bool _debug = false;
         [FoldoutGroup("Debug"), ShowIf("_debug")]
-        [ShowInInspector, ReadOnly] protected Node _targetNodeDebug;
+        [SerializeField] protected Node _targetNodeDebug;
         [FoldoutGroup("Debug"), ShowIf("_debug")]
-        [ShowInInspector, ReadOnly] protected List<Node> path = new();
+        [ShowInInspector, ReadOnly] public List<Node> path = new();
 
-        [SerializeField, ShowIf("_debug")] protected bool _drawGizmos = false;
+        [SerializeField] protected bool _drawGizmos = false;
 
-        [FoldoutGroup("Gizmos"), ShowIf("ShowGizmos")]
+        [FoldoutGroup("Gizmos"), ShowIf("_drawGizmos")]
         [SerializeField] protected float yOffet = 0.5f;
         // raycast
-        [FoldoutGroup("Gizmos"), ShowIf("ShowGizmos")]
+        [FoldoutGroup("Gizmos"), ShowIf("_drawGizmos")]
         [SerializeField, ColorPalette] protected Color _raylineColor = Color.green;
         // destination
-        [FoldoutGroup("Gizmos"), ShowIf("ShowGizmos")]
+        [FoldoutGroup("Gizmos"), ShowIf("_drawGizmos")]
         [SerializeField, ColorPalette] protected Color _targetNodeColor = Color.yellow;
         // pathfinder
-        [FoldoutGroup("Gizmos"), ShowIf("ShowGizmos")]
+        [FoldoutGroup("Gizmos"), ShowIf("_drawGizmos")]
         [SerializeField, ColorPalette] protected Color _pathColor = Color.red;
         // in move
-        [FoldoutGroup("Gizmos"), ShowIf("ShowGizmos")]
+        [FoldoutGroup("Gizmos"), ShowIf("_drawGizmos")]
         [SerializeField, ColorPalette] protected Color _nextPathColor = Color.magenta;
 
         #endregion
 
-        protected bool ShowGizmos => _drawGizmos && _debug;
-
-        protected FSMInterface _currentState;
+        public FSMInterface _currentState;
 
         private PathFinder pathFinder;
 
         private void Start()
         {
             _currentState = new Idle(this);
+
+            if (_isPatrol)
+            {
+                if (_targetNode == null && _debug)
+                {
+                    Debug.LogError("Target node is null, please assign a target node.");
+                }
+                else
+                {
+                    _currentState = new Move(this);
+                    _targetNodeDebug = _targetNode;
+                }
+            }
         }
 
         private void OnValidate()
@@ -113,7 +123,44 @@ namespace Agents
 
         private void Pathfinding()
         {
+            if (currentNode == null || _targetNode == null)
+            {
+                if (_debug) Debug.LogWarning("Pathfinding failed: currentNode or _targetNode is null.");
+                return;
+            }
 
+            // Usa Dijkstra come algoritmo
+            pathFinder = new DijkstraPathFinder
+            {
+                // Definisci le funzioni di costo per G e H
+                GCostFunction = (a, b) => Vector3.Distance(a.transform.position, b.transform.position),
+                HCostFunction = (a, b) => 0 // Per Dijkstra, H è sempre 0
+            };
+
+            // Inizializza il pathfinder
+            pathFinder.Initialize(currentNode, _targetNode);
+
+            // Calcola il percorso passo dopo passo
+            path.Clear();
+            while (pathFinder.Status == PathFinderStatus.RUNNING)
+            {
+                pathFinder.Step();
+            }
+
+            // Se il percorso è stato trovato, estrai il cammino
+            if (pathFinder.Status == PathFinderStatus.SUCCESS)
+            {
+                PathFinder.PathFinderNode node = pathFinder.CurrentNode;
+                while (node != null)
+                {
+                    path.Insert(0, node.Location);
+                    node = node.Parent;
+                }
+            }
+            else
+            {
+                if (_debug) Debug.LogWarning("Pathfinding failed: No path found.");
+            }
         }
 
         #region Setters
@@ -133,7 +180,7 @@ namespace Agents
 
         protected void OnDrawGizmos()
         {
-            if (!ShowGizmos) return;
+            if (!_drawGizmos) return;
 
             Gizmos.color = _raylineColor;
 
