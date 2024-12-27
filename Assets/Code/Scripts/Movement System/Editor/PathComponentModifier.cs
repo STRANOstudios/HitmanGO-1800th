@@ -1,7 +1,6 @@
 using HUB;
 using Unity.VisualScripting;
 using UnityEditor;
-using UnityEditor.MemoryProfiler;
 using UnityEngine;
 
 namespace PathSystem
@@ -14,7 +13,7 @@ namespace PathSystem
         private static Material sharedMaterial;
 
         private static HUBManager hubManager;
-        private static GameObject exitNode;
+        private static GameObject exitNode = null;
 
         static PathComponentModifier()
         {
@@ -78,8 +77,9 @@ namespace PathSystem
             spriteRenderer.material = sharedMaterial;
             spriteRenderer.color = color;
             spriteRenderer.transform.localScale = scale;
+            spriteRenderer.sortingOrder = 2;
 
-            node.transform.SetPositionAndRotation(new(node.transform.position.x, yOffset + 0.1f, node.transform.position.z), Quaternion.LookRotation(Vector3.down));
+            node.transform.SetPositionAndRotation(new(node.transform.position.x, yOffset, node.transform.position.z), Quaternion.LookRotation(Vector3.down));
         }
 
         private static void ApplyLinkChanges(Link connection, Color color, float width, float stoppingDistance, float yOffset)
@@ -111,6 +111,8 @@ namespace PathSystem
 
             lineRenderer.material = sharedMaterial;
             lineRenderer.alignment = LineAlignment.TransformZ;
+
+            lineRenderer.sortingOrder = 1;
 
             connection.transform.rotation = Quaternion.LookRotation(Vector3.down);
         }
@@ -147,8 +149,7 @@ namespace PathSystem
         /// <param name="pathDesign"></param>
         public static void ApplyChanges(PathDesign pathDesign, GameObject exit = null)
         {
-            ApplyChangesToAllNodes(pathDesign);
-            ApplyChangesToAllLinks(pathDesign);
+            exitNode = exit;
 
             localPathDesign = pathDesign;
 
@@ -157,7 +158,13 @@ namespace PathSystem
                 hubManager = GameObject.FindObjectOfType<HUBManager>();
             }
 
-            exitNode = exit;
+            if(sharedMaterial == null)
+            {
+                sharedMaterial = new(Shader.Find("Sprites/Default"));
+            }
+
+            ApplyChangesToAllNodes(pathDesign);
+            ApplyChangesToAllLinks(pathDesign);
         }
 
         private static bool IsActive(GameObject gameObject)

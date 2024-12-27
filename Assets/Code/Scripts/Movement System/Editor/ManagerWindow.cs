@@ -126,9 +126,19 @@ namespace PathSystem
                 }
                 if (pathDesign as HUBPathDesign == null)
                 {
-                    if (GUILayout.Button("Set Node to Exit Node"))
+                    if (exitNode == null)
                     {
-                        SetExitNode(selectedObjects[0]);
+                        if (GUILayout.Button("Set Node to Exit Node"))
+                        {
+                            SetExitNode(selectedObjects[0]);
+                        }
+                    }
+                    else if (selectedObjects[0] == exitNode)
+                    {
+                        if (GUILayout.Button("Remove Exit Node"))
+                        {
+                            RemoveExitNode();
+                        }
                     }
                 }
             }
@@ -302,15 +312,29 @@ namespace PathSystem
 
         private void SetExitNode(GameObject selectedObject)
         {
-            if (exitNode != null)
-            {
-                exitNode = selectedObject;
-            }
+            if (exitNode != null) return;
+
+            exitNode = selectedObject;
 
             selectedObject.AddComponent<BoxCollider>();
             selectedObject.GetComponent<BoxCollider>().isTrigger = true;
 
             selectedObject.AddComponent<TriggerCustomHandler>();
+
+            OnValidate();
+        }
+
+        private void RemoveExitNode()
+        {
+            if (exitNode != null)
+            {
+                DestroyImmediate(exitNode.GetComponent<TriggerCustomHandler>());
+                DestroyImmediate(exitNode.GetComponent<BoxCollider>());
+                DestroyImmediate(exitNode.GetComponent<Rigidbody>());
+                exitNode = null;
+
+                OnValidate();
+            }
         }
 
         #endregion
