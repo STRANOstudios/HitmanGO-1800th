@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PathDesign
   m_EditorClassIdentifier: 
   yOffset: 0.01
-  linkColor: {r: 0, g: 0, b: 0, a: 1}
+  linkColor: {r: 0, g: 0, b: 0, a: 0.88235295}
   spriteNode: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
   nodeColor: {r: 1, g: 1, b: 1, a: 1}
   exitSpriteNode: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
