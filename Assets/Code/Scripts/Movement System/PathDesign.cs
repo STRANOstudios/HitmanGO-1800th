@@ -19,12 +19,6 @@ namespace PathSystem
         private Vector2 _nodeScale = Vector2.one;
         public Color nodeColor = Color.black;
 
-        [Header("Direction Settings")]
-        public Sprite spriteDirection = null;
-        private Vector2 _directionScale = Vector2.one;
-        public Color directionColor = Color.black;
-        private float _directionDistance = 1f;
-
         public float Width
         {
             get { return _width; }
@@ -35,23 +29,6 @@ namespace PathSystem
         {
             get { return _stoppingDistance; }
             set { _stoppingDistance = Mathf.Max(value, 0f); }
-        }
-
-        public float DirectionDistance
-        {
-            get { return _directionDistance; }
-            set { _directionDistance = Mathf.Max(value, 0f); }
-        }
-
-        public Vector2 DirectionScale
-        {
-            get { return _directionScale; }
-            set
-            {
-                // Applica la validazione manuale
-                _directionScale.x = Mathf.Max(value.x, 0f);
-                _directionScale.y = Mathf.Max(value.y, 0f);
-            }
         }
 
         public Vector2 NodeScale

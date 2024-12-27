@@ -301,16 +301,6 @@ namespace PathSystem
                 pathDesign.nodeColor = EditorGUILayout.ColorField("Node Color", pathDesign.nodeColor);
             }
 
-            // Direction Settings
-            showDirectionSettings = EditorGUILayout.Foldout(showDirectionSettings, "Direction Settings", true);
-            if (showDirectionSettings)
-            {
-                pathDesign.spriteDirection = (Sprite)EditorGUILayout.ObjectField("Direction Sprite", pathDesign.spriteDirection, typeof(Sprite), false);
-                pathDesign.DirectionScale = EditorGUILayout.Vector2Field("Direction Scale", pathDesign.DirectionScale);
-                pathDesign.directionColor = EditorGUILayout.ColorField("Direction Color", pathDesign.directionColor);
-                pathDesign.DirectionDistance = EditorGUILayout.FloatField("Direction Distance", pathDesign.DirectionDistance);
-            }
-
             // save the changes
             EditorUtility.SetDirty(pathDesign);
 

@@ -36,6 +36,9 @@ namespace PathSystem
             Vector3 startStopPosition = connection.NodeFrom.position + direction * pathDesign.StoppingDistance;
             Vector3 endStopPosition = connection.NodeTo.position - direction * pathDesign.StoppingDistance;
 
+            startStopPosition = new(startStopPosition.x, pathDesign.yOffset, startStopPosition.z);
+            endStopPosition = new(endStopPosition.x, pathDesign.yOffset, endStopPosition.z);
+
             if (!connection.TryGetComponent(out LineRenderer lineRenderer))
             {
                 lineRenderer = connection.AddComponent<LineRenderer>();
@@ -69,7 +72,7 @@ namespace PathSystem
             spriteRenderer.color = pathDesign.nodeColor;
             spriteRenderer.transform.localScale = pathDesign.NodeScale;
 
-            node.transform.SetPositionAndRotation(new(node.transform.position.x, pathDesign.yOffset, node.transform.position.z), Quaternion.LookRotation(Vector3.down));
+            node.transform.SetPositionAndRotation(new(node.transform.position.x, pathDesign.yOffset + 0.1f, node.transform.position.z), Quaternion.LookRotation(Vector3.down));
         }
 
         /// <summary>
