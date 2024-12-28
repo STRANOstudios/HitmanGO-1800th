@@ -182,18 +182,21 @@ namespace Agents
         {
             if (!_drawGizmos) return;
 
+            // Gizmo Raycast
             Gizmos.color = _raylineColor;
 
             Vector3 pos = transform.position + transform.forward * raycastDistance;
 
             Gizmos.DrawLine(PositionNormalize(transform.position), PositionNormalize(pos));
 
+            // Gizmo target node
             if (_targetNode != null)
             {
                 Gizmos.color = _targetNodeColor;
                 Gizmos.DrawSphere(PositionNormalize(_targetNode.transform.position), 0.15f);
             }
 
+            // Gizmo path
             if (path.Count > 0)
             {
                 Color _patrolPathColorEnds = Color.Lerp(_pathColor, Color.magenta, 0.5f);

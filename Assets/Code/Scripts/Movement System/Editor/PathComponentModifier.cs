@@ -47,6 +47,7 @@ namespace PathSystem
             }
 
         }
+
         private static void CheckNodeType(Node node, PathDesign pathDesign)
         {
             if (pathDesign is HUBPathDesign hubPathDesign && IsActive(node.gameObject))
