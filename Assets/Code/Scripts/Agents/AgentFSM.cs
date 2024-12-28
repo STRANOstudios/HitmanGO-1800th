@@ -2,6 +2,7 @@ using PathSystem;
 using PathSystem.PathFinding;
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -53,7 +54,7 @@ namespace Agents
         public FSMInterface _currentState;
         private PathFinder pathFinder;
 
-        public Node currenNode;
+        public Node currentNode;
 
         private void Start()
         {
@@ -169,6 +170,51 @@ namespace Agents
             }
         }
 
+        /// <summary>
+        /// Search the edge nodes in forward and backward
+        /// </summary>
+        public void NodeFinder()
+        {
+            List<Node> nodes = new(FindObjectsOfType<Node>());
+
+            // Calcoliamo la direzione forward dell'agente (vettore normalizzato)
+            Vector3 forwardDirection = transform.forward;
+
+            // Determiniamo l'asse di ricerca in base alla direzione di forward
+            bool isForwardAlongZ = Mathf.Abs(forwardDirection.x) < Mathf.Abs(forwardDirection.z);
+
+            // Filtra i nodi per il loro asse di ricerca (X o Z)
+            IEnumerable<Node> filteredNodes = nodes
+                .Where(node => isForwardAlongZ
+                    ? Mathf.Approximately(node.transform.position.x, transform.position.x) // Se lungo Z, stessi X
+                    : Mathf.Approximately(node.transform.position.z, transform.position.z)); // Se lungo X, stessi Z
+
+            // Cerca il nodo più lontano in avanti (più grande)
+            Node nodeForward = filteredNodes
+                .Where(node => isForwardAlongZ
+                    ? node.transform.position.z > transform.position.z // Nodo avanti (maggiore Z)
+                    : node.transform.position.x > transform.position.x) // Nodo avanti (maggiore X)
+                .OrderByDescending(node => isForwardAlongZ ? node.transform.position.z : node.transform.position.x) // Più lontano
+                .FirstOrDefault() ?? currentNode;
+
+            // Cerca il nodo più lontano indietro (più piccolo)
+            Node nodeBackward = filteredNodes
+                .Where(node => isForwardAlongZ
+                    ? node.transform.position.z < transform.position.z // Nodo indietro (minore Z)
+                    : node.transform.position.x < transform.position.x) // Nodo indietro (minore X)
+                .OrderBy(node => isForwardAlongZ ? node.transform.position.z : node.transform.position.x) // Più lontano
+                .FirstOrDefault() ?? currentNode;
+
+            // Assegna targetNode e startNode
+            _targetNode = nodeBackward;
+            startNode = nodeForward;
+
+            InPatrol = true;
+            Pathfinding();
+            _currentState = new Move(this);
+        }
+
+
         #region Setters
 
         /// <summary>
@@ -180,9 +226,9 @@ namespace Agents
             {
                 _targetNode = value;
 
-                if(currenNode != null)
+                if (currentNode != null)
                 {
-                    startNode = currenNode;
+                    startNode = currentNode;
                 }
 
                 if (_isPatrol && value != null)
@@ -200,7 +246,6 @@ namespace Agents
                 _currentState = new Move(this);
             }
         }
-
 
         #endregion
 

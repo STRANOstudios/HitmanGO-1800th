@@ -14,7 +14,7 @@ namespace Agents
         public Move(AgentFSM agent)
         {
             _agent = agent;
-            _currentPathIndex = 1;
+            _currentPathIndex = agent.currentNode == null ? 1 : agent.path.IndexOf(agent.currentNode) + 1;
             _isPatrolling = _agent._isPatrol;
             _isMoving = false;  // Initially, the agent is not moving.
         }
@@ -48,7 +48,7 @@ namespace Agents
                 return;
 
             Node targetNode = _agent.path[_currentPathIndex];
-            _agent.currenNode = targetNode;
+            _agent.currentNode = targetNode;
             Vector3 targetPosition = targetNode.transform.position;
 
             // Start the movement coroutine.
@@ -110,9 +110,13 @@ namespace Agents
                 _agent.path.Clear();
 
                 // Se l'agente non è in patrolling, fermati
-                if (!_agent.InPatrol)
+                if (!_agent._isPatrol)
                 {
                     _agent._currentState = new Idle(_agent); // Passa allo stato Idle.
+                }
+                else
+                {
+                    _agent.NodeFinder();
                 }
 
                 yield break; // Termina la coroutine.
