@@ -16,13 +16,13 @@ namespace PathSystem
         private void OnEnable()
         {
             EditorApplication.update += UpdateWindow;
-            EditorApplication.hierarchyChanged += FindStyleInScene;
+            EditorApplication.hierarchyChanged += InizializeScene;
         }
 
         private void OnDisable()
         {
             EditorApplication.update -= UpdateWindow;
-            EditorApplication.hierarchyChanged -= FindStyleInScene;
+            EditorApplication.hierarchyChanged -= InizializeScene;
         }
 
         private void UpdateWindow()
@@ -31,9 +31,10 @@ namespace PathSystem
             OnValidate();
         }
 
-        private void FindStyleInScene()
+        private void InizializeScene()
         {
             pathDesign = FindAnyObjectByType<StyleManager>().PathDesign;
+            exitNode = FindAnyObjectByType<TriggerCustomHandler>().gameObject;
         }
 
         public Transform root;
@@ -81,7 +82,7 @@ namespace PathSystem
             #region Path Design Management
 
             //pathDesign = (PathDesign)EditorGUILayout.ObjectField("Path Design", pathDesign, typeof(PathDesign), false);
-            FindStyleInScene();
+            InizializeScene();
 
             if (pathDesign == null)
             {
