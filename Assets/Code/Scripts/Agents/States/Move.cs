@@ -14,7 +14,7 @@ namespace Agents
         public Move(AgentFSM agentFSM)
         {
             _agent = agentFSM;
-            _currentPathIndex = 0;
+            _currentPathIndex = 1;
             _isPatrolling = _agent._isPatrol;
             _isMoving = false;  // Initially, the agent is not moving.
         }
@@ -63,6 +63,12 @@ namespace Agents
             float moveDuration = 4.5f / _agent.speed;  // Calculate the time to move based on agent speed.
             float elapsedTime = 0f;
 
+            Vector3 directionToTarget = (targetPosition - _agent.transform.position).normalized;
+            directionToTarget.y = 0; // Ignore vertical component.
+
+            // Create a target rotation around the Y-axis only.
+            Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
+
             // Perform smooth movement from the start position to the target position.
             while (elapsedTime < moveDuration)
             {
@@ -73,8 +79,8 @@ namespace Agents
                 _agent.transform.position = Vector3.Lerp(startPosition, targetPosition, t);
 
                 // Rotate the agent smoothly towards the target position.
-                Quaternion targetRotation = Quaternion.LookRotation(targetPosition);
-                _agent.transform.rotation = Quaternion.Slerp(startRotation, targetRotation, t);
+                Quaternion smoothedRotation = Quaternion.Slerp(startRotation, targetRotation, t);
+                _agent.transform.rotation = Quaternion.Euler(0, smoothedRotation.eulerAngles.y, 0);
 
                 yield return null; // Wait for the next frame to continue movement.
             }
@@ -89,7 +95,7 @@ namespace Agents
 
                 // Reverse the path and reset to the first node.
                 _agent.path.Reverse();
-                _currentPathIndex = 0;
+                _currentPathIndex = 1;
                 _isPatrolling = !_isPatrolling;
 
                 if (_agent._debug)

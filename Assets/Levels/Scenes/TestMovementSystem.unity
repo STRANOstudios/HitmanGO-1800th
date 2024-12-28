@@ -2651,7 +2651,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentNode: {fileID: 1092262499}
   _isPatrol: 1
-  _targetNode: {fileID: 981054550}
+  _targetNode: {fileID: 1729828824}
   speed: 50
   raycastDistance: 2.82
   raycastMask:
@@ -2663,8 +2663,8 @@ MonoBehaviour:
   - {fileID: 1092262499}
   - {fileID: 1625670583}
   - {fileID: 2109878142}
-  - {fileID: 1313629650}
-  - {fileID: 981054550}
+  - {fileID: 909536220}
+  - {fileID: 1729828824}
   _drawGizmos: 1
   yOffet: 1
   _raylineColor: {r: 0, g: 1, b: 0, a: 1}
