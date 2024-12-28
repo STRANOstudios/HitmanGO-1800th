@@ -6,58 +6,49 @@ namespace PathSystem
 {
     public class ManagerWindow : EditorWindow
     {
-        // Show Window Function
+        #region Variables and Initialization
+
         [MenuItem("Tools/Pathline System/Pathline Manager")]
-        public static void ShowWindow()
-        {
-            GetWindow<ManagerWindow>("Pathline Manager");
-        }
+        public static void ShowWindow() => GetWindow<ManagerWindow>("Pathline Manager");
+
+        public Transform root;
+        private PathDesign pathDesign;
+        private GameObject exitNode = null;
+
+        private Vector2 designScrollPosition;
+        private bool showDesignSettings, showLinkSettings, showNodeSettings, showExitNodeSettings, showUnlockLinkSettings, showUnlockNodeSettings;
 
         private void OnEnable()
         {
             EditorApplication.update += UpdateWindow;
-            EditorApplication.hierarchyChanged += InizializeScene;
+            EditorApplication.hierarchyChanged += InitializeScene;
         }
 
         private void OnDisable()
         {
             EditorApplication.update -= UpdateWindow;
-            EditorApplication.hierarchyChanged -= InizializeScene;
+            EditorApplication.hierarchyChanged -= InitializeScene;
         }
 
         private void UpdateWindow()
         {
             Repaint();
-            OnValidate();
+            ValidatePathDesign();
         }
 
-        private void InizializeScene()
+        private void InitializeScene()
         {
-            pathDesign = FindAnyObjectByType<StyleManager>().PathDesign;
-            exitNode = FindAnyObjectByType<TriggerCustomHandler>().gameObject;
+            pathDesign = FindAnyObjectByType<StyleManager>()?.PathDesign;
+            exitNode = FindAnyObjectByType<TriggerCustomHandler>()?.gameObject;
         }
 
-        public Transform root;
-        public PathDesign pathDesign;
-
-        private Vector2 designScrollPosition;
-
-        private GameObject exitNode = null;
-
-        private bool showDesignSettings = false;
-        private bool showLinkSettings = false;
-        private bool showNodeSettings = false;
-        private bool showExitNodeSettings = false;
-        private bool showUnlockLinkSettings = false;
-        private bool showUnlockNodeSettings = false;
-
-        private void OnValidate()
+        private void ValidatePathDesign()
         {
             if (pathDesign != null)
-            {
                 PathComponentModifier.ApplyChanges(pathDesign, exitNode);
-            }
         }
+
+        #endregion
 
         private void OnGUI()
         {
@@ -67,126 +58,165 @@ namespace PathSystem
 
             EditorGUILayout.PropertyField(obj.FindProperty("root"));
 
-            if (root == null)
-            {
-                EditorGUILayout.HelpBox("root transform must be set", MessageType.Warning);
-            }
+            if (root != null)
+                DrawNodeManagement();
             else
-            {
-                // Draw a vertical box containing the waypoint management buttons.
-                EditorGUILayout.BeginVertical("box");
-                DrawButtons();
-                EditorGUILayout.EndVertical();
-            }
+                EditorGUILayout.HelpBox("Root transform must be set", MessageType.Warning);
 
-            #region Path Design Management
-
-            //pathDesign = (PathDesign)EditorGUILayout.ObjectField("Path Design", pathDesign, typeof(PathDesign), false);
-            InizializeScene();
-
-            if (pathDesign == null)
-            {
-                EditorGUILayout.HelpBox("Make a Style Manager in the scene", MessageType.Warning);
-            }
-            else
-            {
-                EditorGUILayout.BeginVertical("box");
-
-                // draw the scrollview
-                designScrollPosition = EditorGUILayout.BeginScrollView(designScrollPosition, GUILayout.ExpandHeight(true));
-
-                DrawDesign();
-                if (pathDesign as HUBPathDesign)
-                {
-                    DrawHUBDesign();
-                }
-
-                EditorGUILayout.EndScrollView();
-
-                EditorGUILayout.EndVertical();
-            }
-
-            #endregion
+            DrawPathDesignSection();
 
             obj.ApplyModifiedProperties();
         }
 
-        #region Node Management
+        #region GUI Methods
 
-        private void DrawButtons()
+        private void DrawNodeManagement()
         {
-            if (GUILayout.Button("Create Node"))
+            EditorGUILayout.BeginVertical("box");
+            DrawNodeButtons();
+            EditorGUILayout.EndVertical();
+        }
+
+        private void DrawPathDesignSection()
+        {
+            InitializeScene();
+
+            if (pathDesign == null)
             {
-                CreateNode();
+                EditorGUILayout.HelpBox("Create a Style Manager in the scene", MessageType.Warning);
+                return;
             }
+
+            EditorGUILayout.BeginVertical("box");
+            designScrollPosition = EditorGUILayout.BeginScrollView(designScrollPosition, GUILayout.ExpandHeight(true));
+            DrawPathDesignSettings();
+            if (pathDesign is HUBPathDesign) DrawHUBPathDesignSettings();
+            EditorGUILayout.EndScrollView();
+            EditorGUILayout.EndVertical();
+        }
+
+        private void DrawNodeButtons()
+        {
+            if (GUILayout.Button("Create Node")) CreateNode();
 
             GameObject[] selectedObjects = Selection.gameObjects.Where(obj => obj.GetComponent<Node>() != null).ToArray();
 
             if (selectedObjects.Length == 1)
             {
-                if (GUILayout.Button("Create Lincked Node"))
-                {
-                    CreateNode(selectedObjects[0].GetComponent<Node>());
-                }
-                if (GUILayout.Button("Remove Node"))
-                {
-                    RemoveNode(selectedObjects[0].GetComponent<Node>());
-                }
-                if (pathDesign as HUBPathDesign == null)
-                {
-                    if (exitNode == null)
-                    {
-                        if (GUILayout.Button("Set Node to Exit Node"))
-                        {
-                            SetExitNode(selectedObjects[0]);
-                        }
-                    }
-                    else if (selectedObjects[0] == exitNode)
-                    {
-                        if (GUILayout.Button("Remove Exit Node"))
-                        {
-                            RemoveExitNode();
-                        }
-                    }
-                }
+                DrawSingleNodeButtons(selectedObjects[0]);
             }
-            if (selectedObjects.Length > 1)
+            else if (selectedObjects.Length > 1)
             {
-                if (GUILayout.Button("Remove Nodes"))
+                DrawMultiNodeButtons(selectedObjects);
+            }
+
+            if (Selection.activeGameObject?.GetComponent<Link>() is Link selectedLink)
+            {
+                if (GUILayout.Button("Remove Link"))
+                    RemoveConnection(new[] { selectedLink.NodeFrom.gameObject, selectedLink.NodeTo.gameObject });
+            }
+        }
+
+        private void DrawSingleNodeButtons(GameObject selectedObject)
+        {
+            Node node = selectedObject.GetComponent<Node>();
+            if (GUILayout.Button("Create Linked Node")) CreateNode(node);
+            if (GUILayout.Button("Remove Node")) RemoveNode(node);
+
+            if (pathDesign is not HUBPathDesign)
+            {
+                if (exitNode == null && GUILayout.Button("Set Node as Exit Node"))
+                    SetExitNode(selectedObject);
+
+                if (selectedObject == exitNode && GUILayout.Button("Remove Exit Node"))
+                    RemoveExitNode();
+            }
+        }
+
+        private void DrawMultiNodeButtons(GameObject[] selectedObjects)
+        {
+            if (GUILayout.Button("Remove Nodes"))
+                RemoveNodes(selectedObjects);
+
+            if (selectedObjects.Length == 2)
+            {
+                if (CheckConnectionExistence(selectedObjects))
                 {
-                    RemoveNodes(selectedObjects);
-                }
-                if (selectedObjects.Length > 2)
-                {
-                    EditorGUILayout.HelpBox("You can only connect or disconnect two nodes at a time", MessageType.Warning);
+                    if (GUILayout.Button("Disconnect Nodes"))
+                        RemoveConnection(selectedObjects);
                 }
                 else
                 {
-                    if (CheckConnectionExistence(selectedObjects))
-                    {
-                        if (GUILayout.Button("Disconnect Nodes"))
-                        {
-                            RemoveConnection(selectedObjects);
-                        }
-                    }
-                    else
-                    {
-                        if (GUILayout.Button("Connect Nodes"))
-                        {
-                            CreateConnection(selectedObjects);
-                        }
-                    }
+                    if (GUILayout.Button("Connect Nodes"))
+                        CreateConnection(selectedObjects);
                 }
             }
-
-            if (Selection.activeGameObject != null && Selection.activeGameObject.GetComponent<Link>() is Link selectedLink)
+            else
             {
-                if (GUILayout.Button("Remove Link"))
-                {
-                    RemoveConnection(new[] { selectedLink.NodeFrom.gameObject, selectedLink.NodeTo.gameObject });
-                }
+                EditorGUILayout.HelpBox("You can only connect or disconnect two nodes at a time", MessageType.Warning);
             }
         }
+
+        private void DrawPathDesignSettings()
+        {
+            bool isHUBPathDesign = pathDesign is HUBPathDesign;
+
+            showDesignSettings = EditorGUILayout.Foldout(showDesignSettings, "Design Settings", true);
+            if (showDesignSettings)
+                pathDesign.yOffset = EditorGUILayout.FloatField("Y Offset", pathDesign.yOffset);
+
+            showLinkSettings = EditorGUILayout.Foldout(showLinkSettings, isHUBPathDesign ? "Lock" : "" + "Link Settings", true);
+            if (showLinkSettings)
+            {
+                pathDesign.Width = EditorGUILayout.FloatField("Width", pathDesign.Width);
+                pathDesign.StoppingDistance = EditorGUILayout.FloatField("Stopping Distance", pathDesign.StoppingDistance);
+                pathDesign.linkColor = EditorGUILayout.ColorField("Link Color", pathDesign.linkColor);
+            }
+
+            showNodeSettings = EditorGUILayout.Foldout(showNodeSettings, isHUBPathDesign ? "Lock" : "" + "Node Settings", true);
+            if (showNodeSettings)
+            {
+                pathDesign.spriteNode = (Sprite)EditorGUILayout.ObjectField("Node Sprite", pathDesign.spriteNode, typeof(Sprite), false);
+                pathDesign.NodeScale = EditorGUILayout.Vector2Field("Node Scale", pathDesign.NodeScale);
+                pathDesign.nodeColor = EditorGUILayout.ColorField("Node Color", pathDesign.nodeColor);
+            }
+
+            // if the path design is a HUBPathDesign, don't show other settings
+            if (isHUBPathDesign) return;
+
+            showExitNodeSettings = EditorGUILayout.Foldout(showExitNodeSettings, "Exit Node Settings", true);
+            if (showExitNodeSettings)
+            {
+                pathDesign.exitSpriteNode = (Sprite)EditorGUILayout.ObjectField("Node Sprite", pathDesign.exitSpriteNode, typeof(Sprite), false);
+                pathDesign.ExitNodeScale = EditorGUILayout.Vector2Field("Node Scale", pathDesign.ExitNodeScale);
+                pathDesign.exitNodeColor = EditorGUILayout.ColorField("Node Color", pathDesign.exitNodeColor);
+            }
+        }
+
+        private void DrawHUBPathDesignSettings()
+        {
+            HUBPathDesign hubPathDesign = (HUBPathDesign)pathDesign;
+
+            showUnlockLinkSettings = EditorGUILayout.Foldout(showUnlockLinkSettings, "Unlock Link Settings", true);
+            if (showUnlockLinkSettings)
+            {
+                hubPathDesign.UnlockWidth = EditorGUILayout.FloatField("Width", hubPathDesign.UnlockWidth);
+                hubPathDesign.UnlockStoppingDistance = EditorGUILayout.FloatField("Stopping Distance", hubPathDesign.UnlockStoppingDistance);
+                hubPathDesign.unlockLinkColor = EditorGUILayout.ColorField("Link Color", hubPathDesign.unlockLinkColor);
+            }
+
+            showUnlockNodeSettings = EditorGUILayout.Foldout(showUnlockNodeSettings, "Unlock Node Settings", true);
+            if (showUnlockNodeSettings)
+            {
+                hubPathDesign.unlockSpriteNode = (Sprite)EditorGUILayout.ObjectField("Node Sprite", hubPathDesign.unlockSpriteNode, typeof(Sprite), false);
+                hubPathDesign.UnlockNodeScale = EditorGUILayout.Vector2Field("Node Scale", hubPathDesign.UnlockNodeScale);
+                hubPathDesign.unlockNodeColor = EditorGUILayout.ColorField("Node Color", hubPathDesign.unlockNodeColor);
+            }
+        }
+
+        #endregion
+
+        #region Node Methods
 
         private void CreateConnection(GameObject[] selectedObjects)
         {
@@ -329,7 +359,7 @@ namespace PathSystem
 
             selectedObject.AddComponent<TriggerCustomHandler>();
 
-            OnValidate();
+            ValidatePathDesign();
         }
 
         private void RemoveExitNode()
@@ -341,83 +371,11 @@ namespace PathSystem
                 DestroyImmediate(exitNode.GetComponent<Rigidbody>());
                 exitNode = null;
 
-                OnValidate();
+                ValidatePathDesign();
             }
         }
 
         #endregion
 
-        #region Design
-
-        private void DrawDesign()
-        {
-            // change the values of the ScriptableObject
-            showDesignSettings = EditorGUILayout.Foldout(showDesignSettings, "Design Settings", true);
-            if (showDesignSettings)
-            {
-                pathDesign.yOffset = EditorGUILayout.FloatField("Y Offset", pathDesign.yOffset);
-            }
-
-            // Link Settings
-            showLinkSettings = EditorGUILayout.Foldout(showLinkSettings, pathDesign as HUBPathDesign != null ? "Lock Link Settings" : "Link Settings", true);
-            if (showLinkSettings)
-            {
-                pathDesign.Width = EditorGUILayout.FloatField("Width", pathDesign.Width);
-                pathDesign.StoppingDistance = EditorGUILayout.FloatField("Stopping Distance", pathDesign.StoppingDistance);
-                pathDesign.linkColor = EditorGUILayout.ColorField("Link Color", pathDesign.linkColor);
-            }
-
-            // Node Settings
-            showNodeSettings = EditorGUILayout.Foldout(showNodeSettings, pathDesign as HUBPathDesign != null ? "Lock Node Settings" : "Node Settings", true);
-            if (showNodeSettings)
-            {
-                pathDesign.spriteNode = (Sprite)EditorGUILayout.ObjectField("Node Sprite", pathDesign.spriteNode, typeof(Sprite), false);
-                pathDesign.NodeScale = EditorGUILayout.Vector2Field("Node Scale", pathDesign.NodeScale);
-                pathDesign.nodeColor = EditorGUILayout.ColorField("Node Color", pathDesign.nodeColor);
-            }
-
-            if (pathDesign as HUBPathDesign == null)
-            {
-                // Node Settings
-                showExitNodeSettings = EditorGUILayout.Foldout(showExitNodeSettings, "Exit Node Settings", true);
-                if (showExitNodeSettings)
-                {
-                    pathDesign.exitSpriteNode = (Sprite)EditorGUILayout.ObjectField("Node Sprite", pathDesign.exitSpriteNode, typeof(Sprite), false);
-                    pathDesign.ExitNodeScale = EditorGUILayout.Vector2Field("Node Scale", pathDesign.ExitNodeScale);
-                    pathDesign.exitNodeColor = EditorGUILayout.ColorField("Node Color", pathDesign.exitNodeColor);
-                }
-            }
-
-            // save the changes
-            EditorUtility.SetDirty(pathDesign);
-        }
-
-        private void DrawHUBDesign()
-        {
-            HUBPathDesign pathDesign = (HUBPathDesign)this.pathDesign;
-
-            // Link Settings
-            showUnlockLinkSettings = EditorGUILayout.Foldout(showUnlockLinkSettings, "Unlock Link Settings", true);
-            if (showUnlockLinkSettings)
-            {
-                pathDesign.UnlockWidth = EditorGUILayout.FloatField("Width", pathDesign.UnlockWidth);
-                pathDesign.UnlockStoppingDistance = EditorGUILayout.FloatField("Stopping Distance", pathDesign.UnlockStoppingDistance);
-                pathDesign.unlockLinkColor = EditorGUILayout.ColorField("Link Color", pathDesign.unlockLinkColor);
-            }
-
-            // Node Settings
-            showUnlockNodeSettings = EditorGUILayout.Foldout(showUnlockNodeSettings, "Unlock Node Settings", true);
-            if (showUnlockNodeSettings)
-            {
-                pathDesign.unlockSpriteNode = (Sprite)EditorGUILayout.ObjectField("Node Sprite", pathDesign.unlockSpriteNode, typeof(Sprite), false);
-                pathDesign.UnlockNodeScale = EditorGUILayout.Vector2Field("Node Scale", pathDesign.UnlockNodeScale);
-                pathDesign.unlockNodeColor = EditorGUILayout.ColorField("Node Color", pathDesign.unlockNodeColor);
-            }
-
-            // save the changes
-            EditorUtility.SetDirty(pathDesign);
-        }
-
-        #endregion
     }
 }
