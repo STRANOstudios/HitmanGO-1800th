@@ -28,6 +28,7 @@ namespace PathSystem
         private void UpdateWindow()
         {
             Repaint();
+            OnValidate();
         }
 
         private void FindStyleInScene()
@@ -54,8 +55,6 @@ namespace PathSystem
             if (pathDesign != null)
             {
                 PathComponentModifier.ApplyChanges(pathDesign, exitNode);
-
-                Debug.Log("Path Design has been updated");
             }
         }
 
