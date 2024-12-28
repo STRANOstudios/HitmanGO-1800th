@@ -11,9 +11,9 @@ namespace Agents
         private bool _isPatrolling;
         private bool _isMoving;  // Flag to check if the agent is currently moving.
 
-        public Move(AgentFSM agentFSM)
+        public Move(AgentFSM agent)
         {
-            _agent = agentFSM;
+            _agent = agent;
             _currentPathIndex = 1;
             _isPatrolling = _agent._isPatrol;
             _isMoving = false;  // Initially, the agent is not moving.
@@ -48,6 +48,7 @@ namespace Agents
                 return;
 
             Node targetNode = _agent.path[_currentPathIndex];
+            _agent.currenNode = targetNode;
             Vector3 targetPosition = targetNode.transform.position;
 
             // Start the movement coroutine.
@@ -88,22 +89,33 @@ namespace Agents
             // Once the movement is complete, increment the path index.
             _currentPathIndex++;
 
-            // If the agent has reached the end of the path, reverse it and start again.
+            if (_agent.InPatrol && _currentPathIndex >= _agent.path.Count)
+            {
+                if (_agent.path.Count > 1)
+                {
+                    _agent.path.Reverse();
+                    _currentPathIndex = 1;
+                }
+                else
+                {
+                    if (_agent._debug) Debug.LogWarning("Move state: Path is too short for patrolling.");
+                    _agent._currentState = new Idle(_agent);
+                }
+            }
+
             if (_currentPathIndex >= _agent.path.Count)
             {
-                if (_agent._debug) Debug.Log("Move state: Path complete.");
+                if (_agent._debug) Debug.Log("Move state: Target reached.");
 
-                // Reverse the path and reset to the first node.
-                _agent.path.Reverse();
-                _currentPathIndex = 1;
-                _isPatrolling = !_isPatrolling;
+                _agent.path.Clear();
 
-                if (_agent._debug)
+                // Se l'agente non è in patrolling, fermati
+                if (!_agent.InPatrol)
                 {
-                    Debug.Log(_isPatrolling
-                        ? "Move state: Returning to start."
-                        : "Move state: Going forward.");
+                    _agent._currentState = new Idle(_agent); // Passa allo stato Idle.
                 }
+
+                yield break; // Termina la coroutine.
             }
 
             // Once the movement is complete, set the moving flag to false.

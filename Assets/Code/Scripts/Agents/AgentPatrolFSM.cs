@@ -24,7 +24,7 @@ namespace Agents
                 patrolPath.Clear();
 
                 transform.position = nodeStart.transform.position;
-                currentNode = nodeStart;
+                startNode = nodeStart;
 
                 patrolPath.Add(nodeStart);
 

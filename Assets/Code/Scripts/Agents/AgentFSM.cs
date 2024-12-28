@@ -2,6 +2,7 @@ using PathSystem;
 using PathSystem.PathFinding;
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Agents
@@ -10,7 +11,7 @@ namespace Agents
     public class AgentFSM : MonoBehaviour
     {
         [Title("Settings")]
-        [SerializeField, Required] protected Node currentNode;
+        [SerializeField, Required] protected Node startNode;
         [SerializeField] public bool _isPatrol = false;
         [SerializeField, ShowIf("_isPatrol"), Required] protected Node _targetNode;
 
@@ -46,9 +47,13 @@ namespace Agents
 
         #endregion
 
-        public FSMInterface _currentState;
+        // Flags
+        public bool InPatrol;
 
+        public FSMInterface _currentState;
         private PathFinder pathFinder;
+
+        public Node currenNode;
 
         private void Start()
         {
@@ -63,7 +68,6 @@ namespace Agents
                 else
                 {
                     _currentState = new Move(this);
-                    _targetNodeDebug = _targetNode;
                 }
             }
         }
@@ -74,6 +78,8 @@ namespace Agents
             {
                 Pathfinding();
             }
+
+            InPatrol = _isPatrol;
         }
 
         private void OnEnable()
@@ -123,7 +129,7 @@ namespace Agents
 
         private void Pathfinding()
         {
-            if (currentNode == null || _targetNode == null)
+            if (startNode == null || _targetNode == null)
             {
                 if (_debug) Debug.LogWarning("Pathfinding failed: currentNode or _targetNode is null.");
                 return;
@@ -138,7 +144,7 @@ namespace Agents
             };
 
             // Inizializza il pathfinder
-            pathFinder.Initialize(currentNode, _targetNode);
+            pathFinder.Initialize(startNode, _targetNode);
 
             // Calcola il percorso passo dopo passo
             path.Clear();
@@ -165,14 +171,36 @@ namespace Agents
 
         #region Setters
 
+        /// <summary>
+        /// Set the target node. If the agent is in patrol, it stops patrolling.
+        /// </summary>
         public Node SetTargetNode
         {
             set
             {
                 _targetNode = value;
+
+                if(currenNode != null)
+                {
+                    startNode = currenNode;
+                }
+
+                if (_isPatrol && value != null)
+                {
+                    // Stop patrolling when a specific target is assigned.
+                    InPatrol = false;
+                }
+
+                if (_debug) Debug.Log($"Target node set to {_targetNode.name}. Patrolling stopped: {!_isPatrol}");
+
+                // Start pathfinding to the target node.
                 Pathfinding();
+
+                // Change the state to Move, as the agent needs to move to the target.
+                _currentState = new Move(this);
             }
         }
+
 
         #endregion
 

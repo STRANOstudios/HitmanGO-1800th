@@ -2,16 +2,16 @@ namespace Agents
 {
     public class Idle : FSMInterface
     {
-        private AgentFSM _agentFSM;
+        private AgentFSM _agent;
 
-        public Idle(AgentFSM agentFSM)
+        public Idle(AgentFSM agent)
         {
-            _agentFSM = agentFSM;
+            _agent = agent;
         }
 
         public void Enter()
         {
-            _agentFSM.SetTargetNode = null;
+            _agent.SetTargetNode = null;
         }
 
         public void Exit() { }
