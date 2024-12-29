@@ -204,7 +204,6 @@ namespace Agents
         /// </summary>
         public void NodeFinder()
         {
-            List<Node> nodes = FindAnyObjectByType<GameManager>().GetNodes;
             Vector3 forwardDirection = transform.forward;
             bool isForwardAlongZ = Mathf.Abs(forwardDirection.x) < Mathf.Abs(forwardDirection.z);
 
@@ -223,6 +222,7 @@ namespace Agents
 
             InPatrol = true;
             Pathfinding();
+            
             _currentState = new Move(this);
         }
 

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class GameManager : Singleton<GameManager>
+public class GameManager : MonoBehaviour
 {
     [Header("Events")]
     [Tooltip("Event triggered when the player win")]
@@ -18,16 +18,6 @@ public class GameManager : Singleton<GameManager>
     // flags
     private bool _isPlayerTurn = true;
     private bool _isPlayerAtExit = false;
-
-    private static List<Node> cachedNodes;
-    
-    private void Awake()
-    {
-        if (cachedNodes == null || cachedNodes.Count == 0)
-        {
-            cachedNodes = new List<Node>(FindObjectsOfType<Node>());
-        }
-    }
 
     private void OnEnable()
     {
@@ -69,12 +59,6 @@ public class GameManager : Singleton<GameManager>
     {
         _isPlayerAtExit = true;
     }
-
-    #endregion
-
-    #region Getters & Setters
-
-    public List<Node> GetNodes => cachedNodes;
 
     #endregion
 

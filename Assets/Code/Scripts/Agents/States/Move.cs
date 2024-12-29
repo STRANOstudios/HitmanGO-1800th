@@ -11,10 +11,13 @@ namespace Agents
         private bool _isPatrolling;
         private bool _isMoving;  // Flag to check if the agent is currently moving.
 
+        private bool _setted = false;
+
         public Move(AgentFSM agent)
         {
             _agent = agent;
-            _currentPathIndex = agent.currentNode == null ? 1 : agent.path.IndexOf(agent.currentNode) + 1;
+            _currentPathIndex = 1;
+
             _isPatrolling = _agent._isPatrol;
             _isMoving = false;  // Initially, the agent is not moving.
         }
@@ -47,18 +50,26 @@ namespace Agents
             if (_agent.path.Count == 0)
                 return;
 
+            if (_agent.InPatrol && !_setted)
+            {
+                _currentPathIndex = _agent.path.IndexOf(_agent.currentNode) + 1;
+                _setted = true;
+            }
+
             Node targetNode = _agent.path[_currentPathIndex];
             _agent.currentNode = targetNode;
             Vector3 targetPosition = targetNode.transform.position;
 
             // Start the movement coroutine.
-            _agent.StartCoroutine(MoveToNode(targetPosition, targetNode));
+            _agent.StartCoroutine(MoveToNode(targetPosition));
         }
 
-        private IEnumerator MoveToNode(Vector3 targetPosition, Node targetNode)
+        private IEnumerator MoveToNode(Vector3 targetPosition)
         {
             // Set the moving flag to true since we are starting movement.
             _isMoving = true;
+
+            #region Move Animation
 
             _agent.transform.GetPositionAndRotation(out Vector3 startPosition, out Quaternion startRotation);
             float moveDuration = 4.5f / _agent.speed;  // Calculate the time to move based on agent speed.
@@ -86,15 +97,21 @@ namespace Agents
                 yield return null; // Wait for the next frame to continue movement.
             }
 
-            // Once the movement is complete, increment the path index.
+            #endregion
+
             _currentPathIndex++;
+
+            if (_agent._debug)
+            {
+                Debug.Log($"Current Path Index: {_currentPathIndex}, Path Count: {_agent.path.Count}");
+            }
 
             if (_agent.InPatrol && _currentPathIndex >= _agent.path.Count)
             {
                 if (_agent.path.Count > 1)
                 {
-                    _agent.path.Reverse();
-                    _currentPathIndex = 1;
+                    _agent.path.Reverse();  // Reverse the path to go back
+                    _currentPathIndex = 1;  // Skip the first node as we are already at it
                 }
                 else
                 {
@@ -103,23 +120,26 @@ namespace Agents
                 }
             }
 
+            // If path index exceeds the path count, we have reached the target or end of the path.
             if (_currentPathIndex >= _agent.path.Count)
             {
                 if (_agent._debug) Debug.Log("Move state: Target reached.");
 
                 _agent.path.Clear();
 
-                // Se l'agente non è in patrolling, fermati
                 if (!_agent._isPatrol)
                 {
-                    _agent._currentState = new Idle(_agent); // Passa allo stato Idle.
+                    _agent._currentState = new Idle(_agent);
                 }
                 else
                 {
-                    _agent.NodeFinder();
+                    if (!_agent.InPatrol)
+                    {
+                        _agent.NodeFinder(); // Recalculate the path.
+                    }
                 }
 
-                yield break; // Termina la coroutine.
+                yield break; // End the movement.
             }
 
             // Once the movement is complete, set the moving flag to false.
