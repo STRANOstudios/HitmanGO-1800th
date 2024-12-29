@@ -2,12 +2,12 @@ using Sirenix.OdinInspector;
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class ShiftManager : MonoBehaviour
 {
     [Title("Settings")]
     [SerializeField, Unit(Units.Second, Units.Second), MinValue(0f)] private float _shiftEnemyDuration = 1f;
+    [SerializeField, Unit(Units.Second, Units.Second), MinValue(0f)] private float _shiftPlayerDuration = 10f;
 
     [Title("Debug")]
     [SerializeField] private bool _debug = false;
@@ -18,7 +18,7 @@ public class ShiftManager : MonoBehaviour
         get
         {
             Sirenix.Utilities.Editor.GUIHelper.RequestRepaint();
-            return IsPlayerTurn ? 0 : Time.time - timerStart;
+            return IsPlayerTurn ? Time.time - timerStart : 0;
         }
     }
 
@@ -43,6 +43,19 @@ public class ShiftManager : MonoBehaviour
 
     private void Start()
     {
+        if (!_autoShift)
+        {
+            BeginPlayerTurn();
+        }
+        else
+        {
+            StartCoroutine(Timer());
+        }
+    }
+
+    private IEnumerator Timer()
+    {
+        yield return new WaitForSeconds(1);
         BeginPlayerTurn();
     }
 
@@ -66,26 +79,39 @@ public class ShiftManager : MonoBehaviour
 
     private void BeginPlayerTurn()
     {
-        OnPlayerTurn?.Invoke();
+        timerStart = Time.time;
         IsPlayerTurn = true;
+        OnPlayerTurn?.Invoke();
 
         if (_autoShift)
         {
-            BeginEnemyTurn();
+            StartCoroutine(PlayerTurnTimer());
         }
     }
 
     private IEnumerator EnemyTurnTimer()
     {
+        Debug.Log("Enemy Turn");
         yield return new WaitForSeconds(_shiftEnemyDuration);
         BeginPlayerTurn();
     }
 
+    private IEnumerator PlayerTurnTimer()
+    {
+        Debug.Log("Player Turn");
+        yield return new WaitForSeconds(_shiftPlayerDuration);
+        BeginEnemyTurn();
+    }
+
     private string GetProgressBarLabel()
     {
+
+        if (!Application.isPlaying) return "";
+
         if (IsPlayerTurn)
         {
-            return "Player Turn";
+            double elapsed = Time.time - timerStart;
+            return $"Player Turn ({elapsed:F1}/{_shiftPlayerDuration}s)";
         }
         else
         {

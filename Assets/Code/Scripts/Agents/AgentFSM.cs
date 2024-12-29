@@ -31,6 +31,10 @@ namespace Agents
         [SerializeField] protected Node _targetNodeDebug;
         [FoldoutGroup("Debug"), ShowIf("_debug")]
         [ShowInInspector, ReadOnly] public List<Node> path = new();
+        [FoldoutGroup("Debug"), ShowIf("_debug")]
+        [ShowInInspector, ReadOnly] public bool InPatrol;
+        [FoldoutGroup("Debug"), ShowIf("_debug")]
+        [ShowInInspector, ReadOnly] public Node currentNode;
 
         [SerializeField] protected bool _drawGizmos = false;
 
@@ -51,15 +55,10 @@ namespace Agents
 
         #endregion
 
-        // Flags
-        public bool InPatrol;
-
         public FSMInterface _currentState;
         private PathFinder pathFinder;
 
         private Coroutine pathfindingCoroutine;
-
-        public Node currentNode;
         private Node lastStartNode = null, lastTargetNode = null;
 
         private void Start()
@@ -87,6 +86,8 @@ namespace Agents
             }
 
             InPatrol = _isPatrol;
+
+            if (startNode != null) transform.position = startNode.transform.position;
         }
 
         private void OnEnable()
@@ -222,7 +223,7 @@ namespace Agents
 
             InPatrol = true;
             Pathfinding();
-            
+
             _currentState = new Move(this);
         }
 
