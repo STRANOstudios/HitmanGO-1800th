@@ -1,10 +1,13 @@
 using PathSystem;
 using PathSystem.PathFinding;
 using Sirenix.OdinInspector;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.RuleTile.TilingRuleOutput;
 
 namespace Agents
 {
@@ -54,7 +57,10 @@ namespace Agents
         public FSMInterface _currentState;
         private PathFinder pathFinder;
 
+        private Coroutine pathfindingCoroutine;
+
         public Node currentNode;
+        private Node lastStartNode = null, lastTargetNode = null;
 
         private void Start()
         {
@@ -130,10 +136,28 @@ namespace Agents
 
         private void Pathfinding()
         {
+            if (!gameObject.activeInHierarchy) return;
+
+            if (pathfindingCoroutine != null)
+            {
+                StopCoroutine(pathfindingCoroutine);
+            }
+
+            pathfindingCoroutine = StartCoroutine(CalculatePathCoroutine());
+        }
+
+        private IEnumerator CalculatePathCoroutine()
+        {
+            // If the start node or the target node has changed, recalculate the path
+            //if (startNode == lastStartNode && _targetNode == lastTargetNode) yield break;
+
+            lastStartNode = startNode;
+            lastTargetNode = _targetNode;
+
             if (startNode == null || _targetNode == null)
             {
                 if (_debug) Debug.LogWarning("Pathfinding failed: currentNode or _targetNode is null.");
-                return;
+                yield break;
             }
 
             // Usa Dijkstra come algoritmo
@@ -152,6 +176,7 @@ namespace Agents
             while (pathFinder.Status == PathFinderStatus.RUNNING)
             {
                 pathFinder.Step();
+                yield return null;
             }
 
             // Se il percorso è stato trovato, estrai il cammino
@@ -168,98 +193,123 @@ namespace Agents
             {
                 if (_debug) Debug.LogWarning("Pathfinding failed: No path found.");
             }
+
+            pathfindingCoroutine = null; // Reset 
         }
 
         /// <summary>
-        /// Search the edge nodes in forward and backward
+        /// Finds the furthest connected nodes relative to the agent's current position, 
+        /// considering both forward and backward directions along the dominant axis. 
+        /// Ensures that the nodes are reachable via their connections.
         /// </summary>
         public void NodeFinder()
         {
-            List<Node> nodes = new(FindObjectsOfType<Node>());
-
-            // Calcoliamo la direzione forward dell'agente (vettore normalizzato)
+            List<Node> nodes = FindAnyObjectByType<GameManager>().GetNodes;
             Vector3 forwardDirection = transform.forward;
-
-            // Determiniamo l'asse di ricerca in base alla direzione di forward
             bool isForwardAlongZ = Mathf.Abs(forwardDirection.x) < Mathf.Abs(forwardDirection.z);
 
-            // Filtra i nodi per il loro asse di ricerca (X o Z)
-            IEnumerable<Node> filteredNodes = nodes
-                .Where(node => isForwardAlongZ
-                    ? Mathf.Approximately(node.transform.position.x, transform.position.x) // Se lungo Z, stessi X
-                    : Mathf.Approximately(node.transform.position.z, transform.position.z)); // Se lungo X, stessi Z
+            HashSet<Node> visited = new(); // Used to track visited nodes
 
-            // Funzione per verificare se un nodo è raggiungibile dal currentNode
-            Node FindFurthestConnectedNode(IEnumerable<Node> candidates, bool isForward)
-            {
-                Node current = currentNode;
-                Node furthestNode = currentNode;
-                float furthestDistance = 0f;
+            // Furthest node forward
+            Node nodeForward = FindFurthestConnectedNodeRecursively(
+                currentNode, visited, isForwardAlongZ, false);
 
-                HashSet<Node> visited = new();
-                Queue<Node> queue = new();
-                queue.Enqueue(current);
-                visited.Add(current);
+            // Furthest node backward
+            Node nodeBackward = FindFurthestConnectedNodeRecursively(
+                currentNode, visited, isForwardAlongZ, true);
 
-                while (queue.Count > 0)
-                {
-                    Node node = queue.Dequeue();
-
-                    // Verifica se il nodo corrente è tra i candidati e calcola la distanza
-                    if (candidates.Contains(node))
-                    {
-                        float distance = Vector3.Distance(currentNode.transform.position, node.transform.position);
-                        if (distance > furthestDistance)
-                        {
-                            // Controlla la direzione
-                            if (isForward)
-                            {
-                                if (isForwardAlongZ && node.transform.position.z > currentNode.transform.position.z ||
-                                    !isForwardAlongZ && node.transform.position.x > currentNode.transform.position.x)
-                                {
-                                    furthestNode = node;
-                                    furthestDistance = distance;
-                                }
-                            }
-                            else
-                            {
-                                if (isForwardAlongZ && node.transform.position.z < currentNode.transform.position.z ||
-                                    !isForwardAlongZ && node.transform.position.x < currentNode.transform.position.x)
-                                {
-                                    furthestNode = node;
-                                    furthestDistance = distance;
-                                }
-                            }
-                        }
-                    }
-
-                    // Aggiungi i vicini non visitati
-                    foreach (Node neighbour in node.neighbours)
-                    {
-                        if (!visited.Contains(neighbour))
-                        {
-                            visited.Add(neighbour);
-                            queue.Enqueue(neighbour);
-                        }
-                    }
-                }
-
-                return furthestNode;
-            }
-
-            // Cerca il nodo più distante avanti
-            Node nodeForward = FindFurthestConnectedNode(filteredNodes, true);
-
-            // Cerca il nodo più distante indietro
-            Node nodeBackward = FindFurthestConnectedNode(filteredNodes, false);
-
-            // Assegna targetNode e startNode
             _targetNode = nodeBackward;
             startNode = nodeForward;
 
             InPatrol = true;
             Pathfinding();
             _currentState = new Move(this);
+        }
+
+        private bool IsAlignedWithAxis(Node node, bool isForwardAlongZ)
+        {
+            return isForwardAlongZ
+                ? Mathf.Approximately(node.transform.position.x, transform.position.x)
+                : Mathf.Approximately(node.transform.position.z, transform.position.z);
+        }
+
+        private Node FindFurthestConnectedNodeRecursively(Node currentNode, HashSet<Node> visited, bool isForwardAlongZ, bool isForward)
+        {
+            // Add the current node to the visited nodes
+            visited.Add(currentNode);
+
+            // Make sure the node is aligned with the correct axis
+            if (!IsAlignedWithAxis(currentNode, isForwardAlongZ))
+                return null; // If it's not aligned, we don't consider it
+
+            // Check if there are unvisited neighbors
+            Node furthestNode = currentNode;
+            float furthestDistance = 0f;
+
+            foreach (Node neighbour in currentNode.neighbours)
+            {
+                // Don't explore nodes we've already visited
+                if (visited.Contains(neighbour))
+                    continue;
+
+                // If the node is aligned and hasn't been visited, explore it
+                if (IsAlignedWithAxis(neighbour, isForwardAlongZ))
+                {
+                    // Calculate the distance from the current node
+                    float distance = Vector3.Distance(currentNode.transform.position, neighbour.transform.position);
+
+                    // Check if this node is farther and in the right direction
+                    if (distance > furthestDistance && IsInDirection(neighbour, isForwardAlongZ, isForward))
+                    {
+                        // Recursively explore the neighbor to find the furthest node
+                        Node potentialNode = FindFurthestConnectedNodeRecursively(neighbour, visited, isForwardAlongZ, isForward);
+
+                        // If we find a further node, update the furthest node
+                        if (potentialNode != null)
+                        {
+                            float potentialDistance = Vector3.Distance(currentNode.transform.position, potentialNode.transform.position);
+                            if (potentialDistance > furthestDistance)
+                            {
+                                furthestNode = potentialNode;
+                                furthestDistance = potentialDistance;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Return the furthest node found
+            return furthestNode;
+        }
+
+        private bool IsInDirection(Node node, bool isForwardAlongZ, bool isForward)
+        {
+            if (isForwardAlongZ)
+            {
+                return isForward
+                    ? node.transform.position.z > currentNode.transform.position.z
+                    : node.transform.position.z < currentNode.transform.position.z;
+            }
+            else
+            {
+                return isForward
+                    ? node.transform.position.x > currentNode.transform.position.x
+                    : node.transform.position.x < currentNode.transform.position.x;
+            }
+        }
+
+        private bool IsNodeConnected(Node node, HashSet<Node> visitedNodes)
+        {
+            foreach (var neighbour in node.neighbours)
+            {
+                if (!visitedNodes.Contains(neighbour))
+                {
+                    if (_debug) Debug.DrawLine(node.transform.position + Vector3.up, node.transform.position + Vector3.up * 2, Color.green, 3f);
+                    return true;
+                }
+            }
+            if (_debug) Debug.DrawLine(node.transform.position + Vector3.up, node.transform.position + Vector3.up * 2, Color.red, 3f);
+            return false;
         }
 
         #region Setters
