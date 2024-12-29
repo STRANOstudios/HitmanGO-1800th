@@ -189,21 +189,69 @@ namespace Agents
                     ? Mathf.Approximately(node.transform.position.x, transform.position.x) // Se lungo Z, stessi X
                     : Mathf.Approximately(node.transform.position.z, transform.position.z)); // Se lungo X, stessi Z
 
-            // Cerca il nodo più lontano in avanti (più grande)
-            Node nodeForward = filteredNodes
-                .Where(node => isForwardAlongZ
-                    ? node.transform.position.z > transform.position.z // Nodo avanti (maggiore Z)
-                    : node.transform.position.x > transform.position.x) // Nodo avanti (maggiore X)
-                .OrderByDescending(node => isForwardAlongZ ? node.transform.position.z : node.transform.position.x) // Più lontano
-                .FirstOrDefault() ?? currentNode;
+            // Funzione per verificare se un nodo è raggiungibile dal currentNode
+            Node FindFurthestConnectedNode(IEnumerable<Node> candidates, bool isForward)
+            {
+                Node current = currentNode;
+                Node furthestNode = currentNode;
+                float furthestDistance = 0f;
 
-            // Cerca il nodo più lontano indietro (più piccolo)
-            Node nodeBackward = filteredNodes
-                .Where(node => isForwardAlongZ
-                    ? node.transform.position.z < transform.position.z // Nodo indietro (minore Z)
-                    : node.transform.position.x < transform.position.x) // Nodo indietro (minore X)
-                .OrderBy(node => isForwardAlongZ ? node.transform.position.z : node.transform.position.x) // Più lontano
-                .FirstOrDefault() ?? currentNode;
+                HashSet<Node> visited = new();
+                Queue<Node> queue = new();
+                queue.Enqueue(current);
+                visited.Add(current);
+
+                while (queue.Count > 0)
+                {
+                    Node node = queue.Dequeue();
+
+                    // Verifica se il nodo corrente è tra i candidati e calcola la distanza
+                    if (candidates.Contains(node))
+                    {
+                        float distance = Vector3.Distance(currentNode.transform.position, node.transform.position);
+                        if (distance > furthestDistance)
+                        {
+                            // Controlla la direzione
+                            if (isForward)
+                            {
+                                if (isForwardAlongZ && node.transform.position.z > currentNode.transform.position.z ||
+                                    !isForwardAlongZ && node.transform.position.x > currentNode.transform.position.x)
+                                {
+                                    furthestNode = node;
+                                    furthestDistance = distance;
+                                }
+                            }
+                            else
+                            {
+                                if (isForwardAlongZ && node.transform.position.z < currentNode.transform.position.z ||
+                                    !isForwardAlongZ && node.transform.position.x < currentNode.transform.position.x)
+                                {
+                                    furthestNode = node;
+                                    furthestDistance = distance;
+                                }
+                            }
+                        }
+                    }
+
+                    // Aggiungi i vicini non visitati
+                    foreach (Node neighbour in node.neighbours)
+                    {
+                        if (!visited.Contains(neighbour))
+                        {
+                            visited.Add(neighbour);
+                            queue.Enqueue(neighbour);
+                        }
+                    }
+                }
+
+                return furthestNode;
+            }
+
+            // Cerca il nodo più distante avanti
+            Node nodeForward = FindFurthestConnectedNode(filteredNodes, true);
+
+            // Cerca il nodo più distante indietro
+            Node nodeBackward = FindFurthestConnectedNode(filteredNodes, false);
 
             // Assegna targetNode e startNode
             _targetNode = nodeBackward;
@@ -213,7 +261,6 @@ namespace Agents
             Pathfinding();
             _currentState = new Move(this);
         }
-
 
         #region Setters
 
