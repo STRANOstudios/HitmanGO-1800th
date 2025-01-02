@@ -45,7 +45,7 @@ namespace Agents
         [SerializeField, ColorPalette] protected Color _raylineColor = Color.green;
         // destination
         [FoldoutGroup("Gizmos"), ShowIf("_drawGizmos")]
-        [SerializeField, ColorPalette] protected Color _targetNodeColor = Color.yellow;
+        [SerializeField, ColorPalette] public Color _targetNodeColor = Color.yellow;
         // pathfinder
         [FoldoutGroup("Gizmos"), ShowIf("_drawGizmos")]
         [SerializeField, ColorPalette] protected Color _pathColor = Color.red;
@@ -205,6 +205,8 @@ namespace Agents
         /// </summary>
         public void NodeFinder()
         {
+            transform.rotation = Quaternion.Euler(0, NormalizeAngleOptimized(transform.rotation.y), 0);
+
             Vector3 forwardDirection = transform.forward;
             bool isForwardAlongZ = Mathf.Abs(forwardDirection.x) < Mathf.Abs(forwardDirection.z);
 
@@ -311,6 +313,22 @@ namespace Agents
             }
             if (_debug) Debug.DrawLine(node.transform.position + Vector3.up, node.transform.position + Vector3.up * 2, Color.red, 3f);
             return false;
+        }
+
+        private float NormalizeAngleOptimized(float angle)
+        {
+            // Normalizza l'angolo nell'intervallo [-180, 180]
+            angle = Mathf.Repeat(angle + 180, 360) - 180;
+
+            // Confronta l'angolo con ciascun valore target
+            if (Mathf.Abs(angle - 0) <= 45)
+                return 0;
+            else if (Mathf.Abs(angle - 90) <= 45)
+                return 90;
+            else if (Mathf.Abs(angle - -90) <= 45)
+                return -90;
+            else
+                return 180;
         }
 
         #region Setters

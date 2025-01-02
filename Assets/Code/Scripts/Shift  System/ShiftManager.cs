@@ -7,18 +7,19 @@ public class ShiftManager : MonoBehaviour
 {
     [Title("Settings")]
     [SerializeField, Unit(Units.Second, Units.Second), MinValue(0f)] private float _shiftEnemyDuration = 1f;
+    [ShowIf("_autoShift")]
     [SerializeField, Unit(Units.Second, Units.Second), MinValue(0f)] private float _shiftPlayerDuration = 10f;
 
     [Title("Debug")]
     [SerializeField] private bool _debug = false;
     [SerializeField, ShowIf("_debug")] private bool _autoShift = false;
-    [ShowInInspector, HideLabel, ShowIf("_debug"), ProgressBar(0, "_shiftEnemyDuration", DrawValueLabel = true, CustomValueStringGetter = "$GetProgressBarLabel")]
+    [ShowInInspector, HideLabel, ProgressBar(0, "_shiftEnemyDuration", DrawValueLabel = true, CustomValueStringGetter = "$GetProgressBarLabel")]
     private double Animate
     {
         get
         {
             Sirenix.Utilities.Editor.GUIHelper.RequestRepaint();
-            return IsPlayerTurn ? Time.time - timerStart : 0;
+            return !IsPlayerTurn ? Time.time - timerStart : 0;
         }
     }
 
@@ -91,14 +92,14 @@ public class ShiftManager : MonoBehaviour
 
     private IEnumerator EnemyTurnTimer()
     {
-        Debug.Log("Enemy Turn");
+        if (_debug) Debug.Log("Enemy Turn");
         yield return new WaitForSeconds(_shiftEnemyDuration);
         BeginPlayerTurn();
     }
 
     private IEnumerator PlayerTurnTimer()
     {
-        Debug.Log("Player Turn");
+        if (_debug) Debug.Log("Player Turn");
         yield return new WaitForSeconds(_shiftPlayerDuration);
         BeginEnemyTurn();
     }
@@ -110,8 +111,12 @@ public class ShiftManager : MonoBehaviour
 
         if (IsPlayerTurn)
         {
-            double elapsed = Time.time - timerStart;
-            return $"Player Turn ({elapsed:F1}/{_shiftPlayerDuration}s)";
+            if (_autoShift)
+            {
+                double elapsed = Time.time - timerStart;
+                return $"Player Turn ({elapsed:F1}/{_shiftPlayerDuration}s)";
+            }
+            return "Player Turn";
         }
         else
         {

@@ -9,7 +9,7 @@ public class AgentsTester : MonoBehaviour
 {
     [Header("Target Settings")]
     public Node TargetNode;
-    [SerializeField, Min(0)] private int turnsBeforeChange = 15;         // Number of turns before changing the target.
+    [SerializeField, Range(0, 15)] private int turnsBeforeChange = 15;         // Number of turns before changing the target.
 
     [Header("Agent Settings")]
     public bool infinite = true;
