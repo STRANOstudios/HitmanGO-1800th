@@ -24,7 +24,7 @@ namespace Agents
         [Title("Debug")]
         [SerializeField] private bool _debug;
         [FoldoutGroup("Debug"), ShowIf("_debug")]
-        [SerializeField] private Node _targetNode;
+        [SerializeField] private Node targetNode;
 
         [SerializeField] protected bool _drawGizmos = false;
 
@@ -43,7 +43,11 @@ namespace Agents
         [FoldoutGroup("Gizmos"), ShowIf("_drawGizmos")]
         [SerializeField, ColorPalette] private Color _nextPathColor = Color.magenta;
 
+        // control
+        private Node _targetNode = null;
+
         private static AgentsManager _instance;
+
         public static AgentsManager Instance
         {
             get
@@ -77,6 +81,21 @@ namespace Agents
         {
             if (Instance == null) _instance = this;
             else if (Instance != this) DestroyImmediate(this);
+        }
+
+        private void OnValidate()
+        {
+            if (!Application.isPlaying)
+            {
+                _targetNode = targetNode = null;
+                return;
+            }
+
+            if (targetNode != null && targetNode != _targetNode)
+            {
+                _targetNode = targetNode;
+                NewTarget(targetNode, IdleAgents.Concat(MovingAgents).ToList());
+            }
         }
 
         private void OnEnable()
@@ -119,11 +138,25 @@ namespace Agents
                     {
                         if (_debug) Debug.Log("isPatrol");
 
-                        if (agent.Path[agent.Index - 2] == _targetNode)
+                        if (agent.CurrentNode == targetNode && !agent.HasReachedTarget)
                         {
+                            agent.HasReachedTarget = true;
+
                             if (_debug) Debug.Log("Refactoring path");
 
-                            // pathfinding
+                            NodeFinder(agent);
+
+                            agent.Index = agent.Path.IndexOf(agent.CurrentNode);
+
+                            Debug.Log("Index (modified): " + agent.Index);
+
+                            if(agent.Index >= agent.Path.Count - 1)
+                            {
+                                agent.Path.Reverse();
+                                agent.Index = 1;
+                            }
+
+                            Debug.Log("Index (modified 2): " + agent.Index);
                         }
                         else
                         {
@@ -198,6 +231,9 @@ namespace Agents
                     MovingAgents.Add(agent);
                     IdleAgents.Remove(agent);
                 }
+
+                agent.Index = 0;
+                agent.HasReachedTarget = false;
             }
         }
 
@@ -314,7 +350,6 @@ namespace Agents
             while (pathFinder.Status == PathFinderStatus.RUNNING)
             {
                 pathFinder.Step(); // Execute one step of the A* algorithm
-                yield return null; // Wait for the next frame
             }
 
             // If the path is found, extract the path
@@ -344,12 +379,12 @@ namespace Agents
         {
             // ======================= normalizzare la rotazione dell'agent
 
-            Vector3 forwardDirection = transform.forward;
+            Vector3 forwardDirection = agent.transform.forward;
             bool isForwardAlongZ = Mathf.Abs(forwardDirection.x) < Mathf.Abs(forwardDirection.z);
 
             HashSet<Node> visited = new(); // Used to track visited nodes
 
-            Node currentNode = agent.Path[agent.Index];
+            Node currentNode = agent.Path[agent.Index - 1];
 
             // Furthest node forward
             Node nodeForward = FindFurthestConnectedNodeRecursively(agent, currentNode, visited, isForwardAlongZ, false);
@@ -357,14 +392,16 @@ namespace Agents
             // Furthest node backward
             Node nodeBackward = FindFurthestConnectedNodeRecursively(agent, currentNode, visited, isForwardAlongZ, true);
 
+            if (_debug) Debug.Log("nodeForward: " + nodeForward + ", nodeBackward: " + nodeBackward);
+
             Pathfinding(agent, nodeForward, nodeBackward);
         }
 
-        private bool IsAlignedWithAxis(Node node, bool isForwardAlongZ)
+        private bool IsAlignedWithAxis(Agent agent, Node node, bool isForwardAlongZ)
         {
             return isForwardAlongZ
-                ? Mathf.Approximately(node.transform.position.x, transform.position.x)
-                : Mathf.Approximately(node.transform.position.z, transform.position.z);
+                ? Mathf.Approximately(node.transform.position.x, agent.transform.position.x)
+                : Mathf.Approximately(node.transform.position.z, agent.transform.position.z);
         }
 
         private Node FindFurthestConnectedNodeRecursively(Agent agent, Node currentNode, HashSet<Node> visited, bool isForwardAlongZ, bool isForward)
@@ -373,8 +410,10 @@ namespace Agents
             visited.Add(currentNode);
 
             // Make sure the node is aligned with the correct axis
-            if (!IsAlignedWithAxis(currentNode, isForwardAlongZ))
+            if (!IsAlignedWithAxis(agent, currentNode, isForwardAlongZ))
+            {
                 return null; // If it's not aligned, we don't consider it
+            }
 
             // Check if there are unvisited neighbors
             Node furthestNode = currentNode;
@@ -387,10 +426,13 @@ namespace Agents
                     continue;
 
                 // If the node is aligned and hasn't been visited, explore it
-                if (IsAlignedWithAxis(neighbour, isForwardAlongZ))
+                if (IsAlignedWithAxis(agent, neighbour, isForwardAlongZ))
                 {
                     // Calculate the distance from the current node
                     float distance = Vector3.Distance(currentNode.transform.position, neighbour.transform.position);
+
+                    Debug.Log(distance > furthestDistance);
+                    Debug.Log(IsInDirection(agent, neighbour, isForwardAlongZ, isForward));
 
                     // Check if this node is farther and in the right direction
                     if (distance > furthestDistance && IsInDirection(agent, neighbour, isForwardAlongZ, isForward))
@@ -418,7 +460,7 @@ namespace Agents
 
         private bool IsInDirection(Agent agent, Node node, bool isForwardAlongZ, bool isForward)
         {
-            Node currentNode = agent.Path[agent.Index];
+            Node currentNode = agent.Path[agent.Index - 1];
 
             if (isForwardAlongZ)
             {
@@ -432,20 +474,6 @@ namespace Agents
                     ? node.transform.position.x > currentNode.transform.position.x
                     : node.transform.position.x < currentNode.transform.position.x;
             }
-        }
-
-        private bool IsNodeConnected(Node node, HashSet<Node> visitedNodes)
-        {
-            foreach (var neighbour in node.neighbours)
-            {
-                if (!visitedNodes.Contains(neighbour))
-                {
-                    if (_debug) Debug.DrawLine(node.transform.position + Vector3.up, node.transform.position + Vector3.up * 2, Color.green, 3f);
-                    return true;
-                }
-            }
-            if (_debug) Debug.DrawLine(node.transform.position + Vector3.up, node.transform.position + Vector3.up * 2, Color.red, 3f);
-            return false;
         }
 
         #endregion
@@ -467,10 +495,10 @@ namespace Agents
             }
 
             // Gizmo target node
-            if (_targetNode != null)
+            if (targetNode != null)
             {
                 Gizmos.color = _targetNodeColor;
-                Gizmos.DrawSphere(PositionNormalize(_targetNode.transform.position), 0.15f);
+                Gizmos.DrawSphere(PositionNormalize(targetNode.transform.position), 0.15f);
             }
 
             // Gizmo path

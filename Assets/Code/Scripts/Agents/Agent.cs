@@ -23,6 +23,7 @@ namespace Agents
 
         [FoldoutGroup("Debug"), ShowIf("_debug")]
         [ReadOnly] public int Index = 0;
+        [ReadOnly] private Node currentNode = null;
 
         [FoldoutGroup("Debug"), ShowIf("_debug")]
         [ReadOnly] public List<Node> Path = new();
@@ -34,6 +35,9 @@ namespace Agents
         private string _animSX = "RotationSX";
         private string _anim180 = "Rotation180";
 
+        // flag
+        public bool HasReachedTarget = false;
+
         // control
         private bool _isPatrol = false;
         private Node _startNode = null;
@@ -42,6 +46,8 @@ namespace Agents
         private void Awake()
         {
             RegisterToManager();
+
+            currentNode = startNode;
 
             if (transform.TryGetComponent(out Animator animator) && animator.isActiveAndEnabled)
             {
@@ -73,6 +79,8 @@ namespace Agents
                 {
                     _startNode = startNode;
                     transform.position = startNode.transform.position;
+
+                    currentNode = startNode;
                 }
                 
                 if(endNode != null && endNode != _endNode)
@@ -106,6 +114,8 @@ namespace Agents
 
         public void Move()
         {
+            currentNode = Path[Index];
+
             if (_animator)
             {
                 if (_debug) Debug.Log("Moving with Animation");
@@ -197,6 +207,7 @@ namespace Agents
         public bool IsPatrol => isPatrol;
         public Node StartNode => startNode;
         public Node EndNode => endNode;
+        public Node CurrentNode => currentNode;
 
         #endregion
 

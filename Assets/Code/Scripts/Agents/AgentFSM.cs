@@ -147,7 +147,7 @@ namespace Agents
         private IEnumerator CalculatePathCoroutine()
         {
             // If the start node or the target node has changed, recalculate the path
-            //if (startNode == lastStartNode && _targetNode == lastTargetNode) yield break;
+            //if (startNode == lastStartNode && targetNode == lastTargetNode) yield break;
 
             lastStartNode = startNode;
             lastTargetNode = _targetNode;
