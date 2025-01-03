@@ -43,13 +43,40 @@ namespace Agents
         [FoldoutGroup("Gizmos"), ShowIf("_drawGizmos")]
         [SerializeField, ColorPalette] private Color _nextPathColor = Color.magenta;
 
-        public static AgentsManager Instance { get; private set; }
+        private static AgentsManager _instance;
+        public static AgentsManager Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = FindObjectOfType<AgentsManager>();
+                }
+                return _instance;
+            }
+        }
 
         private PathFinder pathFinder;
 
+#if UNITY_EDITOR
+        [InitializeOnLoadMethod]
+        private static void InitializeInEditor()
+        {
+            if (Instance == null)
+            {
+                AgentsManager existingInstance = FindObjectOfType<AgentsManager>();
+                if (existingInstance != null)
+                {
+                    _instance = existingInstance;
+                }
+            }
+        }
+#endif
+
         private void Awake()
         {
-            if (Instance == null) Instance = this;
+            if (Instance == null) _instance = this;
+            else if (Instance != this) DestroyImmediate(this);
         }
 
         private void OnEnable()
@@ -71,7 +98,7 @@ namespace Agents
 
             if (result) return;
 
-            // moving
+            Move(MovingAgents);
         }
 
         private void Attack(Agent agent) { }
@@ -82,22 +109,34 @@ namespace Agents
             {
                 agent.Index++;
 
-                if (agent.Index > agent.Path.Count)
+                if (_debug) Debug.Log("Index: " + agent.Index + " / " + agent.Path.Count);
+
+                if (agent.Index >= agent.Path.Count)
                 {
+                    if (_debug) Debug.Log("End of path");
+
                     if (agent.IsPatrol)
                     {
-                        if (agent.Path[agent.Index--] == _targetNode)
+                        if (_debug) Debug.Log("isPatrol");
+
+                        if (agent.Path[agent.Index - 2] == _targetNode)
                         {
+                            if (_debug) Debug.Log("Refactoring path");
+
                             // pathfinding
                         }
                         else
                         {
+                            if (_debug) Debug.Log("Reversing path");
+
                             agent.Path.Reverse();
                             agent.Index = 1;
                         }
                     }
                     else
                     {
+                        if (_debug) Debug.Log("Idle to Moving");
+
                         IdleAgents.Add(agent);
                         MovingAgents.Remove(agent);
                         agent.Path.Clear();
@@ -148,7 +187,7 @@ namespace Agents
         /// <param name="agents"></param>
         public void NewTarget(Node targetNode, List<Agent> agents)
         {
-            if(_debug) Debug.Log("New Target");
+            if (_debug) Debug.Log("New Target");
 
             foreach (Agent agent in agents)
             {
@@ -168,9 +207,16 @@ namespace Agents
         /// <param name="agent"></param>
         public void RegisterAgent(Agent agent)
         {
-            if(_debug) Debug.Log("Register agent");
+            if (_debug) Debug.Log("Register agent");
 
-            IdleAgents.Add(agent);
+            if (agent.IsPatrol)
+            {
+                if (!MovingAgents.Contains(agent)) MovingAgents.Add(agent);
+            }
+            else
+            {
+                if (!IdleAgents.Contains(agent)) IdleAgents.Add(agent);
+            }
         }
 
         /// <summary>
@@ -179,7 +225,7 @@ namespace Agents
         /// <param name="agent"></param>
         public void UnregisterAgent(Agent agent)
         {
-            if(_debug) Debug.Log("Unregister agent");
+            if (_debug) Debug.Log("Unregister agent");
 
             if (IdleAgents.Contains(agent))
             {
@@ -197,19 +243,25 @@ namespace Agents
         /// <param name="agent"></param>
         public void ChangeList(Agent agent)
         {
-            if (IdleAgents.Contains(agent))
+            if (agent.IsPatrol)
             {
-                if (_debug) Debug.Log("Idle to Moving");
+                if (IdleAgents.Contains(agent))
+                {
+                    if (_debug) Debug.Log("Idle to Moving");
 
-                IdleAgents.Remove(agent);
-                MovingAgents.Add(agent);
+                    IdleAgents.Remove(agent);
+                    MovingAgents.Add(agent);
+                }
             }
             else
             {
-                if (_debug) Debug.Log("Moving to Idle");
+                if (MovingAgents.Contains(agent))
+                {
+                    if (_debug) Debug.Log("Moving to Idle");
 
-                MovingAgents.Remove(agent);
-                IdleAgents.Add(agent);
+                    MovingAgents.Remove(agent);
+                    IdleAgents.Add(agent);
+                }
             }
         }
 
@@ -219,7 +271,7 @@ namespace Agents
         /// <param name="agent"></param>
         public void UpdatePath(Agent agent)
         {
-            if(_debug) Debug.Log("Agent changed");
+            if (_debug) Debug.Log("Agent changed");
 
             Pathfinding(agent, agent.StartNode, agent.EndNode);
         }
@@ -237,42 +289,45 @@ namespace Agents
 
         private IEnumerator CalculatePathCoroutine(Agent agent, Node startNode, Node targetNode)
         {
-            if(_debug) Debug.Log("Pathfinding");
+            if (_debug) Debug.Log("Pathfinding");
 
+            // Check if startNode and targetNode are valid
             if (startNode == null || targetNode == null)
             {
-                if (_debug) Debug.LogWarning("Pathfinding failed: currentNode or _targetNode is null.");
+                if (_debug) Debug.LogWarning("Pathfinding failed: startNode or targetNode is null.");
                 yield break;
             }
 
-            // Usa Dijkstra come algoritmo
-            pathFinder = new DijkstraPathFinder
+            // Use A* as the pathfinding algorithm
+            pathFinder = new AStarPathFinder
             {
-                // Definisci le funzioni di costo per G e H
-                GCostFunction = (a, b) => Vector3.Distance(a.transform.position, b.transform.position),
-                HCostFunction = (a, b) => 0 // Per Dijkstra, H è sempre 0
+                // Define the cost functions for G and H
+                GCostFunction = (a, b) => Vector3.Distance(a.transform.position, b.transform.position), // G cost: distance between nodes
+                HCostFunction = (a, b) => Vector3.Distance(a.transform.position, b.transform.position)  // H cost: heuristic (Euclidean distance)
             };
 
-            // Inizializza il pathfinder
-            pathFinder.Initialize(startNode, _targetNode);
+            // Initialize the pathfinder with the start and target nodes
+            pathFinder.Initialize(startNode, targetNode);
 
-            // Calcola il percorso passo dopo passo
+            // Calculate the path step by step
             agent.Path.Clear();
             while (pathFinder.Status == PathFinderStatus.RUNNING)
             {
-                pathFinder.Step();
-                yield return null;
+                pathFinder.Step(); // Execute one step of the A* algorithm
+                yield return null; // Wait for the next frame
             }
 
-            // Se il percorso è stato trovato, estrai il cammino
+            // If the path is found, extract the path
             if (pathFinder.Status == PathFinderStatus.SUCCESS)
             {
                 PathFinder.PathFinderNode node = pathFinder.CurrentNode;
                 while (node != null)
                 {
-                    agent.Path.Insert(0, node.Location);
-                    node = node.Parent;
+                    agent.Path.Insert(0, node.Location); // Add the node to the path (in reverse order)
+                    node = node.Parent; // Move to the parent node
                 }
+
+                if (_debug) Debug.Log("Path found with " + agent.Path.Count + " nodes.");
             }
             else
             {
