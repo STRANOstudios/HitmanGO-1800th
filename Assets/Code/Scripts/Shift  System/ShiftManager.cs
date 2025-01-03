@@ -12,7 +12,7 @@ public class ShiftManager : MonoBehaviour
 
     [Title("Debug")]
     [SerializeField] private bool _debug = false;
-    [SerializeField, ShowIf("_debug")] private bool _autoShift = false;
+    [SerializeField] private bool _autoShift = false;
     [ShowInInspector, HideLabel, ProgressBar(0, "_shiftEnemyDuration", DrawValueLabel = true, CustomValueStringGetter = "$GetProgressBarLabel")]
     private double Animate
     {
