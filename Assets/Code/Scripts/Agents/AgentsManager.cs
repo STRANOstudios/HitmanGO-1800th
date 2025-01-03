@@ -146,11 +146,11 @@ namespace Agents
 
                             NodeFinder(agent);
 
-                            agent.Index = agent.Path.IndexOf(agent.CurrentNode);
+                            agent.Index = agent.Path.IndexOf(agent.CurrentNode) + 1;
 
                             Debug.Log("Index (modified): " + agent.Index);
 
-                            if(agent.Index >= agent.Path.Count - 1)
+                            if (agent.Index >= agent.Path.Count - 1)
                             {
                                 agent.Path.Reverse();
                                 agent.Index = 1;
@@ -375,10 +375,8 @@ namespace Agents
         /// considering both forward and backward directions along the dominant axis. 
         /// Ensures that the nodes are reachable via their connections.
         /// </summary>
-        private void NodeFinder(Agent agent)
+        private async void NodeFinder(Agent agent)
         {
-            // ======================= normalizzare la rotazione dell'agent
-
             Vector3 forwardDirection = agent.transform.forward;
             bool isForwardAlongZ = Mathf.Abs(forwardDirection.x) < Mathf.Abs(forwardDirection.z);
 
@@ -386,94 +384,82 @@ namespace Agents
 
             Node currentNode = agent.Path[agent.Index - 1];
 
-            // Furthest node forward
-            Node nodeForward = FindFurthestConnectedNodeRecursively(agent, currentNode, visited, isForwardAlongZ, false);
+            // Trova il nodo più lontano in avanti e indietro
+            Node nodeForward = await FindFurthestConnectedNodeRecursivelyAsync(agent, currentNode, visited, isForwardAlongZ, false);
+            Node nodeBackward = await FindFurthestConnectedNodeRecursivelyAsync(agent, currentNode, visited, isForwardAlongZ, true);
 
-            // Furthest node backward
-            Node nodeBackward = FindFurthestConnectedNodeRecursively(agent, currentNode, visited, isForwardAlongZ, true);
+            // Verifica se è necessario invertire le direzioni
+            if (ShouldInvertDirections(agent))
+            {
+                (nodeBackward, nodeForward) = (nodeForward, nodeBackward);
+            }
 
             if (_debug) Debug.Log("nodeForward: " + nodeForward + ", nodeBackward: " + nodeBackward);
 
             Pathfinding(agent, nodeForward, nodeBackward);
         }
 
-        private bool IsAlignedWithAxis(Agent agent, Node node, bool isForwardAlongZ)
+        private async Task<Node> FindFurthestConnectedNodeRecursivelyAsync(Agent agent, Node currentNode, HashSet<Node> visited, bool isForwardAlongZ, bool isForward)
         {
-            return isForwardAlongZ
-                ? Mathf.Approximately(node.transform.position.x, agent.transform.position.x)
-                : Mathf.Approximately(node.transform.position.z, agent.transform.position.z);
-        }
-
-        private Node FindFurthestConnectedNodeRecursively(Agent agent, Node currentNode, HashSet<Node> visited, bool isForwardAlongZ, bool isForward)
-        {
-            // Add the current node to the visited nodes
             visited.Add(currentNode);
 
-            // Make sure the node is aligned with the correct axis
             if (!IsAlignedWithAxis(agent, currentNode, isForwardAlongZ))
             {
-                return null; // If it's not aligned, we don't consider it
+                return null;
             }
 
-            // Check if there are unvisited neighbors
             Node furthestNode = currentNode;
             float furthestDistance = 0f;
 
-            foreach (Node neighbour in currentNode.neighbours)
+            await Task.WhenAll(currentNode.neighbours.Select(async neighbour =>
             {
-                // Don't explore nodes we've already visited
-                if (visited.Contains(neighbour))
-                    continue;
-
-                // If the node is aligned and hasn't been visited, explore it
-                if (IsAlignedWithAxis(agent, neighbour, isForwardAlongZ))
+                if (visited.Contains(neighbour) || !IsAlignedWithAxis(agent, neighbour, isForwardAlongZ))
                 {
-                    // Calculate the distance from the current node
-                    float distance = Vector3.Distance(currentNode.transform.position, neighbour.transform.position);
+                    return;
+                }
 
-                    Debug.Log(distance > furthestDistance);
-                    Debug.Log(IsInDirection(agent, neighbour, isForwardAlongZ, isForward));
+                float distance = Vector3.Distance(currentNode.transform.position, neighbour.transform.position);
 
-                    // Check if this node is farther and in the right direction
-                    if (distance > furthestDistance && IsInDirection(agent, neighbour, isForwardAlongZ, isForward))
+                if (distance > furthestDistance && IsInDirection(agent, neighbour, isForwardAlongZ, isForward))
+                {
+                    Node potentialNode = await FindFurthestConnectedNodeRecursivelyAsync(agent, neighbour, visited, isForwardAlongZ, isForward);
+
+                    if (potentialNode != null)
                     {
-                        // Recursively explore the neighbor to find the furthest node
-                        Node potentialNode = FindFurthestConnectedNodeRecursively(agent, neighbour, visited, isForwardAlongZ, isForward);
-
-                        // If we find a further node, update the furthest node
-                        if (potentialNode != null)
+                        float potentialDistance = Vector3.Distance(currentNode.transform.position, potentialNode.transform.position);
+                        if (potentialDistance > furthestDistance)
                         {
-                            float potentialDistance = Vector3.Distance(currentNode.transform.position, potentialNode.transform.position);
-                            if (potentialDistance > furthestDistance)
-                            {
-                                furthestNode = potentialNode;
-                                furthestDistance = potentialDistance;
-                            }
+                            furthestNode = potentialNode;
+                            furthestDistance = potentialDistance;
                         }
                     }
                 }
-            }
+            }));
 
-            // Return the furthest node found
             return furthestNode;
         }
 
-        private bool IsInDirection(Agent agent, Node node, bool isForwardAlongZ, bool isForward)
+        private bool IsAlignedWithAxis(Agent agent, Node node, bool isForwardAlongZ, float tolerance = 0.1f)
+        {
+            float diff = isForwardAlongZ ? node.transform.position.x - agent.transform.position.x : node.transform.position.z - agent.transform.position.z;
+            return Mathf.Abs(diff) < tolerance;
+        }
+
+        private bool IsInDirection(Agent agent, Node node, bool isForwardAlongZ, bool isForward, float tolerance = 0.1f)
         {
             Node currentNode = agent.Path[agent.Index - 1];
+            float diff = isForwardAlongZ ? node.transform.position.z - currentNode.transform.position.z : node.transform.position.x - currentNode.transform.position.x;
+            return isForward ? diff > tolerance : diff < -tolerance;
+        }
 
-            if (isForwardAlongZ)
-            {
-                return isForward
-                    ? node.transform.position.z > currentNode.transform.position.z
-                    : node.transform.position.z < currentNode.transform.position.z;
-            }
-            else
-            {
-                return isForward
-                    ? node.transform.position.x > currentNode.transform.position.x
-                    : node.transform.position.x < currentNode.transform.position.x;
-            }
+        private bool ShouldInvertDirections(Agent agent)
+        {
+            float angle = agent.transform.eulerAngles.y;
+
+            if (angle > 180) angle -= 360;
+
+            float tolerance = 10f; 
+            return Mathf.Abs(Mathf.Abs(angle) - 180) < tolerance;
         }
 
         #endregion

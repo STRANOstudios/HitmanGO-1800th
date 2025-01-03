@@ -42,7 +42,7 @@ namespace Agents
         // control
         private bool _isPatrol = false;
         private Node _startNode = null;
-        private Node _endNode = null; 
+        private Node _endNode = null;
 
         private void Awake()
         {
@@ -60,7 +60,7 @@ namespace Agents
         {
             if (Application.isPlaying) return;
 
-            if(_debug) Debug.Log("OnValidate " + gameObject.name);
+            if (_debug) Debug.Log("OnValidate " + gameObject.name);
 
             if (isPatrol != _isPatrol)
             {
@@ -74,17 +74,17 @@ namespace Agents
                 }
             }
 
-            if(startNode != null)
+            if (startNode != null)
             {
-                if(startNode != _startNode)
+                if (startNode != _startNode)
                 {
                     _startNode = startNode;
                     transform.position = startNode.transform.position;
 
                     currentNode = startNode;
                 }
-                
-                if(endNode != null && endNode != _endNode)
+
+                if (endNode != null && endNode != _endNode)
                 {
                     _endNode = endNode;
                     AgentsManager.Instance.UpdatePath(this);
@@ -154,17 +154,14 @@ namespace Agents
             }
 
             // Wait for the animation to finish
-            yield return new WaitForSeconds(_animator.GetCurrentAnimatorStateInfo(0).length);
-
-            _animator.applyRootMotion = false;
+            yield return new WaitForSeconds(_animator.GetCurrentAnimatorStateInfo(0).length + 0.1f);
 
             // round position
             Vector3 currentPosition = transform.position;
             currentPosition.x = RoundToNearest(currentPosition.x, 2f);
+            currentPosition.y = 0.01f;
             currentPosition.z = RoundToNearest(currentPosition.z, 2f);
             transform.position = currentPosition;
-
-            _animator.applyRootMotion = true;
         }
 
         private IEnumerator WithCode()
