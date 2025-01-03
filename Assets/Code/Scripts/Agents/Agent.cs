@@ -23,7 +23,11 @@ namespace Agents
 
         [FoldoutGroup("Debug"), ShowIf("_debug")]
         [ReadOnly] public int Index = 0;
-        [ReadOnly] private Node currentNode = null;
+        [FoldoutGroup("Debug"), ShowIf("_debug")]
+        [ShowInInspector, ReadOnly] private Node currentNode = null;
+
+        [FoldoutGroup("Debug"), ShowIf("_debug")]
+        [ReadOnly] public bool HasReachedTarget = false;
 
         [FoldoutGroup("Debug"), ShowIf("_debug")]
         [ReadOnly] public List<Node> Path = new();
@@ -34,9 +38,6 @@ namespace Agents
         private string _animDX = "RotationDX";
         private string _animSX = "RotationSX";
         private string _anim180 = "Rotation180";
-
-        // flag
-        public bool HasReachedTarget = false;
 
         // control
         private bool _isPatrol = false;
@@ -152,7 +153,18 @@ namespace Agents
                 _animator.CrossFadeInFixedTime(_animStep, 0);
             }
 
-            yield return null;
+            // Wait for the animation to finish
+            yield return new WaitForSeconds(_animator.GetCurrentAnimatorStateInfo(0).length);
+
+            _animator.applyRootMotion = false;
+
+            // round position
+            Vector3 currentPosition = transform.position;
+            currentPosition.x = RoundToNearest(currentPosition.x, 2f);
+            currentPosition.z = RoundToNearest(currentPosition.z, 2f);
+            transform.position = currentPosition;
+
+            _animator.applyRootMotion = true;
         }
 
         private IEnumerator WithCode()
@@ -198,6 +210,11 @@ namespace Agents
             directionToTarget.y = 0;
 
             return Quaternion.LookRotation(directionToTarget);
+        }
+
+        private float RoundToNearest(float value, float nearest)
+        {
+            return Mathf.Round(value / nearest) * nearest;
         }
 
         #endregion
