@@ -1,6 +1,7 @@
 using PathSystem;
 using PathSystem.PathFinding;
 using Sirenix.OdinInspector;
+using Sirenix.Utilities;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,14 +23,18 @@ namespace Agents
         [SerializeField, Range(0, 5)] private float rayDistance;
 
         [Title("Debug")]
-        [SerializeField] private bool _debug;
+        [SerializeField] private bool _debug = false;
+
+        [FoldoutGroup("Debug"), ShowIf("_debug")]
+        [SerializeField] private bool _debugLog = false;
+
         [FoldoutGroup("Debug"), ShowIf("_debug")]
         [SerializeField] private Node targetNode;
 
         [SerializeField] protected bool _drawGizmos = false;
 
         [FoldoutGroup("Gizmos"), ShowIf("_drawGizmos")]
-        [SerializeField] private float yOffet = 0.5f;
+        [SerializeField] private float yOffset = 0.5f;
         // raycast
         [FoldoutGroup("Gizmos"), ShowIf("_drawGizmos")]
         [SerializeField, ColorPalette] private Color _raylineColor = Color.green;
@@ -124,25 +129,27 @@ namespace Agents
 
         private void Move(List<Agent> agents)
         {
-            foreach (Agent agent in agents)
+            for (int i = agents.Count - 1; i >= 0; i--)
             {
+                Agent agent = agents[i];
+
                 agent.Index++;
 
-                if (_debug) Debug.Log("Index: " + agent.Index + " / " + agent.Path.Count);
+                if (_debugLog) Debug.Log("Index: " + agent.Index + " / " + agent.Path.Count);
 
                 if (agent.Index >= agent.Path.Count)
                 {
-                    if (_debug) Debug.Log("End of path");
+                    if (_debugLog) Debug.Log("End of path");
 
                     if (agent.IsPatrol)
                     {
-                        if (_debug) Debug.Log("isPatrol");
+                        if (_debugLog) Debug.Log("isPatrol");
 
                         if (agent.CurrentNode == targetNode && !agent.HasReachedTarget)
                         {
                             agent.HasReachedTarget = true;
 
-                            if (_debug) Debug.Log("Refactoring path");
+                            if (_debugLog) Debug.Log("Refactoring path");
 
                             NodeFinder(agent);
 
@@ -160,7 +167,7 @@ namespace Agents
                         }
                         else
                         {
-                            if (_debug) Debug.Log("Reversing path");
+                            if (_debugLog) Debug.Log("Reversing path");
 
                             agent.Path.Reverse();
                             agent.Index = 1;
@@ -168,7 +175,7 @@ namespace Agents
                     }
                     else
                     {
-                        if (_debug) Debug.Log("Idle to Moving");
+                        if (_debugLog) Debug.Log("Idle to Moving");
 
                         IdleAgents.Add(agent);
                         MovingAgents.Remove(agent);
@@ -195,7 +202,7 @@ namespace Agents
 
                 if (Physics.Raycast(ray, out RaycastHit hit, rayDistance, layerMask))
                 {
-                    if (_debug) Debug.Log(hit.transform.name);
+                    if (_debugLog) Debug.Log(hit.transform.name);
 
                     if (hit.transform.CompareTag("Player"))
                     {
@@ -220,11 +227,20 @@ namespace Agents
         /// <param name="agents"></param>
         public void NewTarget(Node targetNode, List<Agent> agents)
         {
-            if (_debug) Debug.Log("New Target");
+            if (_debugLog) Debug.Log("New Target");
+
+            _targetNode = this.targetNode = targetNode;
 
             foreach (Agent agent in agents)
             {
-                Pathfinding(agent, agent.Path[agent.Index], targetNode);
+                Node StartNode = agent.StartNode;
+
+                if (!agent.Path.IsNullOrEmpty())
+                {
+                    StartNode = agent.Path[agent.Index];
+                }
+
+                Pathfinding(agent, StartNode, targetNode);
 
                 if (IdleAgents.Contains(agent))
                 {
@@ -243,7 +259,7 @@ namespace Agents
         /// <param name="agent"></param>
         public void RegisterAgent(Agent agent)
         {
-            if (_debug) Debug.Log("Register agent");
+            if (_debugLog) Debug.Log("Register agent");
 
             if (agent.IsPatrol)
             {
@@ -261,7 +277,7 @@ namespace Agents
         /// <param name="agent"></param>
         public void UnregisterAgent(Agent agent)
         {
-            if (_debug) Debug.Log("Unregister agent");
+            if (_debugLog) Debug.Log("Unregister agent");
 
             if (IdleAgents.Contains(agent))
             {
@@ -283,7 +299,7 @@ namespace Agents
             {
                 if (IdleAgents.Contains(agent))
                 {
-                    if (_debug) Debug.Log("Idle to Moving");
+                    if (_debugLog) Debug.Log("Idle to Moving");
 
                     IdleAgents.Remove(agent);
                     MovingAgents.Add(agent);
@@ -293,7 +309,7 @@ namespace Agents
             {
                 if (MovingAgents.Contains(agent))
                 {
-                    if (_debug) Debug.Log("Moving to Idle");
+                    if (_debugLog) Debug.Log("Moving to Idle");
 
                     MovingAgents.Remove(agent);
                     IdleAgents.Add(agent);
@@ -307,7 +323,7 @@ namespace Agents
         /// <param name="agent"></param>
         public void UpdatePath(Agent agent)
         {
-            if (_debug) Debug.Log("Agent changed");
+            if (_debugLog) Debug.Log("Agent changed");
 
             Pathfinding(agent, agent.StartNode, agent.EndNode);
         }
@@ -325,12 +341,12 @@ namespace Agents
 
         private IEnumerator CalculatePathCoroutine(Agent agent, Node startNode, Node targetNode)
         {
-            if (_debug) Debug.Log("Pathfinding");
+            if (_debugLog) Debug.Log("Pathfinding");
 
             // Check if startNode and targetNode are valid
             if (startNode == null || targetNode == null)
             {
-                if (_debug) Debug.LogWarning("Pathfinding failed: startNode or targetNode is null.");
+                if (_debugLog) Debug.LogWarning("Pathfinding failed: startNode or targetNode is null.");
                 yield break;
             }
 
@@ -362,11 +378,11 @@ namespace Agents
                     node = node.Parent; // Move to the parent node
                 }
 
-                if (_debug) Debug.Log("Path found with " + agent.Path.Count + " nodes.");
+                if (_debugLog) Debug.Log("Path found with " + agent.Path.Count + " nodes.");
             }
             else
             {
-                if (_debug) Debug.LogWarning("Pathfinding failed: No path found.");
+                if (_debugLog) Debug.LogWarning("Pathfinding failed: No path found.");
             }
         }
 
@@ -394,7 +410,7 @@ namespace Agents
                 (nodeBackward, nodeForward) = (nodeForward, nodeBackward);
             }
 
-            if (_debug) Debug.Log("nodeForward: " + nodeForward + ", nodeBackward: " + nodeBackward);
+            if (_debugLog) Debug.Log("nodeForward: " + nodeForward + ", nodeBackward: " + nodeBackward);
 
             Pathfinding(agent, nodeForward, nodeBackward);
         }
@@ -519,7 +535,7 @@ namespace Agents
 
         protected Vector3 PositionNormalize(Vector3 position)
         {
-            return new Vector3(position.x, yOffet, position.z);
+            return new Vector3(position.x, yOffset, position.z);
         }
 
         #endregion

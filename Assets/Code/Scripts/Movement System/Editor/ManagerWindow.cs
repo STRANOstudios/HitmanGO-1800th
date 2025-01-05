@@ -165,7 +165,9 @@ namespace PathSystem
             if (showDesignSettings)
                 pathDesign.yOffset = EditorGUILayout.FloatField("Y Offset", pathDesign.yOffset);
 
-            showLinkSettings = EditorGUILayout.Foldout(showLinkSettings, isHUBPathDesign ? "Lock" : "" + "Link Settings", true);
+            string tmp = isHUBPathDesign ? "Lock" : "";
+
+            showLinkSettings = EditorGUILayout.Foldout(showLinkSettings, tmp + "Link Settings", true);
             if (showLinkSettings)
             {
                 pathDesign.Width = EditorGUILayout.FloatField("Width", pathDesign.Width);
@@ -173,7 +175,7 @@ namespace PathSystem
                 pathDesign.linkColor = EditorGUILayout.ColorField("Link Color", pathDesign.linkColor);
             }
 
-            showNodeSettings = EditorGUILayout.Foldout(showNodeSettings, isHUBPathDesign ? "Lock" : "" + "Node Settings", true);
+            showNodeSettings = EditorGUILayout.Foldout(showNodeSettings, tmp + "Node Settings", true);
             if (showNodeSettings)
             {
                 pathDesign.spriteNode = (Sprite)EditorGUILayout.ObjectField("Node Sprite", pathDesign.spriteNode, typeof(Sprite), false);

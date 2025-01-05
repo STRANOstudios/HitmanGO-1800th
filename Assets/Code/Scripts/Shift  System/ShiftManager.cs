@@ -23,7 +23,7 @@ public class ShiftManager : MonoBehaviour
         }
     }
 
-    [ShowIf("_debug"), Button]
+    [Button]
     private void ChangeTurn()
     {
         if (IsPlayerTurn)
