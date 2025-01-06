@@ -1,7 +1,6 @@
 using Agents;
 using PathSystem;
 using Sirenix.OdinInspector;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,8 +11,8 @@ namespace Interactables
         [Title("Settings")]
         [SerializeField, Required] private Node _node;
         [SerializeField] private LayerMask _layerMask;
-        [SerializeField] private Vector3 _position = Vector3.zero;
-        [SerializeField] private Vector3 _scale = Vector3.one;
+        [SerializeField] private Vector3 _center = Vector3.zero;
+        [SerializeField] private Vector3 _size = Vector3.one;
 
         [SerializeField] private bool setTarget = false;
 
@@ -29,7 +28,7 @@ namespace Interactables
         {
             agents.Clear();
 
-            Collider[] colliders = Physics.OverlapBox(transform.position + _position, _scale / 2, Quaternion.identity, _layerMask);
+            Collider[] colliders = Physics.OverlapBox(transform.position + _center, _size / 2, Quaternion.identity, _layerMask);
 
             foreach (Collider collider in colliders)
             {
@@ -60,7 +59,7 @@ namespace Interactables
             Gizmos.DrawSphere(transform.position + Vector3.up, 0.5f);
 
             Gizmos.color = _boxColor;
-            Gizmos.DrawWireCube(transform.position + _position, _scale);
+            Gizmos.DrawWireCube(transform.position + _center, _size);
         }
     }
 }
