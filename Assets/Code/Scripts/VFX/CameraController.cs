@@ -267,7 +267,7 @@ namespace VFX
 
         private void OnDrawGizmos()
         {
-            if (!_drawGizmos) return;
+            if (!_drawGizmos || !enabled) return;
 
             if (lookAt != null)
             {
