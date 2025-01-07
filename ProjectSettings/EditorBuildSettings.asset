@@ -11,6 +11,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Levels/Scenes/World 1/HUB.unity
     guid: 5e1413a4a85710649ab1dff61ed1acc4
+  - enabled: 1
+    path: Assets/Levels/Scenes/Test Agents 1.unity
+    guid: 38854782d99ce9b469f6d15954f74e7a
+  - enabled: 1
+    path: Assets/Levels/Scenes/Test caricamento.unity
+    guid: 8529355c6eaa5b349936a73be59a76ed
   m_configObjects:
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000,
       guid: be35a643367049649bbb564827ed23d3, type: 2}

@@ -25,7 +25,7 @@ public class SceneLoader : Singleton<SceneLoader>
 #if UNITY_EDITOR
         Application.targetFrameRate = 60;
 #else
-        Application.targetFrameRate = 30;
+        Application.targetFrameRate = 20;
 #endif
     }
 
@@ -145,9 +145,13 @@ public class SceneLoader : Singleton<SceneLoader>
 
     private IEnumerator LoadMultipleScenesAsync(string[] sceneNames)
     {
+        bool isFirstScene = true;
+
         foreach (string sceneName in sceneNames)
         {
-            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+            LoadSceneMode loadMode = isFirstScene ? LoadSceneMode.Single : LoadSceneMode.Additive;
+
+            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName, loadMode);
             asyncLoad.allowSceneActivation = false;
 
             while (!asyncLoad.isDone)
@@ -158,6 +162,8 @@ public class SceneLoader : Singleton<SceneLoader>
                 }
                 yield return null;
             }
+
+            isFirstScene = false;
         }
     }
 }
