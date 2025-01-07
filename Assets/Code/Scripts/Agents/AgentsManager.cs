@@ -2,6 +2,7 @@ using PathSystem;
 using PathSystem.PathFinding;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,6 +66,8 @@ namespace Agents
             }
         }
 
+        public static event Action OnKillPlayer;
+
         private PathFinder pathFinder;
 
 #if UNITY_EDITOR
@@ -106,12 +109,13 @@ namespace Agents
         private void OnEnable()
         {
             ShiftManager.OnEnemyTurn += OnTurnStart;
-            // on agent death
+            KillHandler.OnKillAgent += OnKill;
         }
 
         private void OnDisable()
         {
             ShiftManager.OnEnemyTurn -= OnTurnStart;
+            KillHandler.OnKillAgent -= OnKill;
         }
 
         #region Main Methods
@@ -120,12 +124,13 @@ namespace Agents
         {
             bool result = await CheckRayCast(IdleAgents.Concat(MovingAgents).ToList());
 
-            if (result) return;
-
             Move(MovingAgents);
-        }
 
-        private void Attack(Agent agent) { }
+            if (result)
+            {
+                OnKillPlayer?.Invoke();
+            }
+        }
 
         private void Move(List<Agent> agents)
         {
@@ -177,6 +182,7 @@ namespace Agents
                     {
                         if (_debugLog) Debug.Log("Idle to Moving");
 
+                        agent.StartNode = targetNode;
                         IdleAgents.Add(agent);
                         MovingAgents.Remove(agent);
                         agent.Path.Clear();
@@ -194,11 +200,16 @@ namespace Agents
 
         private async Task<bool> CheckRayCast(List<Agent> agents)
         {
+            Debug.Log("Raycast");
+
             foreach (Agent agent in agents)
             {
-                Ray ray = new(transform.position, transform.forward);
+                Vector3 pos = agent.transform.position;
+                pos.y = yOffset;
 
-                if (_drawGizmos) Debug.DrawRay(ray.origin, ray.direction * rayDistance, _raylineColor, 1f);
+                Ray ray = new(pos, agent.transform.forward);
+
+                if (_drawGizmos) Debug.DrawRay(ray.origin, ray.direction * rayDistance, Color.magenta, 1f);
 
                 if (Physics.Raycast(ray, out RaycastHit hit, rayDistance, layerMask))
                 {
@@ -206,7 +217,8 @@ namespace Agents
 
                     if (hit.transform.CompareTag("Player"))
                     {
-                        Attack(agent);
+                        if (_debugLog) Debug.Log("Player Detected");
+
                         return true;
                     }
                 }
@@ -214,6 +226,18 @@ namespace Agents
                 await Task.Yield();
             }
             return false;
+        }
+
+        private void OnKill(Agent agent)
+        {
+            if (IdleAgents.Contains(agent))
+            {
+                IdleAgents.Remove(agent);
+            }
+            else
+            {
+                MovingAgents.Remove(agent);
+            }
         }
 
         #endregion

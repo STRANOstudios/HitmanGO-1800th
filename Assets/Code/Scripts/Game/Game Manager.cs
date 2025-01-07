@@ -1,6 +1,5 @@
-using PathSystem;
+using Agents;
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -15,18 +14,22 @@ public class GameManager : MonoBehaviour
 
     [Serializable] public class TriggerEvent : UnityEvent { }
 
-    // flags
-    private bool _isPlayerTurn = true;
-    private bool _isPlayerAtExit = false;
-
     private void OnEnable()
     {
-        ShiftManager.OnEnemyTurn += WinCheck;
+        // Win condition
+        ExitNode.Exit += Win;
+        KillHandler.OnKill += Win;
+
+        // Lose condition
+        AgentsManager.OnKillPlayer += Lose;
     }
 
     private void OnDisable()
     {
-        ShiftManager.OnEnemyTurn += WinCheck;
+        ExitNode.Exit -= Win;
+        KillHandler.OnKill -= Win;
+
+        AgentsManager.OnKillPlayer -= Lose;
     }
 
     // player win
@@ -40,26 +43,5 @@ public class GameManager : MonoBehaviour
     {
         _onLoseTrigger?.Invoke();
     }
-
-    #region private methods
-
-    private void WinCheck()
-    {
-        if(_isPlayerAtExit && _isPlayerTurn)
-        {
-            Win();
-        }
-    }
-
-    #endregion
-
-    #region public methods
-
-    public void OnPlayerEnter()
-    {
-        _isPlayerAtExit = true;
-    }
-
-    #endregion
 
 }

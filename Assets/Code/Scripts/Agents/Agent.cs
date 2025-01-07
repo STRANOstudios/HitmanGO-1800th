@@ -219,7 +219,15 @@ namespace Agents
         #region Getters and Setters
 
         public bool IsPatrol => isPatrol;
-        public Node StartNode => startNode;
+        public Node StartNode
+        {
+            get => startNode;
+            set
+            {
+                startNode = value;
+                transform.position = startNode.transform.position;
+            }
+        }
         public Node EndNode => endNode;
         public Node CurrentNode => currentNode;
 

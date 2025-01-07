@@ -39,7 +39,7 @@ namespace PathSystem
         private void InitializeScene()
         {
             pathDesign = FindAnyObjectByType<StyleManager>()?.PathDesign;
-            exitNode = FindAnyObjectByType<TriggerCustomHandler>()?.gameObject;
+            exitNode = FindAnyObjectByType<ExitNode>()?.gameObject;
         }
 
         private void ValidatePathDesign()
@@ -354,12 +354,11 @@ namespace PathSystem
         {
             if (exitNode != null) return;
 
+            Debug.LogWarning(selectedObject.name);
+
             exitNode = selectedObject;
 
-            selectedObject.AddComponent<BoxCollider>();
-            selectedObject.GetComponent<BoxCollider>().isTrigger = true;
-
-            selectedObject.AddComponent<TriggerCustomHandler>();
+            selectedObject.AddComponent<ExitNode>();
 
             ValidatePathDesign();
         }
@@ -368,9 +367,7 @@ namespace PathSystem
         {
             if (exitNode != null)
             {
-                DestroyImmediate(exitNode.GetComponent<TriggerCustomHandler>());
-                DestroyImmediate(exitNode.GetComponent<BoxCollider>());
-                DestroyImmediate(exitNode.GetComponent<Rigidbody>());
+                DestroyImmediate(exitNode.GetComponent<ExitNode>());
                 exitNode = null;
 
                 ValidatePathDesign();
