@@ -35,6 +35,8 @@ public class ShiftManager : MonoBehaviour
             BeginPlayerTurn();
         }
     }
+    [Button]
+    private void StartBtn() => BeginPlayerTurn();
 
     public static event Action OnEnemyTurn;
     public static event Action OnPlayerTurn;
@@ -44,14 +46,14 @@ public class ShiftManager : MonoBehaviour
 
     private void Start()
     {
-        if (!_autoShift)
-        {
-            BeginPlayerTurn();
-        }
-        else
-        {
-            StartCoroutine(Timer());
-        }
+        //if (!_autoShift)
+        //{
+        //    BeginPlayerTurn();
+        //}
+        //else
+        //{
+        //    StartCoroutine(Timer());
+        //}
     }
 
     private IEnumerator Timer()
@@ -62,12 +64,14 @@ public class ShiftManager : MonoBehaviour
 
     private void OnEnable()
     {
+        SceneLoader.OnSceneLoadComplete += BeginPlayerTurn;
         // ricevere l'evento di fine turno player dal player
     }
 
     private void OnDisable()
     {
-
+        SceneLoader.OnSceneLoadComplete -= BeginPlayerTurn;
+        // ricevere l'evento di fine turno player dal player
     }
 
     private void BeginEnemyTurn()

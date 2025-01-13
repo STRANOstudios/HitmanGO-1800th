@@ -51,6 +51,8 @@ namespace Player.VFX
                 indicator.transform.position += direction * m_distance;
 
                 indicator.transform.LookAt(neighbour.transform.position);
+
+                m_indicators.Add(indicator);
             }
         }
 
