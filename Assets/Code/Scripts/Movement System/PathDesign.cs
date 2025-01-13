@@ -24,6 +24,10 @@ namespace PathSystem
         private Vector2 _exitNodeScale = Vector2.one;
         public Color exitNodeColor = Color.black;
 
+        [Header("Player Indicator Settings")]
+        public GameObject playerIndicator = null;
+        private float _playerIndicatorDistance = 0f;
+
         public float Width
         {
             get { return _width; }
@@ -34,6 +38,12 @@ namespace PathSystem
         {
             get { return _stoppingDistance; }
             set { _stoppingDistance = Mathf.Max(value, 0f); }
+        }
+
+        public float PlayerIndicatorDistance
+        {
+            get { return _playerIndicatorDistance; }
+            set { _playerIndicatorDistance = Mathf.Max(value, 0f); }
         }
 
         public Vector2 NodeScale

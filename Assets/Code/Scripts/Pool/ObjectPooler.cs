@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using System.Collections;
-using System;
 
 public class ObjectPooler : Singleton<ObjectPooler>
 {
@@ -117,6 +116,23 @@ public class ObjectPooler : Singleton<ObjectPooler>
                 poolDictionary.Add(obj, new Queue<GameObject>());
             }
             poolDictionary[obj].Enqueue(obj);
+        }
+    }
+
+    /// <summary>
+    /// Removes an prefab from the poolDictionary and destroys all object from the pool.
+    /// </summary>
+    /// <param name="obj"></param>
+    public void RemoveObjectFromPool(GameObject obj)
+    {
+        if (poolDictionary.TryGetValue(obj, out Queue<GameObject> objectPool))
+        {
+            while (objectPool.Count > 0)
+            {
+                Destroy(objectPool.Dequeue());
+            }
+
+            poolDictionary.Remove(obj);
         }
     }
 

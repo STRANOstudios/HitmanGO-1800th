@@ -16,7 +16,7 @@ namespace PathSystem
         private GameObject exitNode = null;
 
         private Vector2 designScrollPosition;
-        private bool showDesignSettings, showLinkSettings, showNodeSettings, showExitNodeSettings, showUnlockLinkSettings, showUnlockNodeSettings;
+        private bool showDesignSettings, showLinkSettings, showNodeSettings, showExitNodeSettings, showUnlockLinkSettings, showUnlockNodeSettings, showPlayerSettings;
 
         private void OnEnable()
         {
@@ -192,6 +192,13 @@ namespace PathSystem
                 pathDesign.exitSpriteNode = (Sprite)EditorGUILayout.ObjectField("Node Sprite", pathDesign.exitSpriteNode, typeof(Sprite), false);
                 pathDesign.ExitNodeScale = EditorGUILayout.Vector2Field("Node Scale", pathDesign.ExitNodeScale);
                 pathDesign.exitNodeColor = EditorGUILayout.ColorField("Node Color", pathDesign.exitNodeColor);
+            }
+
+            showPlayerSettings = EditorGUILayout.Foldout(showPlayerSettings, "Player Indicator Settings", true);
+            if (showPlayerSettings)
+            {
+                pathDesign.playerIndicator = (GameObject)EditorGUILayout.ObjectField("Indicator prefab", pathDesign.playerIndicator, typeof(GameObject), false);
+                pathDesign.PlayerIndicatorDistance = EditorGUILayout.FloatField("Stopping Distance", pathDesign.PlayerIndicatorDistance);
             }
         }
 
