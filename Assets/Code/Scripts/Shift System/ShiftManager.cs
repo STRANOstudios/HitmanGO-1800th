@@ -1,3 +1,4 @@
+using Player;
 using Sirenix.OdinInspector;
 using System;
 using System.Collections;
@@ -65,13 +66,13 @@ public class ShiftManager : MonoBehaviour
     private void OnEnable()
     {
         SceneLoader.OnSceneLoadComplete += BeginPlayerTurn;
-        // ricevere l'evento di fine turno player dal player
+        PlayerController.OnPlayerEndTurn += BeginEnemyTurn;
     }
 
     private void OnDisable()
     {
         SceneLoader.OnSceneLoadComplete -= BeginPlayerTurn;
-        // ricevere l'evento di fine turno player dal player
+        PlayerController.OnPlayerEndTurn -= BeginEnemyTurn;
     }
 
     private void BeginEnemyTurn()
