@@ -7,8 +7,6 @@ using Sirenix.OdinInspector;
 
 public class SceneLoader : Singleton<SceneLoader>
 {
-    public static SceneLoader instance;
-
     [Title("UI Settings")]
     [SerializeField, Required] private Image blackScreen;
     [SerializeField, MinValue(0f)] private float fadeDuration = 1f;
@@ -21,12 +19,13 @@ public class SceneLoader : Singleton<SceneLoader>
     public static Action OnSceneLoaded;
     public static Action OnSceneLoadComplete;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
 #if UNITY_EDITOR
         Application.targetFrameRate = 60;
 #else
-        Application.targetFrameRate = 20;
+    Application.targetFrameRate = 20;
 #endif
     }
 
