@@ -504,6 +504,12 @@ namespace Agents
 
         #endregion
 
+        #region Getter
+
+        public int AgentsCount => IdleAgents.Count + MovingAgents.Count;
+
+        #endregion
+
         #region Gizmos
 
         private void OnDrawGizmos()
