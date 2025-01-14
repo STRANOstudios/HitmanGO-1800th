@@ -1,6 +1,7 @@
 using PathSystem;
 using Sirenix.OdinInspector;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -82,9 +83,21 @@ namespace Player
 
         private void PlayerTurn(Node node)
         {
-            transform.position = node.transform.position;
-
             currentNode = node;
+
+            StartCoroutine(Movement());
+        }
+
+        private IEnumerator Movement()
+        {
+            while (Vector3.Distance(transform.position, currentNode.transform.position) > 0.1f)
+            {
+                yield return null;
+
+                transform.position = Vector3.MoveTowards(transform.position, currentNode.transform.position, 1f);
+            }
+
+            yield return new WaitForSeconds(0.5f);
 
             PlayerEndTurn();
         }

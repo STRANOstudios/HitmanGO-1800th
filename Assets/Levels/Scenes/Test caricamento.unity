@@ -308,7 +308,7 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
@@ -750,7 +750,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 864271237}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fb7194dc27b9df64c8beca7482ee8e0d, type: 3}
   m_Name: 
@@ -1129,7 +1129,7 @@ MonoBehaviour:
     m_Bias: 0
   m_RecenterToTargetHeading:
     m_enabled: 1
-    m_WaitTime: 0
+    m_WaitTime: 0.1
     m_RecenteringTime: 1
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
@@ -1200,10 +1200,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef69ba1e6d92154438dd97fa33c0a022, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _shiftEnemyDuration: 1.5
-  _shiftPlayerDuration: 0.1
-  _debug: 0
-  _autoShift: 0
 --- !u!114 &1709846836
 MonoBehaviour:
   m_ObjectHideFlags: 0

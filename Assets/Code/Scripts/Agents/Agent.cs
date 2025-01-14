@@ -1,5 +1,6 @@
 using PathSystem;
 using Sirenix.OdinInspector;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -32,12 +33,7 @@ namespace Agents
         [FoldoutGroup("Debug"), ShowIf("_debug")]
         [ReadOnly] public List<Node> Path = new();
 
-        private Animator _animator;
-
-        private string _animStep = "Step";
-        private string _animDX = "RotationDX";
-        private string _animSX = "RotationSX";
-        private string _anim180 = "Rotation180";
+        public static event Action OnEndMovement;
 
         // control
         private bool _isPatrol = false;
@@ -49,11 +45,6 @@ namespace Agents
             RegisterToManager();
 
             currentNode = startNode;
-
-            if (transform.TryGetComponent(out Animator animator) && animator.isActiveAndEnabled)
-            {
-                _animator = animator;
-            }
         }
 
         private void OnValidate()
@@ -117,51 +108,8 @@ namespace Agents
         {
             currentNode = Path[Index];
 
-            if (_animator)
-            {
-                if (_debug) Debug.Log("Moving with Animation");
-                StartCoroutine(WithAnimation());
-            }
-            else
-            {
-                if (_debug) Debug.Log("Moving with Code");
-                StartCoroutine(WithCode());
-            }
-        }
-
-        private IEnumerator WithAnimation()
-        {
-            Vector3 targetPosition = Path[Index].transform.position;
-
-            Quaternion targetRotation = CalculateTargetRotation(targetPosition);
-
-            float angleDifference = CalculateAngleDifference(transform.rotation, targetRotation);
-
-            if (Mathf.Abs(angleDifference) > 0)
-            {
-                if (Mathf.Abs(angleDifference) >= 170)
-                {
-                    _animator.CrossFadeInFixedTime(_anim180, 0);
-                }
-                else
-                {
-                    _animator.CrossFadeInFixedTime(angleDifference < 0 ? _animSX : _animDX, 0);
-                }
-            }
-            else
-            {
-                _animator.CrossFadeInFixedTime(_animStep, 0);
-            }
-
-            // Wait for the animation to finish
-            yield return new WaitForSeconds(_animator.GetCurrentAnimatorStateInfo(0).length + 0.1f);
-
-            // round position
-            Vector3 currentPosition = transform.position;
-            currentPosition.x = RoundToNearest(currentPosition.x, 2f);
-            currentPosition.y = 0.01f;
-            currentPosition.z = RoundToNearest(currentPosition.z, 2f);
-            transform.position = currentPosition;
+            if (_debug) Debug.Log("Moving with Code");
+            StartCoroutine(WithCode());
         }
 
         private IEnumerator WithCode()
@@ -189,6 +137,8 @@ namespace Agents
 
                 yield return null; // Wait for the next frame to continue movement.
             }
+
+            OnEndMovement?.Invoke();
         }
 
         private float CalculateAngleDifference(Quaternion currentRotation, Quaternion targetRotation)
