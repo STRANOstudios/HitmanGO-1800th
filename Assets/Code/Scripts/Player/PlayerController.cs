@@ -2,6 +2,7 @@ using PathSystem;
 using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
+using System.IO.Pipes;
 using UnityEngine;
 
 namespace Player
@@ -53,38 +54,42 @@ namespace Player
             PlayerHandle.OnPlayerSwipe -= CheckAngle;
         }
 
-        private void CheckAngle(Vector3 swipeDir)
+        private void CheckAngle(Vector3 direction)
         {
-            Node bestNode = null;
-            float bestAngle = maxAllowedAngle;
+            Node node = null;
 
-            foreach (Node node in currentNode.neighbours)
+            float angleInRadians = Mathf.Atan2(direction.z, direction.x);
+            float angleInDegrees = Mathf.Rad2Deg * angleInRadians;
+
+            foreach (Angle angle in angles)
             {
-                Transform nodeTransform = node.transform;
-
-                Vector3 nodeDir = (nodeTransform.position - transform.position).normalized;
-                float angle = Vector3.Angle(swipeDir, nodeDir);
-
-                if (_debugLog) Debug.Log($"Node: {node.name}, Angle: {angle}");
-
-                if (angle < bestAngle)
+                // Verifica se l'intervallo angolare attraversa lo zero
+                if (angle.angleMin <= angle.angleMax)
                 {
-                    bestAngle = angle;
-                    bestNode = node;
+                    // Caso in cui l'intervallo non attraversa lo zero
+                    if (angleInDegrees >= angle.angleMin && angleInDegrees <= angle.angleMax)
+                    {
+                        node = angle.node;
+                        break;
+                    }
+                }
+                else
+                {
+                    // Caso in cui l'intervallo attraversa lo zero (ad esempio 350° a 10°)
+                    if (angleInDegrees >= angle.angleMin || angleInDegrees <= angle.angleMax)
+                    {
+                        node = angle.node;
+                        break;
+                    }
                 }
             }
 
-            if (bestNode != null)
+            if (node != null)
             {
-                if (_debugLog) Debug.Log($"Moving to node: {bestNode.name}");
-                PlayerTurn(bestNode);
-                //OnPlayerMove?.Invoke(bestNode.position);
-            }
-            else
-            {
-                if (_debugLog) Debug.Log("No valid node found for swipe direction.");
+                PlayerTurn(node);
             }
         }
+
 
         private void PlayerTurn(Node node)
         {

@@ -93,14 +93,34 @@ namespace Player
 
                 Vector2 swipeDirectionScreen = (endPos - startPos).normalized;
 
+                // Crea un Ray dal punto sullo schermo (endPos)
                 Ray swipeRay = Camera.main.ScreenPointToRay(endPos);
-                swipeDirection = swipeRay.direction;
 
-                if (_debugLog) Debug.Log("Swipe Direction (World): " + swipeDirection);
+                // Variabile per memorizzare il risultato dell'intersezione del raycast
+
+                // Esegui il Raycast per ottenere la posizione nel mondo 3D
+                if (Physics.Raycast(swipeRay, out RaycastHit hit))
+                {
+                    // La posizione dell'intersezione con il piano 3D
+                    Vector3 worldPosition = hit.point;
+
+                    if (_debugLog) Debug.Log("End Position (World): " + worldPosition);
+
+                    Debug.DrawRay(swipeRay.origin, swipeRay.direction * raycastDistance, Color.red, 1f);
+                    Debug.DrawLine(hit.point, hit.point + Vector3.up, Color.green, 1f);
+
+                    // Usalo per altre azioni
+                    OnPlayerSwipe?.Invoke(worldPosition);
+                }
+                else
+                {
+                    // Se non colpisce nulla, puoi decidere cosa fare (es: utilizzare un punto predefinito)
+                    Debug.Log("Raycast non ha colpito nulla.");
+                }
 
                 PlayerChangeStatus(PlayerState.IDLE);
-                OnPlayerSwipe?.Invoke(swipeDirection);
             }
+
         }
 
         private void PlayerChangeStatus(PlayerState state)
