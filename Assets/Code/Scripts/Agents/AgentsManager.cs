@@ -1,5 +1,6 @@
 using PathSystem;
 using PathSystem.PathFinding;
+using Player;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using System;
@@ -49,6 +50,9 @@ namespace Agents
         [FoldoutGroup("Gizmos"), ShowIf("_drawGizmos")]
         [SerializeField, ColorPalette] private Color _nextPathColor = Color.magenta;
 
+        public static event Action OnAgentsEndMovement;
+        private int _endMovmentCounter = 0;
+
         // control
         private Node _targetNode = null;
 
@@ -69,6 +73,8 @@ namespace Agents
         public static event Action OnKillPlayer;
 
         private PathFinder pathFinder;
+
+        private bool _isPlayerDetected = false;
 
 #if UNITY_EDITOR
         [InitializeOnLoadMethod]
@@ -110,26 +116,23 @@ namespace Agents
         {
             ShiftManager.OnEnemyTurn += OnTurnStart;
             KillHandler.OnKillAgent += OnKill;
+            Agent.OnEndMovement += CountEndMovement;
         }
 
         private void OnDisable()
         {
             ShiftManager.OnEnemyTurn -= OnTurnStart;
             KillHandler.OnKillAgent -= OnKill;
+            Agent.OnEndMovement -= CountEndMovement;
         }
 
         #region Main Methods
 
         private async void OnTurnStart()
         {
-            bool result = await CheckRayCast(IdleAgents.Concat(MovingAgents).ToList());
+            _isPlayerDetected = await CheckRayCast(IdleAgents.Concat(MovingAgents).ToList());
 
             Move(MovingAgents);
-
-            if (result)
-            {
-                OnKillPlayer?.Invoke();
-            }
         }
 
         private void Move(List<Agent> agents)
@@ -194,13 +197,32 @@ namespace Agents
             }
         }
 
+        private void CountEndMovement()
+        {
+            _endMovmentCounter++;
+
+            if (_endMovmentCounter >= MovingAgents.Count)
+            {
+                if (_debugLog) Debug.Log("Finish movement");
+
+                if (_isPlayerDetected)
+                {
+                    Debug.Log("Kill player");
+                    OnKillPlayer?.Invoke();
+                }
+
+                OnAgentsEndMovement?.Invoke();
+                _endMovmentCounter = 0;
+            }
+        }
+
         #endregion
 
         #region Methods
 
         private async Task<bool> CheckRayCast(List<Agent> agents)
         {
-            Debug.Log("Raycast");
+            if (_debugLog) Debug.Log("Raycast");
 
             foreach (Agent agent in agents)
             {
@@ -215,9 +237,28 @@ namespace Agents
                 {
                     if (_debugLog) Debug.Log(hit.transform.name);
 
+                    if (_drawGizmos)
+                    {
+                        Debug.DrawLine(ray.origin, hit.point, Color.green, 1f);
+                        Debug.DrawLine(hit.point, hit.point + Vector3.up, Color.green, 1f);
+                    }
+
                     if (hit.transform.CompareTag("Player"))
                     {
                         if (_debugLog) Debug.Log("Player Detected");
+
+                        if (hit.transform.TryGetComponent(out PlayerController component))
+                        {
+                            if (!MovingAgents.Contains(agent))
+                            {
+                                MovingAgents.Add(agent);
+                                IdleAgents.Remove(agent);
+                            }
+
+                            NewTarget(component.CurrentNode, new List<Agent> { agent });
+
+                            return component.IsVisible;
+                        }
 
                         return true;
                     }
@@ -498,7 +539,7 @@ namespace Agents
 
             if (angle > 180) angle -= 360;
 
-            float tolerance = 10f; 
+            float tolerance = 10f;
             return Mathf.Abs(Mathf.Abs(angle) - 180) < tolerance;
         }
 

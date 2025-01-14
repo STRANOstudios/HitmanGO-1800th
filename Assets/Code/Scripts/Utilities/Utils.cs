@@ -1,4 +1,5 @@
 using System.Reflection;
+using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine;
 
 public static class Utils
@@ -43,9 +44,7 @@ public static class Utils
     /// <returns></returns>
     public static float NormalizeAngle(float angle)
     {
-        angle %= 360f;
-        if (angle < 0f) angle += 360f;
-        return angle;
+        return (angle + 360f) % 360f;
     }
 
     /// <summary>
@@ -64,5 +63,41 @@ public static class Utils
         Vector3 intersection = nodeRay.origin + nodeRay.direction * t;
 
         return intersection;
+    }
+
+    /// <summary>
+    /// Calculates the slope between two points
+    /// </summary>
+    /// <param name="point1"></param>
+    /// <param name="point2"></param>
+    /// <returns></returns>
+    public static float CalculateSlope(Vector3 origin, Vector3 point)
+    {
+        // normalize
+        point -= origin;
+        float alpha = Mathf.Atan2(point.z, point.x) * Mathf.Rad2Deg;
+
+        return (alpha + 360f) % 360f;
+    }
+
+    /// <summary>
+    /// Checks if an angle is within a range
+    /// </summary>
+    /// <param name="angle"></param>
+    /// <param name="a"></param>
+    /// <param name="b"></param>
+    /// <returns></returns>
+    public static bool IsAngleInRange(float angle, float a, float b)
+    {
+        angle = NormalizeAngle(angle);
+
+        if (a <= b)
+        {
+            return angle >= a && angle < b;
+        }
+        else
+        {
+            return (angle >= a && angle < 360f) || (angle >= 0f && angle < b);
+        }
     }
 }

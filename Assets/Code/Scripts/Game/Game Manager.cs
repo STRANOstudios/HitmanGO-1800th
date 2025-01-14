@@ -41,6 +41,7 @@ public class GameManager : MonoBehaviour
     // player death
     private void Lose()
     {
+        Debug.Log("Lose");
         _onLoseTrigger?.Invoke();
     }
 

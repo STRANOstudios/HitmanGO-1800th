@@ -6,6 +6,8 @@ namespace Player.VFX
 {
     public class PlayerMoveIndicator : MonoBehaviour
     {
+        [SerializeField] private bool _debugLog = false;
+
         private GameObject m_prefabsToCreate;
         private float m_distance;
 
@@ -36,7 +38,7 @@ namespace Player.VFX
 
         private void Active()
         {
-            Debug.Log("Active");
+            if (_debugLog) Debug.Log("Active");
 
             Node currentNode = PlayerController.CurrentNode;
 
@@ -58,7 +60,7 @@ namespace Player.VFX
 
         private void DeActivate()
         {
-            Debug.Log("DeActivate");
+            if (_debugLog) Debug.Log("DeActivate");
 
             foreach (var indicator in m_indicators)
             {

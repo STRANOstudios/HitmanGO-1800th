@@ -7,8 +7,6 @@ using Sirenix.OdinInspector;
 
 public class SceneLoader : Singleton<SceneLoader>
 {
-    public static SceneLoader instance;
-
     [Title("UI Settings")]
     [SerializeField, Required] private Image blackScreen;
     [SerializeField, MinValue(0f)] private float fadeDuration = 1f;
@@ -18,25 +16,30 @@ public class SceneLoader : Singleton<SceneLoader>
     [SerializeField, Required] private GameObject loadingScreen; // Loading screen GameObject
 
     public static Action<string> OnSwitchScene;
+    public static Action OnSceneLoaded;
     public static Action OnSceneLoadComplete;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
 #if UNITY_EDITOR
         Application.targetFrameRate = 60;
 #else
-        Application.targetFrameRate = 20;
+    Application.targetFrameRate = 20;
 #endif
     }
 
     private void OnEnable()
     {
         OnSwitchScene += LoadScene;
+        DataManager.OnDataLoaded += DataLoaded;
     }
 
     private void OnDisable()
     {
         OnSwitchScene -= LoadScene;
+        DataManager.OnDataLoaded -= DataLoaded;
+
     }
 
     private void Start()
@@ -62,6 +65,11 @@ public class SceneLoader : Singleton<SceneLoader>
         StartCoroutine(TransitionToScene(sceneName, false));
     }
 
+    private void DataLoaded()
+    {
+        StartCoroutine(EndTransition());
+    }
+
     private IEnumerator TransitionToScene(string sceneName, bool isFadeIn = true)
     {
         if (isFadeIn) yield return StartCoroutine(FadeIn());
@@ -73,11 +81,13 @@ public class SceneLoader : Singleton<SceneLoader>
         // Asynchronous scene loading
         yield return StartCoroutine(LoadSceneAsync(sceneName));
 
-        yield return StartCoroutine(FadeOut());
+        OnSceneLoaded?.Invoke();
 
-        loadingScreen?.SetActive(false);
+        //yield return StartCoroutine(FadeOut());
 
-        OnSceneLoadComplete?.Invoke();
+        //loadingScreen?.SetActive(false);
+
+        //OnSceneLoadComplete?.Invoke();
     }
 
     private IEnumerator FadeIn()
@@ -104,6 +114,15 @@ public class SceneLoader : Singleton<SceneLoader>
             yield return null;
         }
         blackScreen.color = new Color(0, 0, 0, 0);
+    }
+
+    private IEnumerator EndTransition()
+    {
+        yield return StartCoroutine(FadeOut());
+
+        loadingScreen?.SetActive(false);
+
+        OnSceneLoadComplete?.Invoke();
     }
 
     private IEnumerator LoadSceneAsync(string sceneName)

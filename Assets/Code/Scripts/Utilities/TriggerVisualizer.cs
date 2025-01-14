@@ -7,7 +7,6 @@ public class TriggerVisualizer : MonoBehaviour
     [Header("Debug")]
     [SerializeField] private bool _debug = false;
     [SerializeField] private bool _showColliderInEditor = true;
-    [SerializeField] private bool _showCoordinates = false;
     [SerializeField] private Color _gizmoColor = Color.green;
 
     private void OnDrawGizmos()
@@ -49,17 +48,6 @@ public class TriggerVisualizer : MonoBehaviour
             }
 
             Gizmos.matrix = Matrix4x4.identity; // Reset matrix
-        }
-
-        if (_showCoordinates)
-        {
-            Vector3 center = collider.transform.position;
-
-            //Handles.color = Color.white;
-            //Handles.Label(center + transform.forward * 1, "N");   // Nord
-            //Handles.Label(center - transform.forward * 1, "S");   // Sud
-            //Handles.Label(center + transform.right * 1, "E"); // Est
-            //Handles.Label(center - transform.right * 1, "W"); // Ovest
         }
     }
 
