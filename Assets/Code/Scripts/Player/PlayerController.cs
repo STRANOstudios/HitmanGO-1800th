@@ -18,12 +18,13 @@ namespace Player
         [SerializeField] private bool _debug = false;
         [ShowIfGroup("_debug")]
         [ShowInInspector, ReadOnly] private List<Angle> angles = new();
+        [ShowIfGroup("_debug")]
+        [ShowInInspector, ReadOnly] private PlayerVisibilityState m_visibilityState = PlayerVisibilityState.Visible;
+        [ShowIfGroup("_debug")]
+        [ShowInInspector, ReadOnly] private Node currentNode;
+
         [SerializeField] private bool _debugLog = false;
         [SerializeField] private bool _drawGizmos = true;
-
-
-        private Node currentNode;
-        private PlayerVisibilityState m_visibilityState = PlayerVisibilityState.Visible;
 
         private bool m_isActive = true;
 
@@ -118,11 +119,11 @@ namespace Player
         /// <returns>True if the player is in a hiding spot</returns>
         private bool IsPlayerInHidingSpot()
         {
-            return Physics.OverlapSphere(transform.position, 1f, m_hidingSpotLayerMask).Length > 1;
+            return Physics.OverlapSphere(transform.position, 1f, m_hidingSpotLayerMask).Length > 0;
         }
 
         public Node CurrentNode => currentNode;
-        public PlayerVisibilityState VisibilityState => m_visibilityState;
+        public bool IsVisible => m_visibilityState == PlayerVisibilityState.Visible;
 
         private void OnDrawGizmos()
         {

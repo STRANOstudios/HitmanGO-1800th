@@ -1,5 +1,6 @@
 using PathSystem;
 using PathSystem.PathFinding;
+using Player;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using System;
@@ -219,7 +220,10 @@ namespace Agents
                     {
                         if (_debugLog) Debug.Log("Player Detected");
 
-                        return true;
+                        if (hit.transform.TryGetComponent(out PlayerController component))
+                            return component.IsVisible;
+
+                        return true;    
                     }
                 }
 
@@ -498,7 +502,7 @@ namespace Agents
 
             if (angle > 180) angle -= 360;
 
-            float tolerance = 10f; 
+            float tolerance = 10f;
             return Mathf.Abs(Mathf.Abs(angle) - 180) < tolerance;
         }
 
