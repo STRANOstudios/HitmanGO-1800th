@@ -237,15 +237,28 @@ namespace Agents
                 {
                     if (_debugLog) Debug.Log(hit.transform.name);
 
-                    Debug.DrawLine(ray.origin, hit.point, Color.green, 1f);
-                    Debug.DrawLine(hit.point, hit.point + Vector3.up, Color.green, 1f);
+                    if (_drawGizmos)
+                    {
+                        Debug.DrawLine(ray.origin, hit.point, Color.green, 1f);
+                        Debug.DrawLine(hit.point, hit.point + Vector3.up, Color.green, 1f);
+                    }
 
                     if (hit.transform.CompareTag("Player"))
                     {
                         if (_debugLog) Debug.Log("Player Detected");
 
                         if (hit.transform.TryGetComponent(out PlayerController component))
+                        {
+                            if (!MovingAgents.Contains(agent))
+                            {
+                                MovingAgents.Add(agent);
+                                IdleAgents.Remove(agent);
+                            }
+
+                            NewTarget(component.CurrentNode, new List<Agent> { agent });
+
                             return component.IsVisible;
+                        }
 
                         return true;
                     }
