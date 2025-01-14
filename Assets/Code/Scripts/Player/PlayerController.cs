@@ -2,7 +2,6 @@ using PathSystem;
 using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
-using System.IO.Pipes;
 using UnityEngine;
 
 namespace Player
@@ -54,42 +53,31 @@ namespace Player
             PlayerHandle.OnPlayerSwipe -= CheckAngle;
         }
 
-        private void CheckAngle(Vector3 direction)
+        private void CheckAngle(Vector3 point)
         {
             Node node = null;
 
-            float angleInRadians = Mathf.Atan2(direction.z, direction.x);
-            float angleInDegrees = Mathf.Rad2Deg * angleInRadians;
+            // calcola il coefficiente angolare
+            Vector3 origin = transform.position;
+            float slope = Utils.CalculateSlope(origin, point);
+
+            if (_debugLog) Debug.Log($"{origin} | {point} | Slope: {slope}°");
 
             foreach (Angle angle in angles)
             {
-                // Verifica se l'intervallo angolare attraversa lo zero
-                if (angle.angleMin <= angle.angleMax)
+                if (Utils.IsAngleInRange(slope, angle.angleMin, angle.angleMax))
                 {
-                    // Caso in cui l'intervallo non attraversa lo zero
-                    if (angleInDegrees >= angle.angleMin && angleInDegrees <= angle.angleMax)
-                    {
-                        node = angle.node;
-                        break;
-                    }
-                }
-                else
-                {
-                    // Caso in cui l'intervallo attraversa lo zero (ad esempio 350° a 10°)
-                    if (angleInDegrees >= angle.angleMin || angleInDegrees <= angle.angleMax)
-                    {
-                        node = angle.node;
-                        break;
-                    }
+                    node = angle.node;
+                    break;
                 }
             }
 
             if (node != null)
             {
+                Debug.DrawLine(node.transform.position, node.transform.position + Vector3.up, Color.magenta, 1f);
                 PlayerTurn(node);
             }
         }
-
 
         private void PlayerTurn(Node node)
         {
@@ -102,23 +90,14 @@ namespace Player
 
         private void CalculateAngle()
         {
-            float maxAngleWidth = 90f;
             angles.Clear();
 
             foreach (Node node in currentNode.neighbours)
             {
-                Transform nodeTransform = node.transform;
+                float slope = Utils.CalculateSlope(transform.position, node.transform.position);
 
-                Vector3 directionToNode = (nodeTransform.position - transform.position).normalized;
-
-                float centralAngle = Vector3.SignedAngle(Vector3.forward, directionToNode, Vector3.up);
-
-                centralAngle = Utils.NormalizeAngle(centralAngle);
-
-                float minAngle = Utils.NormalizeAngle(centralAngle - maxAngleWidth / 2f);
-                float maxAngle = Utils.NormalizeAngle(centralAngle + maxAngleWidth / 2f);
-
-                if (_debugLog) Debug.Log($"Nodo: {node.name} | Angolo centrale: {centralAngle}° | Range: {minAngle}° - {maxAngle}°");
+                float maxAngle = Utils.NormalizeAngle(slope + (maxAllowedAngle / 2));
+                float minAngle = Utils.NormalizeAngle(slope - (maxAllowedAngle / 2));
 
                 angles.Add(new(node, maxAngle, minAngle));
             }

@@ -70,7 +70,7 @@ namespace Player
 
                 Ray ray = Camera.main.ScreenPointToRay(inputPosition);
 
-                Debug.DrawRay(ray.origin, ray.direction * raycastDistance, Color.red, 1f);
+                Debug.DrawRay(ray.origin, ray.direction * raycastDistance, Color.red);
 
                 if (Physics.Raycast(ray, out RaycastHit hit, raycastDistance, playerMask))
                 {
@@ -101,16 +101,11 @@ namespace Player
                 // Esegui il Raycast per ottenere la posizione nel mondo 3D
                 if (Physics.Raycast(swipeRay, out RaycastHit hit))
                 {
-                    // La posizione dell'intersezione con il piano 3D
-                    Vector3 worldPosition = hit.point;
-
-                    if (_debugLog) Debug.Log("End Position (World): " + worldPosition);
-
-                    Debug.DrawRay(swipeRay.origin, swipeRay.direction * raycastDistance, Color.red, 1f);
+                    if (_debugLog) Debug.Log("End Position (World): " + hit.point);
                     Debug.DrawLine(hit.point, hit.point + Vector3.up, Color.green, 1f);
 
                     // Usalo per altre azioni
-                    OnPlayerSwipe?.Invoke(worldPosition);
+                    OnPlayerSwipe?.Invoke(hit.point);
                 }
                 else
                 {

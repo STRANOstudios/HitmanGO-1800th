@@ -200,7 +200,7 @@ namespace Agents
 
         private async Task<bool> CheckRayCast(List<Agent> agents)
         {
-            Debug.Log("Raycast");
+            if (_debugLog) Debug.Log("Raycast");
 
             foreach (Agent agent in agents)
             {
