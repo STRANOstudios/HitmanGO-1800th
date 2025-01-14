@@ -30,6 +30,11 @@ namespace PathSystem
             EditorApplication.hierarchyChanged -= InitializeScene;
         }
 
+        private void OnValidate()
+        {
+            EditorUtility.SetDirty(pathDesign);
+        }
+
         private void UpdateWindow()
         {
             Repaint();
