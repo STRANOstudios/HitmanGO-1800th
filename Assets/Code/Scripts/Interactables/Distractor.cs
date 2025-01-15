@@ -13,6 +13,7 @@ namespace Interactables
     {
         [Title("References")]
         [SerializeField, Required] private string m_nameTargets;
+        [SerializeField] private List<Node> nodes = new();
 
         [Title("Settings")]
         [SerializeField, Required] private Node m_node;
@@ -30,7 +31,6 @@ namespace Interactables
         [Button]
         public void StartCheck() => Spawn();
 
-        private List<Node> nodes = new();
         private List<GameObject> indicators = new();
 
         private Node target;
@@ -46,6 +46,8 @@ namespace Interactables
 
         private void Start()
         {
+            if (nodes.Count > 0) return;
+
             // avvia controllo
             nodes = Utils.CheckGameObjectsInBox(
                 transform.position,
