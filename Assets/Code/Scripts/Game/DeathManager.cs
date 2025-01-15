@@ -22,12 +22,12 @@ namespace Managers
 
         private void OnEnable()
         {
-            KillHandler.OnKillAgent += GetDeathBody;
+            AgentsManager.OnAgentDeath += GetDeathBody;
         }
 
         private void OnDisable()
         {
-            KillHandler.OnKillAgent -= GetDeathBody;
+            AgentsManager.OnAgentDeath -= GetDeathBody;
         }
 
         private void GetDeathBody(Agent agent)

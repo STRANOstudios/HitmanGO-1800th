@@ -50,6 +50,7 @@ namespace Agents
         [FoldoutGroup("Gizmos"), ShowIf("_drawGizmos")]
         [SerializeField, ColorPalette] private Color _nextPathColor = Color.magenta;
 
+        public static event Action<Agent> OnAgentDeath;
         public static event Action OnAgentsEndMovement;
         private int _endMovmentCounter = 0;
 
@@ -249,13 +250,16 @@ namespace Agents
 
                         if (hit.transform.TryGetComponent(out PlayerController component))
                         {
-                            if (!MovingAgents.Contains(agent))
+                            if (component.IsVisible)
                             {
-                                MovingAgents.Add(agent);
-                                IdleAgents.Remove(agent);
-                            }
+                                if (!MovingAgents.Contains(agent))
+                                {
+                                    MovingAgents.Add(agent);
+                                    IdleAgents.Remove(agent);
+                                }
 
-                            NewTarget(component.CurrentNode, new List<Agent> { agent });
+                                NewTarget(component.CurrentNode, new List<Agent> { agent });
+                            }
 
                             return component.IsVisible;
                         }
@@ -352,6 +356,8 @@ namespace Agents
             {
                 MovingAgents.Remove(agent);
             }
+
+            OnAgentDeath?.Invoke(agent);
         }
 
         /// <summary>
@@ -439,8 +445,8 @@ namespace Agents
                 PathFinder.PathFinderNode node = pathFinder.CurrentNode;
                 while (node != null)
                 {
-                    agent.Path.Insert(0, node.Location); // Add the node to the path (in reverse order)
-                    node = node.Parent; // Move to the parent node
+                    agent.Path.Insert(0, node.Location); // Add the m_node to the path (in reverse order)
+                    node = node.Parent; // Move to the parent m_node
                 }
 
                 if (_debugLog) Debug.Log("Path found with " + agent.Path.Count + " nodes.");
@@ -567,7 +573,7 @@ namespace Agents
                 Gizmos.DrawLine(PositionNormalize(agent.transform.position), PositionNormalize(pos));
             }
 
-            // Gizmo target node
+            // Gizmo target m_node
             if (targetNode != null)
             {
                 Gizmos.color = _targetNodeColor;

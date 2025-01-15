@@ -1,15 +1,17 @@
+using Interfaces.PathSystem;
 using PathSystem;
 using Sirenix.OdinInspector;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using UnityEditor;
 using UnityEngine;
 
 namespace Agents
 {
     [InitializeOnLoad]
-    public class Agent : MonoBehaviour
+    public class Agent : MonoBehaviour, INodeStorable
     {
         [Title("Settings")]
         [SerializeField, Required] private Node startNode;
@@ -45,6 +47,8 @@ namespace Agents
             RegisterToManager();
 
             currentNode = startNode;
+
+            currentNode.Storages.Add(gameObject);
         }
 
         private void OnValidate()
@@ -83,11 +87,6 @@ namespace Agents
             }
         }
 
-        private void OnDestroy()
-        {
-            AgentsManager.Instance?.UnregisterAgent(this);
-        }
-
         #region Agents Manager
 
         private void RegisterToManager()
@@ -106,20 +105,33 @@ namespace Agents
 
         public void Move()
         {
+            StoreNode(currentNode, Path[Index]);
+
             currentNode = Path[Index];
 
             if (_debug) Debug.Log("Moving with Code");
             StartCoroutine(WithCode());
         }
 
+        /// <summary>
+        /// Unregister the agent from the manager. 
+        /// And register in Death Manager.
+        /// </summary>
+        public void Death()
+        {
+            currentNode.Storages.Remove(gameObject);
+            AgentsManager.Instance?.UnregisterAgent(this);
+        }
+
         private IEnumerator WithCode()
         {
             Vector3 targetPosition = Path[Index].transform.position;
-
-            Quaternion targetRotation = CalculateTargetRotation(targetPosition);
+            Vector3 targetPositionNext = Path[Index + 1 >= Path.Count ? Index - 1 : Index + 1].transform.position;
+            Quaternion targetRotation = CalculateTargetRotation(targetPosition, targetPositionNext);
 
             transform.GetPositionAndRotation(out Vector3 startPosition, out Quaternion startRotation);
-            float moveDuration = 1f;  // Calculate the time to move based on agent speed.
+
+            float moveDuration = 1f;
             float elapsedTime = 0f;
 
             // Perform smooth movement from the start position to the target position.
@@ -128,40 +140,45 @@ namespace Agents
                 elapsedTime += Time.deltaTime;
                 float t = Mathf.Clamp01(elapsedTime / moveDuration);
 
-                // Move the agent smoothly towards the target position.
                 transform.position = Vector3.Lerp(startPosition, targetPosition, t);
 
-                // Rotate the agent smoothly towards the target position.
-                Quaternion smoothedRotation = Quaternion.Slerp(startRotation, targetRotation, t);
-                transform.rotation = Quaternion.Euler(0, smoothedRotation.eulerAngles.y, 0);
-
                 yield return null; // Wait for the next frame to continue movement.
+            }
+
+            transform.position = targetPosition;
+
+            if (targetRotation != startRotation)
+            {
+                elapsedTime = 0;
+                
+                while (elapsedTime < moveDuration)
+                {
+                    elapsedTime += Time.deltaTime;
+                    float t = Mathf.Clamp01(elapsedTime / moveDuration);
+
+                    // Rotate the agent smoothly towards the target position.
+                    Quaternion smoothedRotation = Quaternion.Slerp(startRotation, targetRotation, t);
+                    transform.rotation = Quaternion.Euler(0, smoothedRotation.eulerAngles.y, 0);
+                    yield return null; // Wait for the next frame to continue movement.
+                }
+
+                transform.rotation = targetRotation;
             }
 
             OnEndMovement?.Invoke();
         }
 
-        private float CalculateAngleDifference(Quaternion currentRotation, Quaternion targetRotation)
+        private Quaternion CalculateTargetRotation(Vector3 currentPosition, Vector3 targetPosition)
         {
-            float angleDifference = Quaternion.Angle(currentRotation, targetRotation);
-
-            Vector3 cross = Vector3.Cross(currentRotation * Vector3.forward, targetRotation * Vector3.forward);
-            if (cross.y < 0) angleDifference = -angleDifference;
-
-            return angleDifference; // -180° | 180°.
-        }
-
-        private Quaternion CalculateTargetRotation(Vector3 targetPosition)
-        {
-            Vector3 directionToTarget = (targetPosition - transform.position).normalized;
+            Vector3 directionToTarget = (targetPosition - currentPosition).normalized;
             directionToTarget.y = 0;
 
             return Quaternion.LookRotation(directionToTarget);
         }
 
-        private float RoundToNearest(float value, float nearest)
+        public void StoreNode(Node currentNode, Node targetNode)
         {
-            return Mathf.Round(value / nearest) * nearest;
+            Utils.NodeInteraction(currentNode, targetNode, gameObject);
         }
 
         #endregion

@@ -279,7 +279,7 @@ MonoBehaviour:
   playerMask:
     serializedVersion: 2
     m_Bits: 64
-  _debug: 0
+  _debug: 1
   _debugLog: 0
 --- !u!1 &547948295
 GameObject:

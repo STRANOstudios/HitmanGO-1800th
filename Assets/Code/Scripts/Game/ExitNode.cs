@@ -1,11 +1,19 @@
+using PathSystem;
 using System;
+using System.Linq;
 using UnityEngine;
 
+[RequireComponent(typeof(Node))]
 public class ExitNode : MonoBehaviour
 {
-    [SerializeField] private LayerMask LayerMask;
+    private Node m_node;
 
     public static event Action Exit;
+
+    private void Awake()
+    {
+        m_node = GetComponent<Node>();
+    }
 
     private void OnEnable()
     {
@@ -19,19 +27,9 @@ public class ExitNode : MonoBehaviour
 
     private void CheckPlayerPresence()
     {
-        Ray ray = new(transform.position, Vector3.up);
-
-        Debug.DrawRay(ray.origin, ray.direction * 10f, Color.red, 1f);
-
-        if (Physics.Raycast(ray, LayerMask))
+        if (m_node.Storages.Any(obj => obj.CompareTag("Player")))
         {
             Exit?.Invoke();
         }
-    }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawRay(transform.position, Vector3.up * 1f);
     }
 }

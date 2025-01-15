@@ -1,3 +1,5 @@
+using Agents;
+using Interfaces.PathSystem;
 using PathSystem;
 using Sirenix.OdinInspector;
 using System;
@@ -7,7 +9,7 @@ using UnityEngine;
 
 namespace Player
 {
-    public class PlayerController : MonoBehaviour
+    public class PlayerController : MonoBehaviour, INodeStorable
     {
         [Title("Settings")]
         [SerializeField] private Node m_startNode;
@@ -27,13 +29,13 @@ namespace Player
         [SerializeField] private bool _debugLog = false;
         [SerializeField] private bool _drawGizmos = true;
 
-        private bool m_isActive = true;
-
         public static event Action OnPlayerEndTurn;
 
         private void Awake()
         {
             currentNode = m_startNode;
+
+            currentNode.Storages.Add(this.gameObject);
 
             if (_debugLog) Debug.Log("Current Node: " + currentNode.name);
 
@@ -83,12 +85,13 @@ namespace Player
 
         private void PlayerTurn(Node node)
         {
+            var tmp = currentNode;
             currentNode = node;
 
-            StartCoroutine(Movement());
+            StartCoroutine(Movement(tmp));
         }
 
-        private IEnumerator Movement()
+        private IEnumerator Movement(Node node)
         {
             while (Vector3.Distance(transform.position, currentNode.transform.position) > 0.1f)
             {
@@ -99,7 +102,9 @@ namespace Player
 
             yield return new WaitForSeconds(0.5f);
 
-            PlayerEndTurn();
+            //PlayerEndTurn();
+
+            StoreNode(node, currentNode);
         }
 
         private void CalculateAngle()
@@ -119,20 +124,36 @@ namespace Player
 
         private void PlayerEndTurn()
         {
-            m_visibilityState = IsPlayerInHidingSpot() ? PlayerVisibilityState.Hidden : PlayerVisibilityState.Visible;
-
             CalculateAngle();
 
             OnPlayerEndTurn?.Invoke();
         }
 
-        /// <summary>
-        /// Checks if the player is in a hiding spot
-        /// </summary>
-        /// <returns>True if the player is in a hiding spot</returns>
-        private bool IsPlayerInHidingSpot()
+        public void StoreNode(Node currentNode, Node targetNode)
         {
-            return Physics.OverlapSphere(transform.position, 1f, m_hidingSpotLayerMask).Length > 0;
+            for (int i = 0; i < targetNode.Storages.Count; i++)
+            {
+                if (targetNode.Storages[i].CompareTag("Enemy"))
+                {
+                    targetNode.Storages[i].GetComponent<Agent>().Death();
+                }
+                else if (targetNode.Storages[i].CompareTag("Distractor"))
+                {
+
+                }
+                else if (targetNode.Storages[i].CompareTag("HiddenPlace"))
+                {
+                    m_visibilityState = PlayerVisibilityState.Hidden;
+                }
+                else
+                {
+                    m_visibilityState = PlayerVisibilityState.Visible;
+                }
+            }
+
+            Utils.NodeInteraction(currentNode, targetNode, gameObject);
+
+            PlayerEndTurn();
         }
 
         public Node CurrentNode => currentNode;

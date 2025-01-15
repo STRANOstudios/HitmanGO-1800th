@@ -57,7 +57,7 @@ namespace PathSystem.PathFinding
         public CostFunction HCostFunction { get; set; }
         public CostFunction GCostFunction { get; set; }
 
-        // Helper function to get the least cost node
+        // Helper function to get the least cost m_node
         protected PathFinderNode GetLeastCostNode(List<PathFinderNode> list)
         {
             int bestIndex = 0;
@@ -81,7 +81,7 @@ namespace PathSystem.PathFinding
             Start = start;
             Goal = goal;
 
-            // Initialize the open list with the start node
+            // Initialize the open list with the start m_node
             float H = HCostFunction(Start, Goal);
             PathFinderNode root = new PathFinderNode(Start, null, 0f, H);
             mOpenList.Add(root);
@@ -110,10 +110,10 @@ namespace PathSystem.PathFinding
                 return Status;
             }
 
-            // Move the current node to the closed list
+            // Move the current m_node to the closed list
             mClosedList.Add(CurrentNode);
 
-            // Get the least cost node from the open list
+            // Get the least cost m_node from the open list
             CurrentNode = GetLeastCostNode(mOpenList);
             mOpenList.Remove(CurrentNode);
 

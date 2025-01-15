@@ -1,3 +1,4 @@
+using PathSystem;
 using System.Reflection;
 using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine;
@@ -99,5 +100,11 @@ public static class Utils
         {
             return (angle >= a && angle < 360f) || (angle >= 0f && angle < b);
         }
+    }
+
+    public static void NodeInteraction(Node currentNode, Node targetNode, GameObject gameObject)
+    {
+        currentNode.Storages.Remove(gameObject);
+        targetNode.Storages.Add(gameObject);
     }
 }
