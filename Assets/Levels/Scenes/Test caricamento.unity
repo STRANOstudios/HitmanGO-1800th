@@ -279,6 +279,9 @@ MonoBehaviour:
   playerMask:
     serializedVersion: 2
     m_Bits: 64
+  distractorMask:
+    serializedVersion: 2
+    m_Bits: 256
   _debug: 1
   _debugLog: 0
 --- !u!1 &547948295
@@ -479,6 +482,9 @@ MonoBehaviour:
   itemsToPool:
   - prefab: {fileID: 723451024597819381, guid: 9c65bdbfacb86da43a3f153a4a4c2cba, type: 3}
     amount: 4
+  - prefab: {fileID: 3942719799785997598, guid: a8ab80b0ed10e8c4d947dc2900b4622e,
+      type: 3}
+    amount: 7
 --- !u!114 &791327276
 MonoBehaviour:
   m_ObjectHideFlags: 0

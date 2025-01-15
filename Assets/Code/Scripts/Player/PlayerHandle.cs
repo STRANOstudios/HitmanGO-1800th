@@ -1,7 +1,9 @@
+using Interactables;
 using Sirenix.OdinInspector;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Player
@@ -9,7 +11,8 @@ namespace Player
     public class PlayerHandle : MonoBehaviour
     {
         [Title("Settings")]
-        [SerializeField] public LayerMask playerMask;
+        [SerializeField] private LayerMask playerMask;
+        [SerializeField] private LayerMask distractorMask;
 
         [Title("Debug")]
         [SerializeField] private bool _debug = false;
@@ -36,6 +39,7 @@ namespace Player
             ShiftManager.OnPlayerTurn += Toggle;
             PlayerController.OnPlayerEndTurn += Toggle;
             PlayerController.OnPlayerDistractionReady += OnDistractionReady;
+            Distractor.OnInteractEnd += OnDistractionEnd;
         }
 
         private void OnDisable()
@@ -43,6 +47,7 @@ namespace Player
             ShiftManager.OnPlayerTurn -= Toggle;
             PlayerController.OnPlayerEndTurn -= Toggle;
             PlayerController.OnPlayerDistractionReady -= OnDistractionReady;
+            Distractor.OnInteractEnd -= OnDistractionEnd;
         }
 
         private void Update()
@@ -73,6 +78,24 @@ namespace Player
                 Ray ray = Camera.main.ScreenPointToRay(inputPosition);
 
                 Debug.DrawRay(ray.origin, ray.direction * raycastDistance, Color.red);
+
+                if (playerState==PlayerState.ITEM_READY)
+                {
+                    Debug.Log("Distractor");
+
+                    if (Physics.Raycast(ray, out RaycastHit hit2, raycastDistance, distractorMask))
+                    {
+                        Debug.Log("hit");
+
+                        if (hit2.collider.CompareTag("DistractorIndicator"))
+                        {
+                            DistractorCollider collider = hit2.collider.GetComponent<DistractorCollider>();
+                            collider.distractor.SetTarget = collider.node;
+                        }
+                    }
+
+                    return;
+                }
 
                 if (Physics.Raycast(ray, out RaycastHit hit, raycastDistance, playerMask))
                 {
@@ -115,7 +138,8 @@ namespace Player
                     Debug.Log("Raycast non ha colpito nulla.");
                 }
 
-                PlayerChangeStatus(PlayerState.IDLE);
+                if (playerState != PlayerState.ITEM_READY)
+                    PlayerChangeStatus(PlayerState.IDLE);
             }
 
         }
@@ -131,6 +155,11 @@ namespace Player
         private void OnDistractionReady()
         {
             PlayerChangeStatus(PlayerState.ITEM_READY);
+        }
+
+        private void OnDistractionEnd()
+        {
+            PlayerChangeStatus(PlayerState.IDLE);
         }
     }
 

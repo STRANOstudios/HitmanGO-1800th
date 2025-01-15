@@ -1,4 +1,5 @@
 using Agents;
+using Interactables;
 using Player;
 using Sirenix.OdinInspector;
 using System;
@@ -19,6 +20,7 @@ public class ShiftManager : MonoBehaviour
         SceneLoader.OnSceneLoadComplete += BeginPlayerTurn;
         PlayerController.OnPlayerEndTurn += BeginEnemyTurn;
         AgentsManager.OnAgentsEndMovement += BeginPlayerTurn;
+        Distractor.OnInteractEnd += BeginEnemyTurn;
     }
 
     private void OnDisable()
@@ -26,6 +28,7 @@ public class ShiftManager : MonoBehaviour
         SceneLoader.OnSceneLoadComplete -= BeginPlayerTurn;
         PlayerController.OnPlayerEndTurn -= BeginEnemyTurn;
         AgentsManager.OnAgentsEndMovement -= BeginPlayerTurn;
+        Distractor.OnInteractEnd -= BeginEnemyTurn;
     }
 
     private void BeginEnemyTurn()

@@ -1,4 +1,5 @@
 using Agents;
+using Interactables;
 using Interfaces.PathSystem;
 using PathSystem;
 using Sirenix.OdinInspector;
@@ -29,6 +30,10 @@ namespace Player
         [SerializeField] private bool _debugLog = false;
         [SerializeField] private bool _drawGizmos = true;
 
+        private bool OnDistractor = false;
+
+        public static event Action OnPlayerMove;
+        public static event Action OnPlayerEndMove;
         public static event Action OnPlayerEndTurn;
         public static event Action OnPlayerDistractionReady;
 
@@ -94,12 +99,16 @@ namespace Player
 
         private IEnumerator Movement(Node node)
         {
+            OnPlayerMove?.Invoke();
+
             while (Vector3.Distance(transform.position, currentNode.transform.position) > 0.1f)
             {
                 yield return null;
 
                 transform.position = Vector3.MoveTowards(transform.position, currentNode.transform.position, 1f);
             }
+
+            OnPlayerEndMove?.Invoke();
 
             yield return new WaitForSeconds(0.5f);
 
@@ -127,22 +136,30 @@ namespace Player
         {
             CalculateAngle();
 
-            OnPlayerEndTurn?.Invoke();
+            if(!OnDistractor)
+                OnPlayerEndTurn?.Invoke();
+            else OnDistractor = false;
         }
 
         public void StoreNode(Node currentNode, Node targetNode)
         {
+            Distractor tmp = null;
+
             for (int i = 0; i < targetNode.Storages.Count; i++)
             {
                 if (targetNode.Storages[i].CompareTag("Enemy"))
                 {
                     targetNode.Storages[i].GetComponent<Agent>().Death();
+                    continue;
                 }
                 else if (targetNode.Storages[i].CompareTag("Distractor"))
                 {
                     OnPlayerDistractionReady?.Invoke();
+                    OnDistractor = true;
+                    tmp = targetNode.Storages[i].GetComponent<Distractor>();
                 }
-                else if (targetNode.Storages[i].CompareTag("HiddenPlace"))
+
+                if (targetNode.Storages[i].CompareTag("HiddenPlace"))
                 {
                     m_visibilityState = PlayerVisibilityState.Hidden;
                 }
@@ -153,6 +170,9 @@ namespace Player
             }
 
             Utils.NodeInteraction(currentNode, targetNode, gameObject);
+
+            if(OnDistractor)
+                tmp.Spawn();
 
             PlayerEndTurn();
         }

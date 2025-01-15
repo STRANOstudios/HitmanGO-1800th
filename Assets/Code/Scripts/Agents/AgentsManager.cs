@@ -109,21 +109,19 @@ namespace Agents
             if (targetNode != null && targetNode != _targetNode)
             {
                 _targetNode = targetNode;
-                NewTarget(targetNode, IdleAgents.Concat(MovingAgents).ToList());
+                SetTarget(targetNode, IdleAgents.Concat(MovingAgents).ToList());
             }
         }
 
         private void OnEnable()
         {
             ShiftManager.OnEnemyTurn += OnTurnStart;
-            KillHandler.OnKillAgent += OnKill;
             Agent.OnEndMovement += CountEndMovement;
         }
 
         private void OnDisable()
         {
             ShiftManager.OnEnemyTurn -= OnTurnStart;
-            KillHandler.OnKillAgent -= OnKill;
             Agent.OnEndMovement -= CountEndMovement;
         }
 
@@ -258,7 +256,7 @@ namespace Agents
                                     IdleAgents.Remove(agent);
                                 }
 
-                                NewTarget(component.CurrentNode, new List<Agent> { agent });
+                                SetTarget(component.CurrentNode, new List<Agent> { agent });
                             }
 
                             return component.IsVisible;
@@ -273,18 +271,6 @@ namespace Agents
             return false;
         }
 
-        private void OnKill(Agent agent)
-        {
-            if (IdleAgents.Contains(agent))
-            {
-                IdleAgents.Remove(agent);
-            }
-            else
-            {
-                MovingAgents.Remove(agent);
-            }
-        }
-
         #endregion
 
         #region Setter
@@ -294,7 +280,7 @@ namespace Agents
         /// </summary>
         /// <param name="targetNode"></param>
         /// <param name="agents"></param>
-        public void NewTarget(Node targetNode, List<Agent> agents)
+        public void SetTarget(Node targetNode, List<Agent> agents)
         {
             if (_debugLog) Debug.Log("New Target");
 
@@ -356,6 +342,11 @@ namespace Agents
             {
                 MovingAgents.Remove(agent);
             }
+        }
+
+        public void OnKill(Agent agent)
+        {
+            UnregisterAgent(agent);
 
             OnAgentDeath?.Invoke(agent);
         }
@@ -554,6 +545,8 @@ namespace Agents
         #region Getter
 
         public int AgentsCount => IdleAgents.Count + MovingAgents.Count;
+
+        public List<Agent> Agents => IdleAgents.Concat(MovingAgents).ToList();
 
         #endregion
 

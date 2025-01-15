@@ -116,26 +116,32 @@ public static class Utils
     }
 
     /// <summary>
-    /// Checks if a player is in a box
+    /// Checks which objects from the provided list are inside a defined 3D box.
     /// </summary>
-    /// <param name="boxCenter"></param>
-    /// <param name="boxSize"></param>
-    /// <param name="objects"></param>
-    /// <returns></returns>
-    public static List<GameObject> CheckGameObjectsInBox(Vector3 boxCenter, Vector3 boxSize, List<GameObject> objects)
+    /// <typeparam name="T">The type of objects being checked, must inherit from MonoBehaviour.</typeparam>
+    /// <param name="boxCenter">The center of the box.</param>
+    /// <param name="boxSize">The size (dimensions) of the box.</param>
+    /// <param name="objects">The list of objects to check.</param>
+    /// <returns>A list of objects that are inside the box.</returns>
+    public static List<T> CheckGameObjectsInBox<T>(Vector3 boxCenter, Vector3 boxSize, List<T> objects) where T : MonoBehaviour
     {
-        List<GameObject> playerInBox = new();
+        // Initialize the list to store objects inside the box
+        List<T> objectsInBox = new();
 
+        // Create bounds based on the given center and size
         Bounds boxBounds = new(boxCenter, boxSize);
 
+        // Iterate through the provided objects
         foreach (var obj in objects)
         {
+            // Check if the object's position is within the bounds
             if (boxBounds.Contains(obj.transform.position))
             {
-                playerInBox.Add(obj);
+                objectsInBox.Add(obj);
             }
         }
 
-        return playerInBox;
+        // Return the list of objects found inside the box
+        return objectsInBox;
     }
 }

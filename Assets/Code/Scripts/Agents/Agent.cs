@@ -120,7 +120,7 @@ namespace Agents
         public void Death()
         {
             currentNode.Storages.Remove(gameObject);
-            AgentsManager.Instance?.UnregisterAgent(this);
+            AgentsManager.Instance.OnKill(this);
         }
 
         private IEnumerator WithCode()
