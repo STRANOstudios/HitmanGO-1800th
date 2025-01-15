@@ -1,4 +1,5 @@
 using PathSystem;
+using System.Collections.Generic;
 using System.Reflection;
 using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine;
@@ -102,9 +103,39 @@ public static class Utils
         }
     }
 
+    /// <summary>
+    /// Interacts with a node
+    /// </summary>
+    /// <param name="currentNode"></param>
+    /// <param name="targetNode"></param>
+    /// <param name="gameObject"></param>
     public static void NodeInteraction(Node currentNode, Node targetNode, GameObject gameObject)
     {
         currentNode.Storages.Remove(gameObject);
         targetNode.Storages.Add(gameObject);
+    }
+
+    /// <summary>
+    /// Checks if a player is in a box
+    /// </summary>
+    /// <param name="boxCenter"></param>
+    /// <param name="boxSize"></param>
+    /// <param name="objects"></param>
+    /// <returns></returns>
+    public static List<GameObject> CheckGameObjectsInBox(Vector3 boxCenter, Vector3 boxSize, List<GameObject> objects)
+    {
+        List<GameObject> playerInBox = new();
+
+        Bounds boxBounds = new(boxCenter, boxSize);
+
+        foreach (var obj in objects)
+        {
+            if (boxBounds.Contains(obj.transform.position))
+            {
+                playerInBox.Add(obj);
+            }
+        }
+
+        return playerInBox;
     }
 }

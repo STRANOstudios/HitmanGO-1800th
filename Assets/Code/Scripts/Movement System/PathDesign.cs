@@ -10,23 +10,23 @@ namespace PathSystem
         public float yOffset = 0f;
 
         [Header("Link Settings")]
-        private float _width = 0.1f;
-        private float _stoppingDistance = 0f;
+        public float _width = 0.1f;
+        public float _stoppingDistance = 0f;
         public Color linkColor = Color.black;
 
         [Header("Node Settings")]
         public Sprite spriteNode = null;
-        private Vector2 _nodeScale = Vector2.one;
+        public Vector2 _nodeScale = Vector2.one;
         public Color nodeColor = Color.black;
 
         [Header("Exit Node Settings")]
         public Sprite exitSpriteNode = null;
-        private Vector2 _exitNodeScale = Vector2.one;
+        public Vector2 _exitNodeScale = Vector2.one;
         public Color exitNodeColor = Color.black;
 
         [Header("Player Indicator Settings")]
         public GameObject playerIndicator = null;
-        private float _playerIndicatorDistance = 0f;
+        public float _playerIndicatorDistance = 0f;
 
         public float Width
         {

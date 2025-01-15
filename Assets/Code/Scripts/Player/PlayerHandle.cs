@@ -35,12 +35,14 @@ namespace Player
         {
             ShiftManager.OnPlayerTurn += Toggle;
             PlayerController.OnPlayerEndTurn += Toggle;
+            PlayerController.OnPlayerDistractionReady += OnDistractionReady;
         }
 
         private void OnDisable()
         {
             ShiftManager.OnPlayerTurn -= Toggle;
             PlayerController.OnPlayerEndTurn -= Toggle;
+            PlayerController.OnPlayerDistractionReady -= OnDistractionReady;
         }
 
         private void Update()
@@ -125,11 +127,17 @@ namespace Player
             OnPlayerStateChange?.Invoke(state);
             playerState = state;
         }
+
+        private void OnDistractionReady()
+        {
+            PlayerChangeStatus(PlayerState.ITEM_READY);
+        }
     }
 
     public enum PlayerState
     {
         IDLE,
-        ACTIVE
+        ACTIVE,
+        ITEM_READY
     }
 }

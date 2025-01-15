@@ -30,6 +30,7 @@ namespace Player
         [SerializeField] private bool _drawGizmos = true;
 
         public static event Action OnPlayerEndTurn;
+        public static event Action OnPlayerDistractionReady;
 
         private void Awake()
         {
@@ -139,7 +140,7 @@ namespace Player
                 }
                 else if (targetNode.Storages[i].CompareTag("Distractor"))
                 {
-
+                    OnPlayerDistractionReady?.Invoke();
                 }
                 else if (targetNode.Storages[i].CompareTag("HiddenPlace"))
                 {
