@@ -39,7 +39,6 @@ namespace Player
             ShiftManager.OnPlayerTurn += Toggle;
             PlayerController.OnPlayerEndTurn += Toggle;
             PlayerController.OnPlayerDistractionReady += OnDistractionReady;
-            Distractor.OnInteractEnd += OnDistractionEnd;
         }
 
         private void OnDisable()
@@ -47,7 +46,6 @@ namespace Player
             ShiftManager.OnPlayerTurn -= Toggle;
             PlayerController.OnPlayerEndTurn -= Toggle;
             PlayerController.OnPlayerDistractionReady -= OnDistractionReady;
-            Distractor.OnInteractEnd -= OnDistractionEnd;
         }
 
         private void Update()
@@ -79,7 +77,7 @@ namespace Player
 
                 Debug.DrawRay(ray.origin, ray.direction * raycastDistance, Color.red);
 
-                if (playerState==PlayerState.ITEM_READY)
+                if (playerState == PlayerState.ITEM_READY)
                 {
                     Debug.Log("Distractor");
 
@@ -91,6 +89,8 @@ namespace Player
                         {
                             DistractorCollider collider = hit2.collider.GetComponent<DistractorCollider>();
                             collider.distractor.SetTarget = collider.node;
+                            playerState = PlayerState.IDLE;
+                            isEnable = false;
                         }
                     }
 
@@ -155,11 +155,6 @@ namespace Player
         private void OnDistractionReady()
         {
             PlayerChangeStatus(PlayerState.ITEM_READY);
-        }
-
-        private void OnDistractionEnd()
-        {
-            PlayerChangeStatus(PlayerState.IDLE);
         }
     }
 
