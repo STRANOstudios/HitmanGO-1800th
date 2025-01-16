@@ -53,7 +53,7 @@ public static class SaveSystem
     /// Check if the file exists
     /// </summary>
     /// <param name="fileName"></param>
-    /// <returns></returns>
+    /// <returns>true if the file exists</returns>
     public static bool Exists(string fileName)
     {
         return File.Exists(SavePath(fileName));

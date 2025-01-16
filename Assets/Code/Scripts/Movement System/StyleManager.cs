@@ -7,4 +7,11 @@ public class StyleManager : Singleton<StyleManager>
     [SerializeField] private PathDesign pathDesign = null;
 
     public PathDesign PathDesign => pathDesign;
+
+    protected override void Awake()
+    {
+        IsPersistent = false;
+
+        base.Awake();
+    }
 }

@@ -4,6 +4,12 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 {
     private static T _instance;
 
+    /// <summary>
+    /// Determines whether the singleton instance should persist across scenes.
+    /// Default is true.
+    /// </summary>
+    public static bool IsPersistent { get; set; } = true;
+
     public static T Instance
     {
         get
@@ -16,7 +22,11 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
                 {
                     GameObject singletonObject = new GameObject(typeof(T).Name);
                     _instance = singletonObject.AddComponent<T>();
-                    DontDestroyOnLoad(singletonObject);
+
+                    if (IsPersistent)
+                    {
+                        DontDestroyOnLoad(singletonObject);
+                    }
                 }
             }
             return _instance;
@@ -32,7 +42,11 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
         else
         {
             _instance = this as T;
-            DontDestroyOnLoad(gameObject);
+
+            if (IsPersistent)
+            {
+                DontDestroyOnLoad(gameObject);
+            }
         }
     }
 }

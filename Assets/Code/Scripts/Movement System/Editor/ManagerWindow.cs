@@ -20,7 +20,7 @@ namespace PathSystem
 
         private void OnEnable()
         {
-            if(Application.isPlaying) return;
+            //if(Application.isPlaying) return;
 
             EditorApplication.update += UpdateWindow;
             EditorApplication.hierarchyChanged += InitializeScene;
@@ -28,7 +28,7 @@ namespace PathSystem
 
         private void OnDisable()
         {
-            if (Application.isPlaying) return;
+            //if (Application.isPlaying) return;
 
             EditorApplication.update -= UpdateWindow;
             EditorApplication.hierarchyChanged -= InitializeScene;
@@ -36,14 +36,12 @@ namespace PathSystem
 
         private void OnValidate()
         {
-            if (Application.isPlaying) return;
-
             EditorUtility.SetDirty(pathDesign);
         }
 
         private void UpdateWindow()
         {
-            if (Application.isPlaying) return;
+            //if (Application.isPlaying) return;
 
             Repaint();
             ValidatePathDesign();
