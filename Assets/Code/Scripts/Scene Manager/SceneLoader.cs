@@ -84,13 +84,9 @@ public class SceneLoader : Singleton<SceneLoader>
         // Asynchronous scene loading
         yield return StartCoroutine(LoadSceneAsync(sceneName));
 
-        OnSceneLoaded?.Invoke();
+        yield return StartCoroutine(FadeOut());
 
-        //yield return StartCoroutine(FadeOut());
-
-        //loadingScreen?.SetActive(false);
-
-        //OnSceneLoadComplete?.Invoke();
+        loadingScreen?.SetActive(false);
     }
 
     private IEnumerator FadeIn()
@@ -130,6 +126,8 @@ public class SceneLoader : Singleton<SceneLoader>
 
     private IEnumerator LoadSceneAsync(string sceneName)
     {
+        yield return StartCoroutine(FadeIn());
+
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
         asyncLoad.allowSceneActivation = false;
 
@@ -152,8 +150,7 @@ public class SceneLoader : Singleton<SceneLoader>
             yield return null;
         }
 
-        // Hide the loading screen once the scene is activated
-        loadingScreen?.SetActive(false);
+        OnSceneLoaded?.Invoke();
     }
 
     /// <summary>
@@ -168,6 +165,8 @@ public class SceneLoader : Singleton<SceneLoader>
     private IEnumerator LoadMultipleScenesAsync(string[] sceneNames)
     {
         bool isFirstScene = true;
+
+        yield return StartCoroutine(FadeIn());
 
         foreach (string sceneName in sceneNames)
         {
@@ -187,5 +186,7 @@ public class SceneLoader : Singleton<SceneLoader>
 
             isFirstScene = false;
         }
+
+        OnSceneLoaded?.Invoke();
     }
 }

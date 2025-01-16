@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class DataManager : MonoBehaviour
@@ -20,6 +18,8 @@ public class DataManager : MonoBehaviour
     private void LoadData()
     {
         // caricamento dati livello
+
+        Debug.Log("Dati caricati");
 
         OnDataLoaded?.Invoke();
     }

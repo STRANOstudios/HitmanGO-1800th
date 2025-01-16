@@ -8,6 +8,7 @@ TagManager:
   - HiddenPlace
   - Distractor
   - DistractorIndicator
+  - Loading
   layers:
   - Default
   - TransparentFX

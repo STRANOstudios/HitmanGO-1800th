@@ -5509,6 +5509,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_nameTargets: DistractorIndicator
+  nodes: []
   m_node: {fileID: 741237616}
   m_sizeBounds: {x: 6, y: 0.5, z: 6}
   _drawGizmos: 1

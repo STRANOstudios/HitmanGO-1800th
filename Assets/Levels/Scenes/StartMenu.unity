@@ -13369,8 +13369,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blackScreen: {fileID: 1377245361}
-  fadeDuration: 1
-  maxLoadingTime: 5
+  fadeDuration: 0.3
+  maxLoadingTime: 1
   loadingScreen: {fileID: 1256726840}
 --- !u!4 &1890557394
 Transform:
@@ -14945,7 +14945,7 @@ GameObject:
   - component: {fileID: 2125116529}
   m_Layer: 0
   m_Name: Camera
-  m_TagString: Untagged
+  m_TagString: Loading
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
