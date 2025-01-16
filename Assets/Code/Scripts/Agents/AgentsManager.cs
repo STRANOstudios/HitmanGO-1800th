@@ -13,7 +13,9 @@ using UnityEngine;
 
 namespace Agents
 {
+#if UNITY_EDITOR
     [InitializeOnLoad]
+#endif
     public class AgentsManager : MonoBehaviour
     {
         [Title("Agents")]

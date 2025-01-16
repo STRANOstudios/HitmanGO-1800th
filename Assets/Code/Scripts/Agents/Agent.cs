@@ -4,13 +4,14 @@ using Sirenix.OdinInspector;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
 using UnityEditor;
 using UnityEngine;
 
 namespace Agents
 {
+#if UNITY_EDITOR
     [InitializeOnLoad]
+#endif
     public class Agent : MonoBehaviour, INodeStorable
     {
         [Title("Settings")]

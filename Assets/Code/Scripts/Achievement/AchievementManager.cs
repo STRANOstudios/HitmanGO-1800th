@@ -6,11 +6,11 @@ namespace Achievement
     public class AchievementManager : MonoBehaviour
     {
         private List<Achievement> unlockedAchievements = new List<Achievement>();
-        private LocalizationManager localizationManager;
+        //private LocalizationManager localizationManager;
 
         void Start()
         {
-            localizationManager = FindObjectOfType<LocalizationManager>();
+            //localizationManager = FindObjectOfType<LocalizationManager>();
         }
 
         // Method to unlock an achievement
@@ -19,8 +19,8 @@ namespace Achievement
             if (!unlockedAchievements.Contains(achievement))
             {
                 unlockedAchievements.Add(achievement);
-                string localizedName = localizationManager.GetLocalizedText(achievement.NameKey);
-                Debug.Log($"Achievement Unlocked: {localizedName}");
+                //string localizedName = localizationManager.GetLocalizedText(achievement.NameKey);
+                //Debug.Log($"Achievement Unlocked: {localizedName}");
                 // Here you could update the UI or trigger a sound
             }
         }

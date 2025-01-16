@@ -8,7 +8,9 @@ using UnityEngine.UIElements;
 namespace VFX
 {
     [RequireComponent(typeof(CinemachineVirtualCamera))]
+#if UNITY_EDITOR
     [InitializeOnLoad]
+#endif
     public class CameraController : MonoBehaviour
     {
         [Title("Settings")]
@@ -125,8 +127,9 @@ namespace VFX
 
         private void FixedUpdate()
         {
+#if UNITY_EDITOR
             EditorUtility.SetDirty(this);
-
+#endif
             HandleMouseRotation();
             HandleTouchRotation();
 

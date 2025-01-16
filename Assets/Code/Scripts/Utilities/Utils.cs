@@ -1,7 +1,7 @@
 using PathSystem;
 using System.Collections.Generic;
 using System.Reflection;
-using UnityEditor.Localization.Plugins.XLIFF.V12;
+//using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine;
 
 public static class Utils
@@ -27,7 +27,7 @@ public static class Utils
         Quaternion targetRotation = Quaternion.LookRotation(direction);
         transform.rotation = targetRotation;
     }
-
+#if UNITY_EDITOR
     /// <summary>
     /// Clears the log entries
     /// </summary>
@@ -38,7 +38,7 @@ public static class Utils
         var method = type.GetMethod("Clear");
         method.Invoke(new object(), null);
     }
-
+#endif
     /// <summary>
     /// Normalizes the angle to be between 0 and 360 degrees
     /// </summary>
