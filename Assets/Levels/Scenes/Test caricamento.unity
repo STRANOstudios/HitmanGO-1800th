@@ -282,7 +282,7 @@ MonoBehaviour:
   distractorMask:
     serializedVersion: 2
     m_Bits: 256
-  _debug: 1
+  _debug: 0
   _debugLog: 0
 --- !u!1 &547948295
 GameObject:
@@ -825,7 +825,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 864271237}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fb7194dc27b9df64c8beca7482ee8e0d, type: 3}
   m_Name: 
@@ -1373,8 +1373,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_BindingMode: 1
   m_FollowOffset: {x: 0, y: 30, z: -15}
-  m_XDamping: 1
-  m_YDamping: 1
+  m_XDamping: 0
+  m_YDamping: 0
   m_ZDamping: 1
   m_AngularDampingMode: 0
   m_PitchDamping: 0
@@ -1394,9 +1394,9 @@ MonoBehaviour:
   m_XAxis:
     Value: 0
     m_SpeedMode: 0
-    m_MaxSpeed: 300
+    m_MaxSpeed: 150
     m_AccelTime: 2
-    m_DecelTime: 5
+    m_DecelTime: 2
     m_InputAxisName: Mouse X
     m_InputAxisValue: 0
     m_InvertInput: 0

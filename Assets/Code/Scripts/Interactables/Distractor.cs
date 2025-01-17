@@ -84,6 +84,8 @@ namespace Interactables
 
         private void Check()
         {
+            m_node.Storages.Remove(gameObject);
+
             AgentsManager.Instance.SetTarget(
                 target,
                 Utils.CheckGameObjectsInBox(

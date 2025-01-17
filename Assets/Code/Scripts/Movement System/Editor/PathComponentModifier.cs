@@ -77,7 +77,7 @@ namespace PathSystem
             spriteRenderer.sprite = sprite;
             spriteRenderer.material = sharedMaterial;
             spriteRenderer.color = color;
-            spriteRenderer.transform.localScale = new(scale.x, scale.y, 1f );
+            spriteRenderer.transform.localScale = new(scale.x, scale.y, 1f);
             spriteRenderer.sortingOrder = 2;
 
             node.transform.SetPositionAndRotation(new(node.transform.position.x, yOffset, node.transform.position.z), Quaternion.LookRotation(Vector3.down));
@@ -159,7 +159,7 @@ namespace PathSystem
                 hubManager = GameObject.FindObjectOfType<HUBManager>();
             }
 
-            if(sharedMaterial == null)
+            if (sharedMaterial == null)
             {
                 sharedMaterial = new(Shader.Find("Sprites/Default"));
             }
