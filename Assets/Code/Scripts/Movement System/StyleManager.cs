@@ -10,6 +10,8 @@ public class StyleManager : Singleton<StyleManager>
 
     protected override void Awake()
     {
+        if (ServiceLocator.Instance != null) ServiceLocator.Instance.PathDesign = this;
+
         IsPersistent = false;
 
         base.Awake();

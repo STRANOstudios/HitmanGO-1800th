@@ -19,7 +19,7 @@ namespace Player.VFX
         {
             PlayerController = GetComponent<PlayerController>();
 
-            PathDesign style = FindAnyObjectByType<StyleManager>()?.PathDesign;
+            PathDesign style = ServiceLocator.Instance.PathDesign.PathDesign;
             m_prefabsToCreate = style.playerIndicator;
             m_distance = style.PlayerIndicatorDistance;
         }

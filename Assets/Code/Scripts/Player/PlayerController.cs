@@ -1,6 +1,5 @@
 using Agents;
 using Interactables;
-using Interfaces.PathSystem;
 using PathSystem;
 using Sirenix.OdinInspector;
 using System;
@@ -10,11 +9,10 @@ using UnityEngine;
 
 namespace Player
 {
-    public class PlayerController : MonoBehaviour, INodeStorable
+    public class PlayerController : MonoBehaviour
     {
         [Title("Settings")]
         [SerializeField] private Node m_startNode;
-        [SerializeField] private LayerMask m_hidingSpotLayerMask;
 
         [SerializeField, Range(0, 360)] private float maxAllowedAngle = 45f;
 
@@ -93,21 +91,18 @@ namespace Player
 
         private void PlayerTurn(Node node)
         {
-            var tmp = currentNode;
-            currentNode = node;
-
-            StartCoroutine(Movement(tmp));
+            StartCoroutine(Movement(node));
         }
 
         private IEnumerator Movement(Node node)
         {
             OnPlayerMove?.Invoke();
 
-            while (Vector3.Distance(transform.position, currentNode.transform.position) > 0.1f)
+            while (Vector3.Distance(transform.position, node.transform.position) > 0.1f)
             {
                 yield return null;
 
-                transform.position = Vector3.MoveTowards(transform.position, currentNode.transform.position, 1f);
+                transform.position = Vector3.MoveTowards(transform.position, node.transform.position, 1f);
             }
 
             OnPlayerEndMove?.Invoke();
@@ -116,7 +111,7 @@ namespace Player
 
             //PlayerEndTurn();
 
-            StoreNode(node, currentNode);
+            StoreNode(node);
         }
 
         private void CalculateAngle()
@@ -143,37 +138,38 @@ namespace Player
             else OnDistractor = false;
         }
 
-        public void StoreNode(Node currentNode, Node targetNode)
+        public void StoreNode(Node node)
         {
             Distractor tmp = null;
 
-            for (int i = 0; i < targetNode.Storages.Count; i++)
+            m_visibilityState = PlayerVisibilityState.Visible;
+
+            for (int i = 0; i < node.Storages.Count; i++)
             {
-                if (targetNode.Storages[i].CompareTag("Enemy"))
+                if (node.Storages[i].CompareTag("Enemy"))
                 {
-                    targetNode.Storages[i].GetComponent<Agent>().Death();
+                    node.Storages[i].GetComponent<Agent>().Death();
                     continue;
                 }
-                else if (targetNode.Storages[i].CompareTag("Distractor"))
+                else if (node.Storages[i].CompareTag("Distractor"))
                 {
                     OnPlayerDistractionReady?.Invoke();
                     OnDistractor = true;
-                    tmp = targetNode.Storages[i].GetComponent<Distractor>();
+                    tmp = node.Storages[i].GetComponent<Distractor>();
                 }
 
-                if (targetNode.Storages[i].CompareTag("HiddenPlace"))
+                if (node.Storages[i].CompareTag("HiddenPlace"))
                 {
                     m_visibilityState = PlayerVisibilityState.Hidden;
                 }
-                else
-                {
-                    m_visibilityState = PlayerVisibilityState.Visible;
-                }
             }
 
-            Utils.NodeInteraction(currentNode, targetNode, gameObject);
+            node.Storages.Add(gameObject);
+            currentNode.Storages.Remove(gameObject);
 
-            if(OnDistractor)
+            currentNode = node;
+
+            if (OnDistractor)
                 tmp.Spawn();
 
             PlayerEndTurn();

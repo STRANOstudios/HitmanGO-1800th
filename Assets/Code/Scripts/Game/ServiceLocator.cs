@@ -25,6 +25,9 @@ public class ServiceLocator : Singleton<ServiceLocator>
     [ShowIfGroup("m_debug")]
     [ShowInInspector, ReadOnly] private PlayerController player = null;
 
+    [ShowIfGroup("m_debug")]
+    [ShowInInspector, ReadOnly] private StyleManager pathDesign = null;
+
     // DATI SALVATI
 
     [SerializeField] private bool m_debugLog = false;
@@ -54,7 +57,7 @@ public class ServiceLocator : Singleton<ServiceLocator>
         //    if (player == null) Debug.LogError("Missing reference Player");
         //}
 
-        if (agentsManager != null && nodeCache != null && nodeManager != null && deathManager != null && player != null && !hasNotified)
+        if (agentsManager != null && nodeCache != null && nodeManager != null && deathManager != null && player != null && pathDesign != null && !hasNotified)
         {
             hasNotified = true;
             OnServiceLoactorCreated?.Invoke();
@@ -129,6 +132,19 @@ public class ServiceLocator : Singleton<ServiceLocator>
             }
         }
         get { return nodeManager; }
+    }
+
+    public StyleManager PathDesign
+    {
+        set
+        {
+            if (pathDesign == null)
+            {
+                pathDesign = value;
+                CheckCreateProgress();
+            }
+        }
+        get { return pathDesign; }
     }
 
     #endregion

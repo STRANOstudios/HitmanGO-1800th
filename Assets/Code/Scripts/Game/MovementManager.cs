@@ -3,15 +3,15 @@ using PathSystem;
 using Sirenix.OdinInspector;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MovementManager : MonoBehaviour
 {
     [Title("Settings")]
     [SerializeField, Range(0.1f, 10f)] private float moveSpeed = 1f;
+    [SerializeField, Range(0.1f, 10f)] private float rotateSpeed = 1f;
     [SerializeField, Range(0, 5f)] private float distance = 1f;
-
-    private int activeMovements = 0;
 
     public static event Action OnEndMovement;
 
@@ -35,12 +35,11 @@ public class MovementManager : MonoBehaviour
 
     private void MoveCalculate()
     {
-        bool anyMovementStarted = false;
+        List<GameObject> storages = new();
+        List<Vector3> vertices = new();
 
         foreach (Node node in NodeCache.Nodes)
         {
-            Color color = Color.magenta;
-
             if (node.Storages.Count > 0)
             {
                 int counter = node.Storages.Count;
@@ -50,33 +49,37 @@ public class MovementManager : MonoBehaviour
 
                 if (counter == 0) continue;
 
-                Vector3[] vertices = Utils.GenerateInscribedPolygonVertices(node.transform.position, counter, distance);
+                vertices.AddRange(Utils.GenerateInscribedPolygonVertices(node.transform.position, counter, distance));
 
-                int j = 0;
                 foreach (GameObject obj in node.Storages)
                 {
                     if (obj == ServiceLocator.Instance.Player.gameObject) continue;
-
-                    anyMovementStarted = true;
-                    activeMovements++;
-
-                    StartCoroutine(Movement(obj.transform, vertices[j], () =>
-                    {
-                        activeMovements--;
-                        if (activeMovements == 0)
-                        {
-                            OnEndMovement?.Invoke();
-                        }
-                    })
-                        );
-                    j++;
+                    storages.Add(obj);
                 }
             }
         }
 
-        if (!anyMovementStarted)
+        if (storages.Count == 0)
         {
             OnEndMovement?.Invoke();
+            return;
+        }
+
+        int activeMovements = storages.Count;
+
+        int j = 0;
+        foreach (GameObject obj in storages)
+        {
+            StartCoroutine(Movement(obj.transform, vertices[j], () =>
+            {
+                activeMovements--;
+                if (activeMovements == 0)
+                {
+                    OnEndMovement?.Invoke();
+                }
+            })
+                );
+            j++;
         }
     }
 
@@ -126,7 +129,7 @@ public class MovementManager : MonoBehaviour
                     while (elapsedTime < moveSpeed)
                     {
                         elapsedTime += Time.deltaTime;
-                        float t = Mathf.Clamp01(elapsedTime / moveSpeed);
+                        float t = Mathf.Clamp01(elapsedTime / rotateSpeed);
 
                         // Rotate the agent smoothly towards the target position.
                         Quaternion smoothedRotation = Quaternion.Slerp(startRotation, targetRotation, t);

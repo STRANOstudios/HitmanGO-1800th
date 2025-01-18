@@ -2532,15 +2532,12 @@ MonoBehaviour:
   MovingAgents:
   - {fileID: 3612721611183657213}
   - {fileID: 1468428315}
-  layerMask:
-    serializedVersion: 2
-    m_Bits: 64
-  rayDistance: 2
+  size: {x: 3, y: 1, z: 3}
   _debug: 0
   _debugLog: 0
   _drawGizmos: 1
   yOffset: 1
-  _raylineColor: {r: 0, g: 1, b: 0, a: 0}
+  _raylineColor: {r: 0, g: 1, b: 0, a: 1}
   _targetNodeColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   _pathColor: {r: 1, g: 0, b: 0, a: 0}
   _nextPathColor: {r: 1, g: 0, b: 1, a: 1}
@@ -3267,7 +3264,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 708217355}
-  - component: {fileID: 708217353}
   - component: {fileID: 708217359}
   - component: {fileID: 708217356}
   - component: {fileID: 708217357}
@@ -3279,29 +3275,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!136 &708217353
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 708217352}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 1, z: 0}
 --- !u!4 &708217355
 Transform:
   m_ObjectHideFlags: 0
@@ -3331,9 +3304,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_startNode: {fileID: 1548474340}
-  m_hidingSpotLayerMask:
-    serializedVersion: 2
-    m_Bits: 256
   maxAllowedAngle: 90
   _debug: 1
   _debugLog: 0
@@ -3368,33 +3338,29 @@ MonoBehaviour:
   - {fileID: 708217355}
   rotationAxis: {x: 1, y: 0, z: 1}
   m_ifIsActive: 1
---- !u!54 &708217359
-Rigidbody:
+--- !u!136 &708217359
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 708217352}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &722637266
 GameObject:
   m_ObjectHideFlags: 0
@@ -3894,7 +3860,7 @@ GameObject:
   m_Icon: {fileID: 2800000, guid: f1d766c90aeb37d4fb8c7d1ed3ba1378, type: 3}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &902861196
 Transform:
   m_ObjectHideFlags: 0
@@ -5523,7 +5489,7 @@ GameObject:
   m_Icon: {fileID: 2800000, guid: dd81f55787e496249bb4111007562ef5, type: 3}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1332272192
 Transform:
   m_ObjectHideFlags: 0
@@ -7931,7 +7897,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 898181867496546094}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 4, y: 0.01, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

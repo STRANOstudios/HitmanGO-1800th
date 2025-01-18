@@ -16,24 +16,27 @@ public class GameStatusManager : MonoBehaviour
 
     private void OnEnable()
     {
-        SceneLoader.OnSceneLoadComplete += BeginPlayerTurn;
+        SceneLoader.OnSceneLoadComplete += GameStart;
 
         PlayerController.OnPlayerEndTurn += BeginEnemyTurn;
 
         MovementManager.OnEndMovement += BeginPlayerTurn;
-
-        Distractor.OnInteractEnd += BeginEnemyTurn;
+        Distractor.OnInteractEnd += BeginPlayerTurn;
     }
 
     private void OnDisable()
     {
-        SceneLoader.OnSceneLoadComplete -= BeginPlayerTurn;
+        SceneLoader.OnSceneLoadComplete -= GameStart;
 
         PlayerController.OnPlayerEndTurn -= BeginEnemyTurn;
 
         MovementManager.OnEndMovement -= BeginPlayerTurn;
+        Distractor.OnInteractEnd -= BeginPlayerTurn;
+    }
 
-        Distractor.OnInteractEnd -= BeginEnemyTurn;
+    private void GameStart()
+    {
+        BeginPlayerTurn();
     }
 
     private void BeginEnemyTurn()

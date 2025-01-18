@@ -1,9 +1,6 @@
 using Interactables;
 using Sirenix.OdinInspector;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Player
@@ -36,13 +33,15 @@ namespace Player
 
         private void OnEnable()
         {
-            GameStatusManager.OnPlayerTurn += Toggle;
+            GameStatusManager.OnPlayerTurn += Enable;
+            GameStatusManager.OnEnemyTurn += Disable;
             PlayerController.OnPlayerDistractionReady += OnDistractionReady;
         }
 
         private void OnDisable()
         {
-            GameStatusManager.OnPlayerTurn -= Toggle;
+            GameStatusManager.OnPlayerTurn -= Enable;
+            GameStatusManager.OnEnemyTurn -= Disable;
             PlayerController.OnPlayerDistractionReady -= OnDistractionReady;
         }
 
@@ -53,9 +52,14 @@ namespace Player
             HandlePlayerTurn();
         }
 
-        private void Toggle()
+        private void Enable()
         {
             isEnable = true;
+        }
+
+        private void Disable()
+        {
+            isEnable = false;
         }
 
         private void HandlePlayerTurn()
@@ -88,7 +92,7 @@ namespace Player
                             DistractorCollider collider = hit2.collider.GetComponent<DistractorCollider>();
                             collider.distractor.SetTarget = collider.node;
                             playerState = PlayerState.IDLE;
-                            isEnable = false;
+                            isEnable = true;
                         }
                     }
 

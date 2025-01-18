@@ -23,8 +23,7 @@ namespace Agents
         [SerializeField] private List<Agent> MovingAgents = new();
 
         [Title("Settings")]
-        [SerializeField] private LayerMask layerMask;
-        [SerializeField, Range(0, 5)] private float rayDistance;
+        [SerializeField] private Vector3 size = Vector3.one;
 
         [Title("Debug")]
         [SerializeField] private bool _debug = false;
@@ -78,7 +77,7 @@ namespace Agents
 
         private async void OnTurnStart()
         {
-            _isPlayerDetected = await CheckRayCast(IdleAgents.Concat(MovingAgents).ToList());
+            _isPlayerDetected = await CheckRayCast(IdleAgents.Concat(MovingAgents).ToList(), NodeCache.Nodes);
 
             Move(MovingAgents);
         }
@@ -154,51 +153,19 @@ namespace Agents
 
         #region Methods
 
-        private async Task<bool> CheckRayCast(List<Agent> agents)
+        private async Task<bool> CheckRayCast(List<Agent> agents, List<Node> nodes)
         {
-            if (_debugLog) Debug.Log("Raycast");
+            Debug.Log("Check");
 
             foreach (Agent agent in agents)
             {
-                Vector3 pos = agent.transform.position;
-                pos.y = yOffset;
+                Vector3 size = this.size;
+                size.x = Mathf.Clamp(Mathf.Abs(Vector3.Dot(agent.transform.forward, Vector3.right)) * this.size.x, 1f, this.size.x);
+                size.z = Mathf.Clamp(Mathf.Abs(Vector3.Dot(agent.transform.forward, Vector3.forward)) * this.size.z, 1f, this.size.z);
 
-                Ray ray = new(pos, agent.transform.forward);
-
-                if (_drawGizmos) Debug.DrawRay(ray.origin, ray.direction * rayDistance, Color.magenta, 1f);
-
-                if (Physics.Raycast(ray, out RaycastHit hit, rayDistance, layerMask))
+                if (Utils.CheckGameObjectsInBox(agent.CurrentNode.transform.position + agent.transform.forward, size, new List<PlayerController> { ServiceLocator.Instance.Player }).Count > 0)
                 {
-                    if (_debugLog) Debug.Log(hit.transform.name);
-
-                    if (_drawGizmos)
-                    {
-                        Debug.DrawLine(ray.origin, hit.point, Color.green, 1f);
-                        Debug.DrawLine(hit.point, hit.point + Vector3.up, Color.green, 1f);
-                    }
-
-                    if (hit.transform.CompareTag("Player"))
-                    {
-                        if (_debugLog) Debug.Log("Player Detected");
-
-                        if (hit.transform.TryGetComponent(out PlayerController component))
-                        {
-                            if (component.IsVisible)
-                            {
-                                if (!MovingAgents.Contains(agent))
-                                {
-                                    MovingAgents.Add(agent);
-                                    IdleAgents.Remove(agent);
-                                }
-
-                                SetTarget(component.CurrentNode, new List<Agent> { agent });
-                            }
-
-                            return component.IsVisible;
-                        }
-
-                        return true;
-                    }
+                    return ServiceLocator.Instance.Player.IsVisible;
                 }
 
                 await Task.Yield();
@@ -487,9 +454,12 @@ namespace Agents
             {
                 Gizmos.color = _raylineColor;
 
-                Vector3 pos = agent.transform.position + agent.transform.forward * rayDistance;
+                Vector3 size = this.size;
+                size.x = Mathf.Clamp(Mathf.Abs(Vector3.Dot(agent.transform.forward, Vector3.right)) * this.size.x, 1f, this.size.x);
+                size.z = Mathf.Clamp(Mathf.Abs(Vector3.Dot(agent.transform.forward, Vector3.forward)) * this.size.z, 1f, this.size.z);
 
-                Gizmos.DrawLine(PositionNormalize(agent.transform.position), PositionNormalize(pos));
+                // Disegna il cubo con la posizione e la dimensione calcolate
+                Gizmos.DrawWireCube(agent.CurrentNode.transform.position + agent.transform.forward, size);
             }
 
             // Gizmo path

@@ -283,7 +283,7 @@ MonoBehaviour:
   distractorMask:
     serializedVersion: 2
     m_Bits: 256
-  _debug: 0
+  _debug: 1
   _debugLog: 0
 --- !u!1 &547948295
 GameObject:
@@ -1110,7 +1110,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23bedeffd16c04f43b870a7a9d9a300e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 1
+  moveSpeed: 3
+  rotateSpeed: 0.5
   distance: 1
 --- !u!1 &1053065863
 GameObject:

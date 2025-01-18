@@ -52,7 +52,7 @@ namespace Interactables
             nodes = Utils.CheckGameObjectsInBox(
                 transform.position,
                 m_sizeBounds,
-                GameObject.FindObjectsOfType<Node>().ToList()
+                NodeCache.Nodes
                 );
         }
 

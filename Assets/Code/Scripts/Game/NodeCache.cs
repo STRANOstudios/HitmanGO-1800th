@@ -20,7 +20,7 @@ public class NodeCache : MonoBehaviour
     }
 
     // Public property to access the nodes list (read-only)
-    public static IReadOnlyList<Node> Nodes => nodes;
+    public static List<Node> Nodes => nodes;
 
     private void Awake()
     {
