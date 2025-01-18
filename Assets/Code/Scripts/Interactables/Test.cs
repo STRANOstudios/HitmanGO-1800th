@@ -39,7 +39,7 @@ namespace Interactables
 
             if (setTarget)
             {
-                AgentsManager.Instance.SetTarget(_node, agents);
+                ServiceLocator.Instance.AgentsManager.SetTarget(_node, agents);
             }
         }
 

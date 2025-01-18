@@ -39,6 +39,8 @@ namespace Player
 
         private void Awake()
         {
+            ServiceLocator.Instance.Player = this;
+
             currentNode = m_startNode;
 
             currentNode.Storages.Add(this.gameObject);

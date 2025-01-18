@@ -27,18 +27,7 @@ public static class Utils
         Quaternion targetRotation = Quaternion.LookRotation(direction);
         transform.rotation = targetRotation;
     }
-#if UNITY_EDITOR
-    /// <summary>
-    /// Clears the log entries
-    /// </summary>
-    public static void ClearLog()
-    {
-        var assembly = Assembly.GetAssembly(typeof(UnityEditor.ActiveEditorTracker));
-        var type = assembly.GetType("UnityEditorInternal.LogEntries");
-        var method = type.GetMethod("Clear");
-        method.Invoke(new object(), null);
-    }
-#endif
+
     /// <summary>
     /// Normalizes the angle to be between 0 and 360 degrees
     /// </summary>
@@ -144,4 +133,39 @@ public static class Utils
         // Return the list of objects found inside the box
         return objectsInBox;
     }
+
+    /// <summary>
+    /// Generates the vertices of a regular polygon inscribed in a circle.
+    /// The polygon's center is provided, along with the number of vertices and the radius of the circle.
+    /// </summary>
+    /// <param name="center">The center position of the polygon (Vector3).</param>
+    /// <param name="numVertices">The number of vertices in the polygon (int).</param>
+    /// <param name="radius">The radius of the circle inscribed by the polygon (float).</param>
+    /// <returns>A Vector3 array containing the positions of the polygon's vertices.</returns>
+    public static Vector3[] GenerateInscribedPolygonVertices(Vector3 center, int numVertices, float radius)
+    {
+        // Array to hold the vertices of the polygon
+        Vector3[] vertices = new Vector3[numVertices];
+
+        // Calculate the angle between each vertex
+        float angleStep = 360f / numVertices;
+
+        // Loop through each vertex and calculate its position
+        for (int i = 0; i < numVertices; i++)
+        {
+            // Calculate the angle in radians for the current vertex
+            float angleInRadians = Mathf.Deg2Rad * (angleStep * i);
+
+            // Calculate the position of the vertex on the X and Z axis using trigonometry
+            float x = center.x + radius * Mathf.Cos(angleInRadians);
+            float z = center.z + radius * Mathf.Sin(angleInRadians);
+
+            // Set the Y position to match the center's Y (for a flat polygon in the XY plane)
+            vertices[i] = new Vector3(x, center.y, z);
+        }
+
+        // Return the array of vertices
+        return vertices;
+    }
+
 }

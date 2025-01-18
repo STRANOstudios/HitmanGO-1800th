@@ -86,12 +86,12 @@ namespace Interactables
         {
             m_node.Storages.Remove(gameObject);
 
-            AgentsManager.Instance.SetTarget(
+            ServiceLocator.Instance.AgentsManager.SetTarget(
                 target,
                 Utils.CheckGameObjectsInBox(
                     target.transform.position,
                     m_sizeBounds,
-                    AgentsManager.Instance.Agents)
+                    ServiceLocator.Instance.AgentsManager.Agents)
                 );
 
             for (int i = 0; i < indicators.Count; i++)

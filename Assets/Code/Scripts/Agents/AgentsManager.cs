@@ -52,52 +52,20 @@ namespace Agents
         [FoldoutGroup("Gizmos"), ShowIf("_drawGizmos")]
         [SerializeField, ColorPalette] private Color _nextPathColor = Color.magenta;
 
-        public static event Action<Agent> OnAgentDeath;
+        public static event Action OnKillPlayer;
         public static event Action OnAgentsEndMovement;
         private int _endMovmentCounter = 0;
 
         // control
         private Node _targetNode = null;
 
-        private static AgentsManager _instance;
-
-        public static AgentsManager Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = FindObjectOfType<AgentsManager>();
-                }
-                return _instance;
-            }
-        }
-
-        public static event Action OnKillPlayer;
-
         private PathFinder pathFinder;
 
         private bool _isPlayerDetected = false;
 
-#if UNITY_EDITOR
-        [InitializeOnLoadMethod]
-        private static void InitializeInEditor()
-        {
-            if (Instance == null)
-            {
-                AgentsManager existingInstance = FindObjectOfType<AgentsManager>();
-                if (existingInstance != null)
-                {
-                    _instance = existingInstance;
-                }
-            }
-        }
-#endif
-
         private void Awake()
         {
-            if (Instance == null) _instance = this;
-            else if (Instance != this) DestroyImmediate(this);
+            ServiceLocator.Instance.AgentsManager = this;
         }
 
         private void OnValidate()
@@ -350,7 +318,7 @@ namespace Agents
         {
             UnregisterAgent(agent);
 
-            OnAgentDeath?.Invoke(agent);
+            ServiceLocator.Instance.DeathManager.GetDeathBody(agent);
         }
 
         /// <summary>

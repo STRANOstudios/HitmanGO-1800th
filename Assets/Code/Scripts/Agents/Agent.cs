@@ -60,7 +60,6 @@ namespace Agents
 
             if (isPatrol != _isPatrol)
             {
-                ChangeToManager();
                 _isPatrol = isPatrol;
 
                 if (!_isPatrol)
@@ -83,7 +82,7 @@ namespace Agents
                 if (endNode != null && endNode != _endNode)
                 {
                     _endNode = endNode;
-                    AgentsManager.Instance.UpdatePath(this);
+                    ServiceLocator.Instance.AgentsManager.UpdatePath(this);
                 }
             }
         }
@@ -92,12 +91,12 @@ namespace Agents
 
         private void RegisterToManager()
         {
-            AgentsManager.Instance.RegisterAgent(this);
+            ServiceLocator.Instance.AgentsManager.RegisterAgent(this);
         }
 
         private void ChangeToManager()
         {
-            AgentsManager.Instance.ChangeList(this);
+            ServiceLocator.Instance.AgentsManager.ChangeList(this);
         }
 
         #endregion
@@ -121,7 +120,7 @@ namespace Agents
         public void Death()
         {
             currentNode.Storages.Remove(gameObject);
-            AgentsManager.Instance.OnKill(this);
+            ServiceLocator.Instance.AgentsManager.OnKill(this);
         }
 
         private IEnumerator WithCode()

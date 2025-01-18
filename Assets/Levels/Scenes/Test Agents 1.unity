@@ -1520,7 +1520,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef16aade02d092c40b37d67d6b70b4c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_agentsManager: {fileID: 547875797}
   m_deathPositions:
   - {fileID: 865989762}
   - {fileID: 1652310433}
@@ -2506,7 +2505,7 @@ MonoBehaviour:
     m_Bits: 64
   rayDistance: 2
   _debug: 0
-  _debugLog: 1
+  _debugLog: 0
   targetNode: {fileID: 0}
   _drawGizmos: 1
   yOffset: 1
@@ -3630,37 +3629,6 @@ MonoBehaviour:
   HCost: 0
   Parent: {fileID: 0}
   Storages: []
---- !u!1 &770113462
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 770113463}
-  m_Layer: 0
-  m_Name: '- Level manager'
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &770113463
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 770113462}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1555358755}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &786127487
 GameObject:
   m_ObjectHideFlags: 0
@@ -4456,6 +4424,50 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1059926846
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1059926847}
+  - component: {fileID: 1059926848}
+  m_Layer: 0
+  m_Name: '- Node Cache'
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1059926847
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1059926846}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1555358755}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1059926848
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1059926846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9d84f0c499e4cd4cbf786f76e776fa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1101988814
 GameObject:
   m_ObjectHideFlags: 0
@@ -6186,7 +6198,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1555358755}
   m_Layer: 0
-  m_Name: --- Level Managers ---
+  m_Name: --- Level System ---
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6206,8 +6218,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 547875798}
-  - {fileID: 770113463}
   - {fileID: 309591487}
+  - {fileID: 1059926847}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1559824609
