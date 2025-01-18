@@ -17,12 +17,12 @@ public class ExitNode : MonoBehaviour
 
     private void OnEnable()
     {
-        ShiftManager.OnEnemyTurn += CheckPlayerPresence;
+        GameStatusManager.OnEnemyTurn += CheckPlayerPresence;
     }
 
     private void OnDisable()
     {
-        ShiftManager.OnEnemyTurn -= CheckPlayerPresence;
+        GameStatusManager.OnEnemyTurn -= CheckPlayerPresence;
     }
 
     private void CheckPlayerPresence()

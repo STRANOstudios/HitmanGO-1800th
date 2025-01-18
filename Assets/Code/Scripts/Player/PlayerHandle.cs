@@ -36,15 +36,13 @@ namespace Player
 
         private void OnEnable()
         {
-            ShiftManager.OnPlayerTurn += Toggle;
-            PlayerController.OnPlayerEndTurn += Toggle;
+            GameStatusManager.OnPlayerTurn += Toggle;
             PlayerController.OnPlayerDistractionReady += OnDistractionReady;
         }
 
         private void OnDisable()
         {
-            ShiftManager.OnPlayerTurn -= Toggle;
-            PlayerController.OnPlayerEndTurn -= Toggle;
+            GameStatusManager.OnPlayerTurn -= Toggle;
             PlayerController.OnPlayerDistractionReady -= OnDistractionReady;
         }
 
@@ -57,7 +55,7 @@ namespace Player
 
         private void Toggle()
         {
-            isEnable = !isEnable;
+            isEnable = true;
         }
 
         private void HandlePlayerTurn()

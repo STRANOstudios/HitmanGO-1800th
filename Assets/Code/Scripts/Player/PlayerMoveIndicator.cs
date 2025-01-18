@@ -26,13 +26,13 @@ namespace Player.VFX
 
         private void OnEnable()
         {
-            ShiftManager.OnPlayerTurn += Active;
+            GameStatusManager.OnPlayerTurn += Active;
             PlayerController.OnPlayerMove += DeActivate;
         }
 
         private void OnDisable()
         {
-            ShiftManager.OnPlayerTurn -= Active;
+            GameStatusManager.OnPlayerTurn -= Active;
             PlayerController.OnPlayerMove -= DeActivate;
         }
 

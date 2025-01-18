@@ -32,9 +32,6 @@ namespace Agents
         [FoldoutGroup("Debug"), ShowIf("_debug")]
         [SerializeField] private bool _debugLog = false;
 
-        [FoldoutGroup("Debug"), ShowIf("_debug")]
-        [SerializeField] private Node targetNode;
-
         [SerializeField] protected bool _drawGizmos = false;
 
         [FoldoutGroup("Gizmos"), ShowIf("_drawGizmos")]
@@ -53,11 +50,8 @@ namespace Agents
         [SerializeField, ColorPalette] private Color _nextPathColor = Color.magenta;
 
         public static event Action OnKillPlayer;
-        public static event Action OnAgentsEndMovement;
+        public static event Action OnAgentsEndSettingsMovement;
         private int _endMovmentCounter = 0;
-
-        // control
-        private Node _targetNode = null;
 
         private PathFinder pathFinder;
 
@@ -68,30 +62,15 @@ namespace Agents
             ServiceLocator.Instance.AgentsManager = this;
         }
 
-        private void OnValidate()
-        {
-            if (!Application.isPlaying)
-            {
-                _targetNode = targetNode = null;
-                return;
-            }
-
-            if (targetNode != null && targetNode != _targetNode)
-            {
-                _targetNode = targetNode;
-                SetTarget(targetNode, IdleAgents.Concat(MovingAgents).ToList());
-            }
-        }
-
         private void OnEnable()
         {
-            ShiftManager.OnEnemyTurn += OnTurnStart;
+            GameStatusManager.OnEnemyTurn += OnTurnStart;
             Agent.OnEndMovement += CountEndMovement;
         }
 
         private void OnDisable()
         {
-            ShiftManager.OnEnemyTurn -= OnTurnStart;
+            GameStatusManager.OnEnemyTurn -= OnTurnStart;
             Agent.OnEndMovement -= CountEndMovement;
         }
 
@@ -112,35 +91,23 @@ namespace Agents
 
                 agent.Index++;
 
-                if (_debugLog) Debug.Log("Index: " + agent.Index + " / " + agent.Path.Count);
-
                 if (agent.Index >= agent.Path.Count)
                 {
-                    if (_debugLog) Debug.Log("End of path");
-
                     if (agent.IsPatrol)
                     {
-                        if (_debugLog) Debug.Log("isPatrol");
-
-                        if (agent.CurrentNode == targetNode && !agent.HasReachedTarget)
+                        if (!agent.HasReachedTarget)
                         {
                             agent.HasReachedTarget = true;
-
-                            if (_debugLog) Debug.Log("Refactoring path");
 
                             NodeFinder(agent);
 
                             agent.Index = agent.Path.IndexOf(agent.CurrentNode) + 1;
-
-                            Debug.Log("Index (modified): " + agent.Index);
 
                             if (agent.Index >= agent.Path.Count - 1)
                             {
                                 agent.Path.Reverse();
                                 agent.Index = 1;
                             }
-
-                            Debug.Log("Index (modified 2): " + agent.Index);
                         }
                         else
                         {
@@ -152,9 +119,7 @@ namespace Agents
                     }
                     else
                     {
-                        if (_debugLog) Debug.Log("Idle to Moving");
-
-                        agent.StartNode = targetNode;
+                        agent.StartNode = agent.CurrentNode;
                         IdleAgents.Add(agent);
                         MovingAgents.Remove(agent);
                         agent.Path.Clear();
@@ -180,7 +145,7 @@ namespace Agents
                     OnKillPlayer?.Invoke();
                 }
 
-                OnAgentsEndMovement?.Invoke();
+                OnAgentsEndSettingsMovement?.Invoke();
                 _endMovmentCounter = 0;
             }
         }
@@ -254,8 +219,6 @@ namespace Agents
         {
             if (_debugLog) Debug.Log("New Target");
 
-            _targetNode = this.targetNode = targetNode;
-
             foreach (Agent agent in agents)
             {
                 Node StartNode = agent.StartNode;
@@ -312,13 +275,6 @@ namespace Agents
             {
                 MovingAgents.Remove(agent);
             }
-        }
-
-        public void OnKill(Agent agent)
-        {
-            UnregisterAgent(agent);
-
-            ServiceLocator.Instance.DeathManager.GetDeathBody(agent);
         }
 
         /// <summary>
@@ -534,13 +490,6 @@ namespace Agents
                 Vector3 pos = agent.transform.position + agent.transform.forward * rayDistance;
 
                 Gizmos.DrawLine(PositionNormalize(agent.transform.position), PositionNormalize(pos));
-            }
-
-            // Gizmo target m_node
-            if (targetNode != null)
-            {
-                Gizmos.color = _targetNodeColor;
-                Gizmos.DrawSphere(PositionNormalize(targetNode.transform.position), 0.15f);
             }
 
             // Gizmo path

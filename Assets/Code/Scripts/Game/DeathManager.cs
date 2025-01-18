@@ -35,7 +35,7 @@ namespace Managers
             }
         }
 
-        public void GetDeathBody(Agent agent)
+        public void RegisterAgent(Agent agent)
         {
             Vector3 pos = m_deathPositions[m_deathCount].position;
             pos.y = m_heightSpawn;

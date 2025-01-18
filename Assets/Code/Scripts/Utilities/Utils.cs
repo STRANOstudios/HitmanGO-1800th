@@ -29,6 +29,20 @@ public static class Utils
     }
 
     /// <summary>
+    /// Calculates the target rotation
+    /// </summary>
+    /// <param name="currentPos">current position</param>
+    /// <param name="targetPos">target position</param>
+    /// <returns>The target rotation in quaternion</returns>
+    public static Quaternion CalculateTargetRotation(Vector3 currentPos, Vector3 targetPos)
+    {
+        Vector3 direction = targetPos - currentPos;
+        direction.y = 0;
+
+        return Quaternion.LookRotation(direction);
+    }
+
+    /// <summary>
     /// Normalizes the angle to be between 0 and 360 degrees
     /// </summary>
     /// <param name="angle"></param>
@@ -144,6 +158,17 @@ public static class Utils
     /// <returns>A Vector3 array containing the positions of the polygon's vertices.</returns>
     public static Vector3[] GenerateInscribedPolygonVertices(Vector3 center, int numVertices, float radius)
     {
+        if (numVertices < 1)
+        {
+            Debug.LogError("Number of vertices must be at least 1");
+            return null;
+        }
+
+        if (numVertices == 1)
+        {
+            return new Vector3[] { center };
+        }
+
         // Array to hold the vertices of the polygon
         Vector3[] vertices = new Vector3[numVertices];
 

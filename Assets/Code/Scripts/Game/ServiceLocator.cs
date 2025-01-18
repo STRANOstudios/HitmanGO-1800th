@@ -17,7 +17,7 @@ public class ServiceLocator : Singleton<ServiceLocator>
     [ShowInInspector, ReadOnly] private NodeCache nodeCache = null;
 
     [ShowIfGroup("m_debug")]
-    [ShowInInspector, ReadOnly] private NodeManager nodeManager = null;
+    [ShowInInspector, ReadOnly] private MovementManager nodeManager = null;
 
     [ShowIfGroup("m_debug")]
     [ShowInInspector, ReadOnly] private DeathManager deathManager = null;
@@ -45,14 +45,14 @@ public class ServiceLocator : Singleton<ServiceLocator>
 
     private void CheckCreateProgress()
     {
-        if (m_debugLog)
-        {
-            Debug.LogError("AgentsManager: " + (agentsManager != null));
-            Debug.LogError("NodeCache: " + (nodeCache != null));
-            Debug.LogError("NodeManager: " + (nodeManager != null));
-            Debug.LogError("DeathManager: " + (deathManager != null));
-            Debug.LogError("Player: " + (player != null));
-        }
+        //if (m_debugLog)
+        //{
+        //    if (agentsManager == null) Debug.LogError("Missing reference AgentsManager");
+        //    if (nodeCache == null) Debug.LogError("Missing reference NodeCache");
+        //    if (nodeManager == null) Debug.LogError("Missing reference NodeManager");
+        //    if (deathManager == null) Debug.LogError("Missing reference DeathManager");
+        //    if (player == null) Debug.LogError("Missing reference Player");
+        //}
 
         if (agentsManager != null && nodeCache != null && nodeManager != null && deathManager != null && player != null && !hasNotified)
         {
@@ -118,7 +118,7 @@ public class ServiceLocator : Singleton<ServiceLocator>
         get { return player; }
     }
 
-    public NodeManager NodeManager
+    public MovementManager NodeManager
     {
         set
         {

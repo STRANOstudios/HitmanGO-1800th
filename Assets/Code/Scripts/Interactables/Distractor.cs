@@ -103,6 +103,8 @@ namespace Interactables
             indicators.Clear();
 
             OnInteractEnd?.Invoke();
+
+            gameObject.SetActive(false);
         }
 
         public Node SetTarget
