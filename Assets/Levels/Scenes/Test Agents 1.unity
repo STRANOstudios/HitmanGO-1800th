@@ -2539,7 +2539,7 @@ MonoBehaviour:
   yOffset: 1
   _raylineColor: {r: 0, g: 1, b: 0, a: 1}
   _targetNodeColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  _pathColor: {r: 1, g: 0, b: 0, a: 0}
+  _pathColor: {r: 1, g: 0, b: 0, a: 1}
   _nextPathColor: {r: 1, g: 0, b: 1, a: 1}
 --- !u!4 &547875798
 Transform:

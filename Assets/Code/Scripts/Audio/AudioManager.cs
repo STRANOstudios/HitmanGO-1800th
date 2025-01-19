@@ -1,5 +1,4 @@
 using Sirenix.OdinInspector;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -13,9 +12,18 @@ namespace Audio
         [Title("Debug")]
         [SerializeField] private bool _debug;
 
+        [ShowIfGroup("_debug")]
+        [ShowInInspector, ReadOnly]private AudioSource _soundtrack = null;
+
+        private void Start()
+        {
+            _soundtrack = gameObject.AddComponent<AudioSource>();
+        }
+
         /// <summary>
         /// Play a Music clip by its unique key.
         /// </summary>
+        /// <param name="key">name of the clip</param>
         public void PlayMusic(string key)
         {
             if (key == null) return;
@@ -33,6 +41,8 @@ namespace Audio
         /// <summary>
         /// Play an Sfx clip by its unique key.
         /// </summary>
+        /// <param name="key">name of the clip</param>
+        /// <param name="parent">parent transform</param>
         public void PlaySFX(string key, Transform parent = null)
         {
             if (key is null or "") return;
@@ -52,6 +62,7 @@ namespace Audio
         /// <summary>
         /// Play an Sfx clip by its unique key.
         /// </summary>
+        /// <param name="key">name of the clip</param>
         public void PlaySfx(string key)
         {
             if (_debug) Debug.Log($"Playing SFX: {key}");
@@ -61,6 +72,9 @@ namespace Audio
         /// <summary>
         /// Plays a given AudioClip using a pooled AudioSource.
         /// </summary>
+        /// <param name="clip">AudioClip to play</param>
+        /// <param name="group">AudioMixerGroup to use</param>
+        /// <param name="parent">Parent transform</param>
         private void PlayAudio(AudioClip clip, AudioMixerGroup group, Transform parent = null)
         {
             if (_debug) Debug.Log($"Playing Audio: {clip.name}");
@@ -73,6 +87,16 @@ namespace Audio
             audioSource.clip = clip;
             audioSource.outputAudioMixerGroup = group ?? null;
             audioSource.Play();
+        }
+
+        /// <summary>
+        /// Change the current music clip
+        /// </summary>
+        /// <param name="key">name of the clip</param>
+        public void ChangeMusic(string key)
+        {
+            if (_soundtrack != null)
+                _soundtrack.clip = audioData.GetMusicClip(key);
         }
     }
 }
