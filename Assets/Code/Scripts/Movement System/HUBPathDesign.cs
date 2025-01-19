@@ -7,13 +7,13 @@ namespace PathSystem
     public class HUBPathDesign : PathDesign
     {
         [Header("Unlock Link Settings")]
-        private float _unlockWidth = 0.1f;
-        private float _unlockStoppingDistance = 0f;
+        public float _unlockWidth = 0.1f;
+        public float _unlockStoppingDistance = 0f;
         public Color unlockLinkColor = Color.black;
 
         [Header("Unlock Node Settings")]
         public Sprite unlockSpriteNode = null;
-        private Vector2 _unlockNodeScale = Vector2.one;
+        public Vector2 _unlockNodeScale = Vector2.one;
         public Color unlockNodeColor = Color.black;
 
         public float UnlockWidth

@@ -9,6 +9,8 @@ namespace VFX.Player
     {
         private CinemachineInputProvider inputProvider;
 
+        private bool isEnabled = false;
+
         private void Start()
         {
             inputProvider = GetComponent<CinemachineInputProvider>();
@@ -24,9 +26,27 @@ namespace VFX.Player
             PlayerHandle.OnPlayerStateChange -= Toggle;
         }
 
+        private void Update()
+        {
+            if (isEnabled)
+            {
+                inputProvider.enabled = false;
+                return;
+            }
+
+            if (Input.GetMouseButtonDown(0) || Input.GetMouseButton(0) || Input.touchCount > 0)
+            {
+                inputProvider.enabled = true;
+            }
+            else
+            {
+                inputProvider.enabled = false;
+            }
+        }
+
         private void Toggle(PlayerState state)
         {
-            inputProvider.enabled = !(state == PlayerState.ACTIVE);
+            isEnabled = state == PlayerState.ACTIVE;
         }
     }
 }

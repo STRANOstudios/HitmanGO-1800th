@@ -1,3 +1,5 @@
+using Agents;
+using Interactables;
 using PathSystem;
 using Sirenix.OdinInspector;
 using System;
@@ -11,7 +13,6 @@ namespace Player
     {
         [Title("Settings")]
         [SerializeField] private Node m_startNode;
-        [SerializeField] private LayerMask m_hidingSpotLayerMask;
 
         [SerializeField, Range(0, 360)] private float maxAllowedAngle = 45f;
 
@@ -27,13 +28,20 @@ namespace Player
         [SerializeField] private bool _debugLog = false;
         [SerializeField] private bool _drawGizmos = true;
 
-        private bool m_isActive = true;
+        private bool OnDistractor = false;
 
+        public static event Action OnPlayerMove;
+        public static event Action OnPlayerEndMove;
         public static event Action OnPlayerEndTurn;
+        public static event Action OnPlayerDistractionReady;
 
         private void Awake()
         {
+            ServiceLocator.Instance.Player = this;
+
             currentNode = m_startNode;
+
+            currentNode.Storages.Add(this.gameObject);
 
             if (_debugLog) Debug.Log("Current Node: " + currentNode.name);
 
@@ -83,23 +91,27 @@ namespace Player
 
         private void PlayerTurn(Node node)
         {
-            currentNode = node;
-
-            StartCoroutine(Movement());
+            StartCoroutine(Movement(node));
         }
 
-        private IEnumerator Movement()
+        private IEnumerator Movement(Node node)
         {
-            while (Vector3.Distance(transform.position, currentNode.transform.position) > 0.1f)
+            OnPlayerMove?.Invoke();
+
+            while (Vector3.Distance(transform.position, node.transform.position) > 0.1f)
             {
                 yield return null;
 
-                transform.position = Vector3.MoveTowards(transform.position, currentNode.transform.position, 1f);
+                transform.position = Vector3.MoveTowards(transform.position, node.transform.position, 1f);
             }
+
+            OnPlayerEndMove?.Invoke();
 
             yield return new WaitForSeconds(0.5f);
 
-            PlayerEndTurn();
+            //PlayerEndTurn();
+
+            StoreNode(node);
         }
 
         private void CalculateAngle()
@@ -119,20 +131,48 @@ namespace Player
 
         private void PlayerEndTurn()
         {
-            m_visibilityState = IsPlayerInHidingSpot() ? PlayerVisibilityState.Hidden : PlayerVisibilityState.Visible;
-
             CalculateAngle();
 
-            OnPlayerEndTurn?.Invoke();
+            if(!OnDistractor)
+                OnPlayerEndTurn?.Invoke();
+            else OnDistractor = false;
         }
 
-        /// <summary>
-        /// Checks if the player is in a hiding spot
-        /// </summary>
-        /// <returns>True if the player is in a hiding spot</returns>
-        private bool IsPlayerInHidingSpot()
+        public void StoreNode(Node node)
         {
-            return Physics.OverlapSphere(transform.position, 1f, m_hidingSpotLayerMask).Length > 0;
+            Distractor tmp = null;
+
+            m_visibilityState = PlayerVisibilityState.Visible;
+
+            for (int i = 0; i < node.Storages.Count; i++)
+            {
+                if (node.Storages[i].CompareTag("Enemy"))
+                {
+                    node.Storages[i].GetComponent<Agent>().Death();
+                    continue;
+                }
+                else if (node.Storages[i].CompareTag("Distractor"))
+                {
+                    OnPlayerDistractionReady?.Invoke();
+                    OnDistractor = true;
+                    tmp = node.Storages[i].GetComponent<Distractor>();
+                }
+
+                if (node.Storages[i].CompareTag("HiddenPlace"))
+                {
+                    m_visibilityState = PlayerVisibilityState.Hidden;
+                }
+            }
+
+            node.Storages.Add(gameObject);
+            currentNode.Storages.Remove(gameObject);
+
+            currentNode = node;
+
+            if (OnDistractor)
+                tmp.Spawn();
+
+            PlayerEndTurn();
         }
 
         public Node CurrentNode => currentNode;

@@ -19,21 +19,21 @@ namespace Player.VFX
         {
             PlayerController = GetComponent<PlayerController>();
 
-            PathDesign style = FindAnyObjectByType<StyleManager>()?.PathDesign;
+            PathDesign style = ServiceLocator.Instance.PathDesign.PathDesign;
             m_prefabsToCreate = style.playerIndicator;
             m_distance = style.PlayerIndicatorDistance;
         }
 
         private void OnEnable()
         {
-            ShiftManager.OnPlayerTurn += Active;
-            ShiftManager.OnEnemyTurn += DeActivate;
+            GameStatusManager.OnPlayerTurn += Active;
+            PlayerController.OnPlayerMove += DeActivate;
         }
 
         private void OnDisable()
         {
-            ShiftManager.OnPlayerTurn -= Active;
-            ShiftManager.OnEnemyTurn -= DeActivate;
+            GameStatusManager.OnPlayerTurn -= Active;
+            PlayerController.OnPlayerMove -= DeActivate;
         }
 
         private void Active()

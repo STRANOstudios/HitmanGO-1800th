@@ -13,7 +13,9 @@ using UnityEngine;
 
 namespace Agents
 {
+#if UNITY_EDITOR
     [InitializeOnLoad]
+#endif
     public class AgentsManager : MonoBehaviour
     {
         [Title("Agents")]
@@ -21,17 +23,13 @@ namespace Agents
         [SerializeField] private List<Agent> MovingAgents = new();
 
         [Title("Settings")]
-        [SerializeField] private LayerMask layerMask;
-        [SerializeField, Range(0, 5)] private float rayDistance;
+        [SerializeField] private Vector3 size = Vector3.one;
 
         [Title("Debug")]
         [SerializeField] private bool _debug = false;
 
         [FoldoutGroup("Debug"), ShowIf("_debug")]
         [SerializeField] private bool _debugLog = false;
-
-        [FoldoutGroup("Debug"), ShowIf("_debug")]
-        [SerializeField] private Node targetNode;
 
         [SerializeField] protected bool _drawGizmos = false;
 
@@ -50,79 +48,28 @@ namespace Agents
         [FoldoutGroup("Gizmos"), ShowIf("_drawGizmos")]
         [SerializeField, ColorPalette] private Color _nextPathColor = Color.magenta;
 
-        public static event Action OnAgentsEndMovement;
-        private int _endMovmentCounter = 0;
-
-        // control
-        private Node _targetNode = null;
-
-        private static AgentsManager _instance;
-
-        public static AgentsManager Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = FindObjectOfType<AgentsManager>();
-                }
-                return _instance;
-            }
-        }
-
         public static event Action OnKillPlayer;
+        public static event Action OnAgentsEndSettingsMovement;
+        private int _endMovmentCounter = 0;
 
         private PathFinder pathFinder;
 
         private bool _isPlayerDetected = false;
 
-#if UNITY_EDITOR
-        [InitializeOnLoadMethod]
-        private static void InitializeInEditor()
-        {
-            if (Instance == null)
-            {
-                AgentsManager existingInstance = FindObjectOfType<AgentsManager>();
-                if (existingInstance != null)
-                {
-                    _instance = existingInstance;
-                }
-            }
-        }
-#endif
-
         private void Awake()
         {
-            if (Instance == null) _instance = this;
-            else if (Instance != this) DestroyImmediate(this);
-        }
-
-        private void OnValidate()
-        {
-            if (!Application.isPlaying)
-            {
-                _targetNode = targetNode = null;
-                return;
-            }
-
-            if (targetNode != null && targetNode != _targetNode)
-            {
-                _targetNode = targetNode;
-                NewTarget(targetNode, IdleAgents.Concat(MovingAgents).ToList());
-            }
+            ServiceLocator.Instance.AgentsManager = this;
         }
 
         private void OnEnable()
         {
-            ShiftManager.OnEnemyTurn += OnTurnStart;
-            KillHandler.OnKillAgent += OnKill;
+            GameStatusManager.OnEnemyTurn += OnTurnStart;
             Agent.OnEndMovement += CountEndMovement;
         }
 
         private void OnDisable()
         {
-            ShiftManager.OnEnemyTurn -= OnTurnStart;
-            KillHandler.OnKillAgent -= OnKill;
+            GameStatusManager.OnEnemyTurn -= OnTurnStart;
             Agent.OnEndMovement -= CountEndMovement;
         }
 
@@ -130,7 +77,7 @@ namespace Agents
 
         private async void OnTurnStart()
         {
-            _isPlayerDetected = await CheckRayCast(IdleAgents.Concat(MovingAgents).ToList());
+            _isPlayerDetected = await CheckRayCast(IdleAgents.Concat(MovingAgents).ToList(), NodeCache.Nodes);
 
             Move(MovingAgents);
         }
@@ -143,35 +90,23 @@ namespace Agents
 
                 agent.Index++;
 
-                if (_debugLog) Debug.Log("Index: " + agent.Index + " / " + agent.Path.Count);
-
                 if (agent.Index >= agent.Path.Count)
                 {
-                    if (_debugLog) Debug.Log("End of path");
-
                     if (agent.IsPatrol)
                     {
-                        if (_debugLog) Debug.Log("isPatrol");
-
-                        if (agent.CurrentNode == targetNode && !agent.HasReachedTarget)
+                        if (!agent.HasReachedTarget)
                         {
                             agent.HasReachedTarget = true;
-
-                            if (_debugLog) Debug.Log("Refactoring path");
 
                             NodeFinder(agent);
 
                             agent.Index = agent.Path.IndexOf(agent.CurrentNode) + 1;
-
-                            Debug.Log("Index (modified): " + agent.Index);
 
                             if (agent.Index >= agent.Path.Count - 1)
                             {
                                 agent.Path.Reverse();
                                 agent.Index = 1;
                             }
-
-                            Debug.Log("Index (modified 2): " + agent.Index);
                         }
                         else
                         {
@@ -183,9 +118,7 @@ namespace Agents
                     }
                     else
                     {
-                        if (_debugLog) Debug.Log("Idle to Moving");
-
-                        agent.StartNode = targetNode;
+                        agent.StartNode = agent.CurrentNode;
                         IdleAgents.Add(agent);
                         MovingAgents.Remove(agent);
                         agent.Path.Clear();
@@ -211,7 +144,7 @@ namespace Agents
                     OnKillPlayer?.Invoke();
                 }
 
-                OnAgentsEndMovement?.Invoke();
+                OnAgentsEndSettingsMovement?.Invoke();
                 _endMovmentCounter = 0;
             }
         }
@@ -220,65 +153,24 @@ namespace Agents
 
         #region Methods
 
-        private async Task<bool> CheckRayCast(List<Agent> agents)
+        private async Task<bool> CheckRayCast(List<Agent> agents, List<Node> nodes)
         {
-            if (_debugLog) Debug.Log("Raycast");
+            Debug.Log("Check");
 
             foreach (Agent agent in agents)
             {
-                Vector3 pos = agent.transform.position;
-                pos.y = yOffset;
+                Vector3 size = this.size;
+                size.x = Mathf.Clamp(Mathf.Abs(Vector3.Dot(agent.transform.forward, Vector3.right)) * this.size.x, 1f, this.size.x);
+                size.z = Mathf.Clamp(Mathf.Abs(Vector3.Dot(agent.transform.forward, Vector3.forward)) * this.size.z, 1f, this.size.z);
 
-                Ray ray = new(pos, agent.transform.forward);
-
-                if (_drawGizmos) Debug.DrawRay(ray.origin, ray.direction * rayDistance, Color.magenta, 1f);
-
-                if (Physics.Raycast(ray, out RaycastHit hit, rayDistance, layerMask))
+                if (Utils.CheckGameObjectsInBox(agent.CurrentNode.transform.position + agent.transform.forward, size, new List<PlayerController> { ServiceLocator.Instance.Player }).Count > 0)
                 {
-                    if (_debugLog) Debug.Log(hit.transform.name);
-
-                    if (_drawGizmos)
-                    {
-                        Debug.DrawLine(ray.origin, hit.point, Color.green, 1f);
-                        Debug.DrawLine(hit.point, hit.point + Vector3.up, Color.green, 1f);
-                    }
-
-                    if (hit.transform.CompareTag("Player"))
-                    {
-                        if (_debugLog) Debug.Log("Player Detected");
-
-                        if (hit.transform.TryGetComponent(out PlayerController component))
-                        {
-                            if (!MovingAgents.Contains(agent))
-                            {
-                                MovingAgents.Add(agent);
-                                IdleAgents.Remove(agent);
-                            }
-
-                            NewTarget(component.CurrentNode, new List<Agent> { agent });
-
-                            return component.IsVisible;
-                        }
-
-                        return true;
-                    }
+                    return ServiceLocator.Instance.Player.IsVisible;
                 }
 
                 await Task.Yield();
             }
             return false;
-        }
-
-        private void OnKill(Agent agent)
-        {
-            if (IdleAgents.Contains(agent))
-            {
-                IdleAgents.Remove(agent);
-            }
-            else
-            {
-                MovingAgents.Remove(agent);
-            }
         }
 
         #endregion
@@ -290,11 +182,9 @@ namespace Agents
         /// </summary>
         /// <param name="targetNode"></param>
         /// <param name="agents"></param>
-        public void NewTarget(Node targetNode, List<Agent> agents)
+        public void SetTarget(Node targetNode, List<Agent> agents)
         {
             if (_debugLog) Debug.Log("New Target");
-
-            _targetNode = this.targetNode = targetNode;
 
             foreach (Agent agent in agents)
             {
@@ -439,8 +329,8 @@ namespace Agents
                 PathFinder.PathFinderNode node = pathFinder.CurrentNode;
                 while (node != null)
                 {
-                    agent.Path.Insert(0, node.Location); // Add the node to the path (in reverse order)
-                    node = node.Parent; // Move to the parent node
+                    agent.Path.Insert(0, node.Location); // Add the m_node to the path (in reverse order)
+                    node = node.Parent; // Move to the parent m_node
                 }
 
                 if (_debugLog) Debug.Log("Path found with " + agent.Path.Count + " nodes.");
@@ -549,6 +439,8 @@ namespace Agents
 
         public int AgentsCount => IdleAgents.Count + MovingAgents.Count;
 
+        public List<Agent> Agents => IdleAgents.Concat(MovingAgents).ToList();
+
         #endregion
 
         #region Gizmos
@@ -562,16 +454,12 @@ namespace Agents
             {
                 Gizmos.color = _raylineColor;
 
-                Vector3 pos = agent.transform.position + agent.transform.forward * rayDistance;
+                Vector3 size = this.size;
+                size.x = Mathf.Clamp(Mathf.Abs(Vector3.Dot(agent.transform.forward, Vector3.right)) * this.size.x, 1f, this.size.x);
+                size.z = Mathf.Clamp(Mathf.Abs(Vector3.Dot(agent.transform.forward, Vector3.forward)) * this.size.z, 1f, this.size.z);
 
-                Gizmos.DrawLine(PositionNormalize(agent.transform.position), PositionNormalize(pos));
-            }
-
-            // Gizmo target node
-            if (targetNode != null)
-            {
-                Gizmos.color = _targetNodeColor;
-                Gizmos.DrawSphere(PositionNormalize(targetNode.transform.position), 0.15f);
+                // Disegna il cubo con la posizione e la dimensione calcolate
+                Gizmos.DrawWireCube(agent.CurrentNode.transform.position + agent.transform.forward, size);
             }
 
             // Gizmo path

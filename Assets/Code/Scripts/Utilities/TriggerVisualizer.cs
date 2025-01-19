@@ -1,54 +1,45 @@
-using UnityEditor;
 using UnityEngine;
 
-[RequireComponent(typeof(Collider))]
 public class TriggerVisualizer : MonoBehaviour
 {
     [Header("Debug")]
-    [SerializeField] private bool _debug = false;
-    [SerializeField] private bool _showColliderInEditor = true;
     [SerializeField] private Color _gizmoColor = Color.green;
+
+    private void Start() { }
 
     private void OnDrawGizmos()
     {
         if (!enabled) return;
 
         // Get the Collider component
-        if (!TryGetComponent<Collider>(out var collider))
+        if (!TryGetComponent<Collider>(out var collider)) return;
+
+        Gizmos.color = _gizmoColor;
+
+        // Draw the Collider based on its type
+        if (collider is BoxCollider boxCollider)
         {
-            if (_debug) Debug.LogWarning("Collider component not found.");
-            return;
+            Gizmos.matrix = transform.localToWorldMatrix;
+            Gizmos.DrawCube(boxCollider.center, boxCollider.size);
+            Gizmos.DrawWireCube(boxCollider.center, boxCollider.size);
+        }
+        else if (collider is SphereCollider sphereCollider)
+        {
+            Gizmos.matrix = transform.localToWorldMatrix;
+            Gizmos.DrawSphere(sphereCollider.center, sphereCollider.radius);
+            Gizmos.DrawWireSphere(sphereCollider.center, sphereCollider.radius);
+        }
+        else if (collider is CapsuleCollider capsuleCollider)
+        {
+            Gizmos.matrix = transform.localToWorldMatrix;
+            DrawCapsuleGizmos(capsuleCollider);
+        }
+        else if (collider is MeshCollider meshCollider && meshCollider.sharedMesh != null)
+        {
+            Gizmos.DrawMesh(meshCollider.sharedMesh, transform.position, transform.rotation, transform.lossyScale);
         }
 
-        if (_showColliderInEditor)
-        {
-            Gizmos.color = _gizmoColor;
-
-            // Draw the Collider based on its type
-            if (collider is BoxCollider boxCollider)
-            {
-                Gizmos.matrix = transform.localToWorldMatrix;
-                Gizmos.DrawCube(boxCollider.center, boxCollider.size);
-                Gizmos.DrawWireCube(boxCollider.center, boxCollider.size);
-            }
-            else if (collider is SphereCollider sphereCollider)
-            {
-                Gizmos.matrix = transform.localToWorldMatrix;
-                Gizmos.DrawSphere(sphereCollider.center, sphereCollider.radius);
-                Gizmos.DrawWireSphere(sphereCollider.center, sphereCollider.radius);
-            }
-            else if (collider is CapsuleCollider capsuleCollider)
-            {
-                Gizmos.matrix = transform.localToWorldMatrix;
-                DrawCapsuleGizmos(capsuleCollider);
-            }
-            else if (collider is MeshCollider meshCollider && meshCollider.sharedMesh != null)
-            {
-                Gizmos.DrawMesh(meshCollider.sharedMesh, transform.position, transform.rotation, transform.lossyScale);
-            }
-
-            Gizmos.matrix = Matrix4x4.identity; // Reset matrix
-        }
+        Gizmos.matrix = Matrix4x4.identity; // Reset matrix
     }
 
     // Helper to draw a Capsule Collider

@@ -3,8 +3,8 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 using Sirenix.OdinInspector;
-using UnityEngine.Localization.Components;
-using UnityEngine.Localization;
+//using UnityEngine.Localization.Components;
+//using UnityEngine.Localization;
 
 [DisallowMultipleComponent]
 public class AudioController : MonoBehaviour
@@ -15,17 +15,17 @@ public class AudioController : MonoBehaviour
     [FoldoutGroup("Master")]
     [SerializeField] private Slider _volumeMaster;
     [FoldoutGroup("Master")]
-    [SerializeField] private LocalizedString _masterMuteButton;
+    //[SerializeField] private LocalizedString _masterMuteButton;
 
     [FoldoutGroup("Music")]
     [SerializeField] private Slider _volumeMusic;
     [FoldoutGroup("Music")]
-    [SerializeField] private LocalizedString _muteMusicButton;
+    //[SerializeField] private LocalizedString _muteMusicButton;
 
     [FoldoutGroup("Sfx")]
     [SerializeField] private Slider _volumeSFX;
     [FoldoutGroup("Sfx")]
-    [SerializeField] private LocalizedString _muteSFXButton;
+    //[SerializeField] private LocalizedString _muteSFXButton;
 
     [Title("Debug")]
     [SerializeField] private bool _debug;

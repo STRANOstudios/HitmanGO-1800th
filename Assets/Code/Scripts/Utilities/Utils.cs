@@ -1,5 +1,7 @@
+using PathSystem;
+using System.Collections.Generic;
 using System.Reflection;
-using UnityEditor.Localization.Plugins.XLIFF.V12;
+//using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine;
 
 public static class Utils
@@ -27,14 +29,17 @@ public static class Utils
     }
 
     /// <summary>
-    /// Clears the log entries
+    /// Calculates the target rotation
     /// </summary>
-    public static void ClearLog()
+    /// <param name="currentPos">current position</param>
+    /// <param name="targetPos">target position</param>
+    /// <returns>The target rotation in quaternion</returns>
+    public static Quaternion CalculateTargetRotation(Vector3 currentPos, Vector3 targetPos)
     {
-        var assembly = Assembly.GetAssembly(typeof(UnityEditor.ActiveEditorTracker));
-        var type = assembly.GetType("UnityEditorInternal.LogEntries");
-        var method = type.GetMethod("Clear");
-        method.Invoke(new object(), null);
+        Vector3 direction = targetPos - currentPos;
+        direction.y = 0;
+
+        return Quaternion.LookRotation(direction);
     }
 
     /// <summary>
@@ -100,4 +105,92 @@ public static class Utils
             return (angle >= a && angle < 360f) || (angle >= 0f && angle < b);
         }
     }
+
+    /// <summary>
+    /// Interacts with a node
+    /// </summary>
+    /// <param name="currentNode"></param>
+    /// <param name="targetNode"></param>
+    /// <param name="gameObject"></param>
+    public static void NodeInteraction(Node currentNode, Node targetNode, GameObject gameObject)
+    {
+        currentNode.Storages.Remove(gameObject);
+        targetNode.Storages.Add(gameObject);
+    }
+
+    /// <summary>
+    /// Checks which objects from the provided list are inside a defined 3D box.
+    /// </summary>
+    /// <typeparam name="T">The type of objects being checked, must inherit from MonoBehaviour.</typeparam>
+    /// <param name="boxCenter">The center of the box.</param>
+    /// <param name="boxSize">The size (dimensions) of the box.</param>
+    /// <param name="objects">The list of objects to check.</param>
+    /// <returns>A list of objects that are inside the box.</returns>
+    public static List<T> CheckGameObjectsInBox<T>(Vector3 boxCenter, Vector3 boxSize, List<T> objects) where T : MonoBehaviour
+    {
+        // Initialize the list to store objects inside the box
+        List<T> objectsInBox = new();
+
+        // Create bounds based on the given center and size
+        Bounds boxBounds = new(boxCenter, boxSize);
+
+        // Iterate through the provided objects
+        foreach (var obj in objects)
+        {
+            // Check if the object's position is within the bounds
+            if (boxBounds.Contains(obj.transform.position))
+            {
+                objectsInBox.Add(obj);
+            }
+        }
+
+        // Return the list of objects found inside the box
+        return objectsInBox;
+    }
+
+    /// <summary>
+    /// Generates the vertices of a regular polygon inscribed in a circle.
+    /// The polygon's center is provided, along with the number of vertices and the radius of the circle.
+    /// </summary>
+    /// <param name="center">The center position of the polygon (Vector3).</param>
+    /// <param name="numVertices">The number of vertices in the polygon (int).</param>
+    /// <param name="radius">The radius of the circle inscribed by the polygon (float).</param>
+    /// <returns>A Vector3 array containing the positions of the polygon's vertices.</returns>
+    public static Vector3[] GenerateInscribedPolygonVertices(Vector3 center, int numVertices, float radius)
+    {
+        if (numVertices < 1)
+        {
+            Debug.LogError("Number of vertices must be at least 1");
+            return null;
+        }
+
+        if (numVertices == 1)
+        {
+            return new Vector3[] { center };
+        }
+
+        // Array to hold the vertices of the polygon
+        Vector3[] vertices = new Vector3[numVertices];
+
+        // Calculate the angle between each vertex
+        float angleStep = 360f / numVertices;
+
+        // Loop through each vertex and calculate its position
+        for (int i = 0; i < numVertices; i++)
+        {
+            // Calculate the angle in radians for the current vertex
+            float angleInRadians = Mathf.Deg2Rad * (angleStep * i);
+
+            // Calculate the position of the vertex on the X and Z axis using trigonometry
+            float x = center.x + radius * Mathf.Cos(angleInRadians);
+            float z = center.z + radius * Mathf.Sin(angleInRadians);
+
+            // Set the Y position to match the center's Y (for a flat polygon in the XY plane)
+            vertices[i] = new Vector3(x, center.y, z);
+        }
+
+        // Return the array of vertices
+        return vertices;
+    }
+
 }

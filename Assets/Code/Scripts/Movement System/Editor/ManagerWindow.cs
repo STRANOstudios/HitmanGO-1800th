@@ -20,23 +20,30 @@ namespace PathSystem
 
         private void OnEnable()
         {
+            //if(Application.isPlaying) return;
+
             EditorApplication.update += UpdateWindow;
             EditorApplication.hierarchyChanged += InitializeScene;
         }
 
         private void OnDisable()
         {
+            //if (Application.isPlaying) return;
+
             EditorApplication.update -= UpdateWindow;
             EditorApplication.hierarchyChanged -= InitializeScene;
         }
 
         private void OnValidate()
         {
+            if(pathDesign == null) return;
             EditorUtility.SetDirty(pathDesign);
         }
 
         private void UpdateWindow()
         {
+            //if (Application.isPlaying) return;
+
             Repaint();
             ValidatePathDesign();
         }
@@ -49,8 +56,8 @@ namespace PathSystem
 
         private void ValidatePathDesign()
         {
-            if (pathDesign != null)
-                PathComponentModifier.ApplyChanges(pathDesign, exitNode);
+            //if (pathDesign != null)
+                //PathComponentModifier.ApplyChanges(pathDesign, exitNode);
         }
 
         #endregion

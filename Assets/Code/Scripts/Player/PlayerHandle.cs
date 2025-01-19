@@ -1,7 +1,6 @@
+using Interactables;
 using Sirenix.OdinInspector;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Player
@@ -9,7 +8,8 @@ namespace Player
     public class PlayerHandle : MonoBehaviour
     {
         [Title("Settings")]
-        [SerializeField] public LayerMask playerMask;
+        [SerializeField] private LayerMask playerMask;
+        [SerializeField] private LayerMask distractorMask;
 
         [Title("Debug")]
         [SerializeField] private bool _debug = false;
@@ -33,14 +33,16 @@ namespace Player
 
         private void OnEnable()
         {
-            ShiftManager.OnPlayerTurn += Toggle;
-            PlayerController.OnPlayerEndTurn += Toggle;
+            GameStatusManager.OnPlayerTurn += Enable;
+            GameStatusManager.OnEnemyTurn += Disable;
+            PlayerController.OnPlayerDistractionReady += OnDistractionReady;
         }
 
         private void OnDisable()
         {
-            ShiftManager.OnPlayerTurn -= Toggle;
-            PlayerController.OnPlayerEndTurn -= Toggle;
+            GameStatusManager.OnPlayerTurn -= Enable;
+            GameStatusManager.OnEnemyTurn -= Disable;
+            PlayerController.OnPlayerDistractionReady -= OnDistractionReady;
         }
 
         private void Update()
@@ -50,9 +52,14 @@ namespace Player
             HandlePlayerTurn();
         }
 
-        private void Toggle()
+        private void Enable()
         {
-            isEnable = !isEnable;
+            isEnable = true;
+        }
+
+        private void Disable()
+        {
+            isEnable = false;
         }
 
         private void HandlePlayerTurn()
@@ -71,6 +78,26 @@ namespace Player
                 Ray ray = Camera.main.ScreenPointToRay(inputPosition);
 
                 Debug.DrawRay(ray.origin, ray.direction * raycastDistance, Color.red);
+
+                if (playerState == PlayerState.ITEM_READY)
+                {
+                    Debug.Log("Distractor");
+
+                    if (Physics.Raycast(ray, out RaycastHit hit2, raycastDistance, distractorMask))
+                    {
+                        Debug.Log("hit");
+
+                        if (hit2.collider.CompareTag("DistractorIndicator"))
+                        {
+                            DistractorCollider collider = hit2.collider.GetComponent<DistractorCollider>();
+                            collider.distractor.SetTarget = collider.node;
+                            playerState = PlayerState.IDLE;
+                            isEnable = true;
+                        }
+                    }
+
+                    return;
+                }
 
                 if (Physics.Raycast(ray, out RaycastHit hit, raycastDistance, playerMask))
                 {
@@ -113,7 +140,8 @@ namespace Player
                     Debug.Log("Raycast non ha colpito nulla.");
                 }
 
-                PlayerChangeStatus(PlayerState.IDLE);
+                if (playerState != PlayerState.ITEM_READY)
+                    PlayerChangeStatus(PlayerState.IDLE);
             }
 
         }
@@ -125,11 +153,17 @@ namespace Player
             OnPlayerStateChange?.Invoke(state);
             playerState = state;
         }
+
+        private void OnDistractionReady()
+        {
+            PlayerChangeStatus(PlayerState.ITEM_READY);
+        }
     }
 
     public enum PlayerState
     {
         IDLE,
-        ACTIVE
+        ACTIVE,
+        ITEM_READY
     }
 }

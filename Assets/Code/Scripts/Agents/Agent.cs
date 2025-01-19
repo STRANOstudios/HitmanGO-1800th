@@ -1,14 +1,16 @@
+using Interfaces.PathSystem;
 using PathSystem;
 using Sirenix.OdinInspector;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
 namespace Agents
 {
+#if UNITY_EDITOR
     [InitializeOnLoad]
+#endif
     public class Agent : MonoBehaviour
     {
         [Title("Settings")]
@@ -22,15 +24,16 @@ namespace Agents
         [Title("Debug")]
         [SerializeField] private bool _debug = false;
 
-        [FoldoutGroup("Debug"), ShowIf("_debug")]
+        [ShowIfGroup("_debug")]
         [ReadOnly] public int Index = 0;
-        [FoldoutGroup("Debug"), ShowIf("_debug")]
+
+        [ShowIfGroup("_debug")]
         [ShowInInspector, ReadOnly] private Node currentNode = null;
 
-        [FoldoutGroup("Debug"), ShowIf("_debug")]
+        [ShowIfGroup("_debug")]
         [ReadOnly] public bool HasReachedTarget = false;
 
-        [FoldoutGroup("Debug"), ShowIf("_debug")]
+        [ShowIfGroup("_debug")]
         [ReadOnly] public List<Node> Path = new();
 
         public static event Action OnEndMovement;
@@ -42,9 +45,11 @@ namespace Agents
 
         private void Awake()
         {
-            RegisterToManager();
+            ServiceLocator.Instance.AgentsManager.RegisterAgent(this);
 
             currentNode = startNode;
+
+            currentNode.Storages.Add(gameObject);
         }
 
         private void OnValidate()
@@ -55,7 +60,6 @@ namespace Agents
 
             if (isPatrol != _isPatrol)
             {
-                ChangeToManager();
                 _isPatrol = isPatrol;
 
                 if (!_isPatrol)
@@ -78,90 +82,32 @@ namespace Agents
                 if (endNode != null && endNode != _endNode)
                 {
                     _endNode = endNode;
-                    AgentsManager.Instance.UpdatePath(this);
+                    ServiceLocator.Instance.AgentsManager.UpdatePath(this);
                 }
             }
         }
-
-        private void OnDestroy()
-        {
-            AgentsManager.Instance?.UnregisterAgent(this);
-        }
-
-        #region Agents Manager
-
-        private void RegisterToManager()
-        {
-            AgentsManager.Instance.RegisterAgent(this);
-        }
-
-        private void ChangeToManager()
-        {
-            AgentsManager.Instance.ChangeList(this);
-        }
-
-        #endregion
 
         #region Methods
 
         public void Move()
         {
+            Utils.NodeInteraction(currentNode, Path[Index], gameObject);
             currentNode = Path[Index];
-
-            if (_debug) Debug.Log("Moving with Code");
-            StartCoroutine(WithCode());
-        }
-
-        private IEnumerator WithCode()
-        {
-            Vector3 targetPosition = Path[Index].transform.position;
-
-            Quaternion targetRotation = CalculateTargetRotation(targetPosition);
-
-            transform.GetPositionAndRotation(out Vector3 startPosition, out Quaternion startRotation);
-            float moveDuration = 1f;  // Calculate the time to move based on agent speed.
-            float elapsedTime = 0f;
-
-            // Perform smooth movement from the start position to the target position.
-            while (elapsedTime < moveDuration)
-            {
-                elapsedTime += Time.deltaTime;
-                float t = Mathf.Clamp01(elapsedTime / moveDuration);
-
-                // Move the agent smoothly towards the target position.
-                transform.position = Vector3.Lerp(startPosition, targetPosition, t);
-
-                // Rotate the agent smoothly towards the target position.
-                Quaternion smoothedRotation = Quaternion.Slerp(startRotation, targetRotation, t);
-                transform.rotation = Quaternion.Euler(0, smoothedRotation.eulerAngles.y, 0);
-
-                yield return null; // Wait for the next frame to continue movement.
-            }
 
             OnEndMovement?.Invoke();
         }
 
-        private float CalculateAngleDifference(Quaternion currentRotation, Quaternion targetRotation)
+        /// <summary>
+        /// Unregister the agent from the manager. 
+        /// And register in Death Manager.
+        /// </summary>
+        public void Death()
         {
-            float angleDifference = Quaternion.Angle(currentRotation, targetRotation);
+            currentNode.Storages.Remove(gameObject);
 
-            Vector3 cross = Vector3.Cross(currentRotation * Vector3.forward, targetRotation * Vector3.forward);
-            if (cross.y < 0) angleDifference = -angleDifference;
+            ServiceLocator.Instance.AgentsManager.UnregisterAgent(this);
 
-            return angleDifference; // -180° | 180°.
-        }
-
-        private Quaternion CalculateTargetRotation(Vector3 targetPosition)
-        {
-            Vector3 directionToTarget = (targetPosition - transform.position).normalized;
-            directionToTarget.y = 0;
-
-            return Quaternion.LookRotation(directionToTarget);
-        }
-
-        private float RoundToNearest(float value, float nearest)
-        {
-            return Mathf.Round(value / nearest) * nearest;
+            ServiceLocator.Instance.DeathManager.RegisterAgent(this);
         }
 
         #endregion
@@ -169,6 +115,7 @@ namespace Agents
         #region Getters and Setters
 
         public bool IsPatrol => isPatrol;
+
         public Node StartNode
         {
             get => startNode;
@@ -178,7 +125,9 @@ namespace Agents
                 transform.position = startNode.transform.position;
             }
         }
+
         public Node EndNode => endNode;
+
         public Node CurrentNode => currentNode;
 
         #endregion
