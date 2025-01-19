@@ -3860,7 +3860,7 @@ GameObject:
   m_Icon: {fileID: 2800000, guid: f1d766c90aeb37d4fb8c7d1ed3ba1378, type: 3}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &902861196
 Transform:
   m_ObjectHideFlags: 0
@@ -5489,7 +5489,7 @@ GameObject:
   m_Icon: {fileID: 2800000, guid: dd81f55787e496249bb4111007562ef5, type: 3}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1332272192
 Transform:
   m_ObjectHideFlags: 0
