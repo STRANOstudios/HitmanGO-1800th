@@ -56,8 +56,10 @@ namespace PathSystem
 
         private void ValidatePathDesign()
         {
-            //if (pathDesign != null)
-                //PathComponentModifier.ApplyChanges(pathDesign, exitNode);
+            if (Application.isPlaying) return;
+
+            if (pathDesign != null)
+                PathComponentModifier.ApplyChanges(pathDesign, exitNode);
         }
 
         #endregion
