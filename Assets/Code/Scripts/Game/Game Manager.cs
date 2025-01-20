@@ -6,12 +6,6 @@ using UnityEngine.Events;
 public class GameManager : MonoBehaviour
 {
     [Header("Events")]
-    [Tooltip("Event triggered when the game start after dark transition")]
-    [SerializeField] private TriggerEvent _onStart = new();
-
-    [Tooltip("Event triggered when the game end")]
-    [SerializeField] private TriggerEvent _onEnd = new();
-
     [Tooltip("Event triggered when the player win")]
     [SerializeField] private TriggerEvent _onWinTrigger = new();
 
@@ -19,6 +13,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TriggerEvent _onLoseTrigger = new();
 
     [Serializable] public class TriggerEvent : UnityEvent { }
+
+    public static event Action OnStartGame;
+    public static event Action OnEndGame;
 
     private void OnEnable()
     {
@@ -44,24 +41,24 @@ public class GameManager : MonoBehaviour
 
     private void OnStart()
     {
-        _onStart?.Invoke();
+        OnStartGame?.Invoke();
     }
 
-    private void OnEnd()
+    public void OnEnd()
     {
-        _onEnd?.Invoke();
+        OnEndGame?.Invoke();
     }
 
     private void OnWin()
     {
         _onWinTrigger?.Invoke();
-        OnEnd();
+        //OnEnd();
     }
 
     private void OnLose()
     {
         _onLoseTrigger?.Invoke();
-        OnEnd();
+        //OnEnd();
     }
 
 }
