@@ -13,11 +13,18 @@ namespace Audio
         [SerializeField] private bool _debug;
 
         [ShowIfGroup("_debug")]
-        [ShowInInspector, ReadOnly]private AudioSource _soundtrack = null;
+        [ShowInInspector, ReadOnly] private AudioSource _soundtrack = null;
+
+        [SerializeField] private string _currentMusic;
 
         private void Start()
         {
             _soundtrack = gameObject.AddComponent<AudioSource>();
+
+            if (_currentMusic != "")
+            {
+                ChangeMusic(_currentMusic);
+            }
         }
 
         /// <summary>
@@ -65,7 +72,7 @@ namespace Audio
         /// <param name="key">name of the clip</param>
         public void PlaySfx(string key)
         {
-            if (_debug) Debug.Log($"Playing SFX: {key}");
+            if (_debug) Debug.Log($"Playing sfx: {key}");
             PlaySFX(key);
         }
 
@@ -96,7 +103,16 @@ namespace Audio
         public void ChangeMusic(string key)
         {
             if (_soundtrack != null)
+            {
+                _currentMusic = key;
                 _soundtrack.clip = audioData.GetMusicClip(key);
+            }
         }
+
+        /// <summary>
+        /// Get the name of the current music clip
+        /// </summary>
+        /// <returns>name of the clip</returns>
+        public string GetCurrentMusic => _currentMusic;
     }
 }

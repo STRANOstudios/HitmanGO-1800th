@@ -1,6 +1,6 @@
 using Agents;
+using Audio;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Managers
@@ -9,6 +9,8 @@ namespace Managers
     {
         [SerializeField] List<Transform> m_deathPositions = new();
         [SerializeField, Range(0, 10f)] private float m_heightSpawn = 5f;
+
+        public string m_clipName = "";
 
         private int m_deathCount = 0;
 
@@ -42,6 +44,8 @@ namespace Managers
             agent.transform.position = pos;
 
             m_deathCount++;
+
+            AudioManager.Instance.PlaySFX(m_clipName);
         }
     }
 }

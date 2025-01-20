@@ -1,3 +1,4 @@
+using Audio;
 using PathSystem;
 using PathSystem.PathFinding;
 using Player;
@@ -24,6 +25,8 @@ namespace Agents
 
         [Title("Settings")]
         [SerializeField] private Vector3 size = Vector3.one;
+        public string m_clipNameMove = "";
+        public string m_clipNameTrigger = "";
 
         [Title("Debug")]
         [SerializeField] private bool _debug = false;
@@ -126,6 +129,8 @@ namespace Agents
                     }
                 }
 
+                AudioManager.Instance.PlaySFX(m_clipNameMove);
+
                 agent.Move();
             }
         }
@@ -185,6 +190,8 @@ namespace Agents
         public void SetTarget(Node targetNode, List<Agent> agents)
         {
             if (_debugLog) Debug.Log("New Target");
+
+            AudioManager.Instance.PlaySFX(m_clipNameTrigger);
 
             foreach (Agent agent in agents)
             {

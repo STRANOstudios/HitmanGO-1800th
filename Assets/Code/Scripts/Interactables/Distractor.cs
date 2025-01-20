@@ -1,10 +1,9 @@
-using Agents;
+using Audio;
 using PathSystem;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace Interactables
@@ -18,6 +17,8 @@ namespace Interactables
         [Title("Settings")]
         [SerializeField, Required] private Node m_node;
         [SerializeField] private Vector3 m_sizeBounds = Vector3.one;
+
+        public string m_clipName = "";
 
         [Title("Debug")]
         [SerializeField] private bool _drawGizmos = true;
@@ -111,6 +112,7 @@ namespace Interactables
         {
             set
             {
+                AudioManager.Instance.PlaySFX(m_clipName);
                 target = value;
                 Check();
             }

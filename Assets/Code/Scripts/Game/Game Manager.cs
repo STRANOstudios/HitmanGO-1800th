@@ -14,35 +14,51 @@ public class GameManager : MonoBehaviour
 
     [Serializable] public class TriggerEvent : UnityEvent { }
 
+    public static event Action OnStartGame;
+    public static event Action OnEndGame;
+
     private void OnEnable()
     {
-        // Win condition
-        ExitNode.Exit += Win;
-        KillHandler.OnKill += Win;
+        SceneLoader.OnSceneLoadComplete += OnStart;
 
-        // Lose condition
-        AgentsManager.OnKillPlayer += Lose;
+        // OnWin condition
+        ExitNode.Exit += OnWin;
+        KillHandler.OnKill += OnWin;
+
+        // OnLose condition
+        AgentsManager.OnKillPlayer += OnLose;
     }
 
     private void OnDisable()
     {
-        ExitNode.Exit -= Win;
-        KillHandler.OnKill -= Win;
+        SceneLoader.OnSceneLoadComplete -= OnStart;
 
-        AgentsManager.OnKillPlayer -= Lose;
+        ExitNode.Exit -= OnWin;
+        KillHandler.OnKill -= OnWin;
+
+        AgentsManager.OnKillPlayer -= OnLose;
     }
 
-    // player win
-    private void Win()
+    private void OnStart()
+    {
+        OnStartGame?.Invoke();
+    }
+
+    public void OnEnd()
+    {
+        OnEndGame?.Invoke();
+    }
+
+    private void OnWin()
     {
         _onWinTrigger?.Invoke();
+        //OnEnd();
     }
 
-    // player death
-    private void Lose()
+    private void OnLose()
     {
-        Debug.Log("Lose");
         _onLoseTrigger?.Invoke();
+        //OnEnd();
     }
 
 }

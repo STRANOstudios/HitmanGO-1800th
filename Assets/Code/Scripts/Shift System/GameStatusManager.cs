@@ -22,6 +22,8 @@ public class GameStatusManager : MonoBehaviour
 
         MovementManager.OnEndMovement += BeginPlayerTurn;
         Distractor.OnInteractEnd += BeginPlayerTurn;
+
+        NoEnemy.OnNoEnemy += BeginPlayerTurn;
     }
 
     private void OnDisable()
@@ -32,6 +34,8 @@ public class GameStatusManager : MonoBehaviour
 
         MovementManager.OnEndMovement -= BeginPlayerTurn;
         Distractor.OnInteractEnd -= BeginPlayerTurn;
+
+        NoEnemy.OnNoEnemy -= BeginPlayerTurn;
     }
 
     private void GameStart()
