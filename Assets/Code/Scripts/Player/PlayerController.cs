@@ -35,6 +35,11 @@ namespace Player
         public static event Action OnPlayerEndTurn;
         public static event Action OnPlayerDistractionReady;
 
+        private void OnValidate()
+        {
+            if (m_startNode != null && m_startNode != currentNode) transform.position = m_startNode.transform.position;
+        }
+
         private void Awake()
         {
             ServiceLocator.Instance.Player = this;
@@ -133,7 +138,7 @@ namespace Player
         {
             CalculateAngle();
 
-            if(!OnDistractor)
+            if (!OnDistractor)
                 OnPlayerEndTurn?.Invoke();
             else OnDistractor = false;
         }

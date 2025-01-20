@@ -112,7 +112,7 @@ namespace Interactables
         {
             set
             {
-                AudioManager.Instance.PlaySFX(m_clipName);
+                if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX(m_clipName);
                 target = value;
                 Check();
             }

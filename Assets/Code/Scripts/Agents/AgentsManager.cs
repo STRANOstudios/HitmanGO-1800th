@@ -51,6 +51,16 @@ namespace Agents
         [FoldoutGroup("Gizmos"), ShowIf("_drawGizmos")]
         [SerializeField, ColorPalette] private Color _nextPathColor = Color.magenta;
 
+        [Button("Bake Paths")]
+        public void BakePaths()
+        {
+            foreach (Agent agent in MovingAgents)
+            {
+                if (agent.StartNode == null || agent.EndNode == null) continue;
+                Pathfinding(agent, agent.StartNode, agent.EndNode);
+            }
+        }
+
         public static event Action OnKillPlayer;
         public static event Action OnAgentsEndSettingsMovement;
         private int _endMovmentCounter = 0;
@@ -170,6 +180,7 @@ namespace Agents
 
                 if (Utils.CheckGameObjectsInBox(agent.CurrentNode.transform.position + agent.transform.forward, size, new List<PlayerController> { ServiceLocator.Instance.Player }).Count > 0)
                 {
+                    if (!agent.CurrentNode.neighbours.Contains(ServiceLocator.Instance.Player.CurrentNode)) return false;
                     return ServiceLocator.Instance.Player.IsVisible;
                 }
 
@@ -225,7 +236,11 @@ namespace Agents
 
             if (agent.IsPatrol)
             {
-                if (!MovingAgents.Contains(agent)) MovingAgents.Add(agent);
+                if (!MovingAgents.Contains(agent))
+                {
+                    MovingAgents.Add(agent);
+                    Pathfinding(agent, agent.StartNode, agent.EndNode);
+                }
             }
             else
             {

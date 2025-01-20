@@ -164,7 +164,7 @@ MonoBehaviour:
   m_nameTargets: DistractorIndicator
   nodes: []
   m_node: {fileID: 0}
-  m_sizeBounds: {x: 6, y: 0.5, z: 6}
+  m_sizeBounds: {x: 7, y: 0.5, z: 7}
   m_clipName: distractor
   _drawGizmos: 1
   m_boundsColor: {r: 1, g: 0, b: 0, a: 1}

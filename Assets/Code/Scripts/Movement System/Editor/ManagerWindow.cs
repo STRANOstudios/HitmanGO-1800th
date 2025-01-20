@@ -56,7 +56,7 @@ namespace PathSystem
 
         private void ValidatePathDesign()
         {
-            if (Application.isPlaying) return;
+            //if (Application.isPlaying) return;
 
             if (pathDesign != null)
                 PathComponentModifier.ApplyChanges(pathDesign, exitNode);

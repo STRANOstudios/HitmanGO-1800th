@@ -18,13 +18,15 @@ namespace Agents
         [SerializeField] private bool isPatrol = false;
 
         [ShowIf("isPatrol")]
+        public int Index = 0;
+
+        [ShowIf("isPatrol")]
         [SerializeField, Required] private Node endNode;
 
         [Title("Debug")]
         [SerializeField] private bool _debug = false;
 
         [ShowIfGroup("_debug")]
-        [ReadOnly] public int Index = 0;
 
         [ShowIfGroup("_debug")]
         [ShowInInspector, ReadOnly] private Node currentNode = null;
@@ -45,7 +47,6 @@ namespace Agents
         private void Start()
         {
             ServiceLocator.Instance.AgentsManager.RegisterAgent(this);
-            if (isPatrol) ServiceLocator.Instance.AgentsManager.UpdatePath(this);
 
             currentNode = startNode;
 
@@ -66,6 +67,7 @@ namespace Agents
                 {
                     Path.Clear();
                     endNode = null;
+                    Index = 0;
                 }
             }
 
@@ -82,8 +84,16 @@ namespace Agents
                 if (endNode != null && endNode != _endNode)
                 {
                     _endNode = endNode;
-                    ServiceLocator.Instance.AgentsManager.UpdatePath(this);
+                    Debug.DrawLine(endNode.transform.position, endNode.transform.position + Vector3.up, Color.red, 1f);
                 }
+            }
+
+            Index = Mathf.Clamp(Index, 0, Mathf.Max(0, Path.Count - 1));
+
+            if (Index != 0)
+            {
+                currentNode = Path[Index];
+                transform.position = currentNode.transform.position;
             }
         }
 
