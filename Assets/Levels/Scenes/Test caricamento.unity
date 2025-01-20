@@ -479,7 +479,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 791327274}
-  - component: {fileID: 791327276}
   - component: {fileID: 791327275}
   m_Layer: 0
   m_Name: Test Pool
@@ -521,18 +520,6 @@ MonoBehaviour:
   - prefab: {fileID: 3942719799785997598, guid: a8ab80b0ed10e8c4d947dc2900b4622e,
       type: 3}
     amount: 7
---- !u!114 &791327276
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 791327273}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 290943a239d0a604aad93821ad94af86, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &844716550
 GameObject:
   m_ObjectHideFlags: 0
@@ -1474,6 +1461,8 @@ GameObject:
   - component: {fileID: 1709846836}
   - component: {fileID: 1709846835}
   - component: {fileID: 1709846837}
+  - component: {fileID: 1709846839}
+  - component: {fileID: 1709846838}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -1520,6 +1509,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5028a35ee1e3de45863171ebeafe247, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _onStart:
+    m_PersistentCalls:
+      m_Calls: []
+  _onEnd:
+    m_PersistentCalls:
+      m_Calls: []
   _onWinTrigger:
     m_PersistentCalls:
       m_Calls:
@@ -1527,6 +1522,18 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 1709846839}
+        m_TargetAssemblyTypeName: Audio.AudioHandler, Assembly-CSharp
+        m_MethodName: OnTrigger
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1550,6 +1557,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 1709846838}
+        m_TargetAssemblyTypeName: Audio.AudioHandler, Assembly-CSharp
+        m_MethodName: OnTrigger
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!114 &1709846837
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1562,6 +1581,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d32fc1aa257bd734b8a85cc93747f893, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1709846838
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1709846833}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82b6741740cd87e4ea754209c279da1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_clipName: whistle
+  m_isMusic: 0
+--- !u!114 &1709846839
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1709846833}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82b6741740cd87e4ea754209c279da1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_clipName: win
+  m_isMusic: 0
 --- !u!1 &1716236069
 GameObject:
   m_ObjectHideFlags: 0

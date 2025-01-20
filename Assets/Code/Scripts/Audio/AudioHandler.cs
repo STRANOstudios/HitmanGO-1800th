@@ -6,7 +6,7 @@ namespace Audio
     public class AudioHandler : MonoBehaviour
     {
         [Title("Settings")]
-        [SerializeField] private string m_clipName;
+        [SerializeField] private string m_clipName = "";
         [SerializeField] private bool m_isMusic = false;
 
         public void OnTrigger()

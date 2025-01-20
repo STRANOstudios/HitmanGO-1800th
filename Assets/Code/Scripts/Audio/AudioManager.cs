@@ -65,7 +65,7 @@ namespace Audio
         /// <param name="key">name of the clip</param>
         public void PlaySfx(string key)
         {
-            if (_debug) Debug.Log($"Playing SFX: {key}");
+            if (_debug) Debug.Log($"Playing sfx: {key}");
             PlaySFX(key);
         }
 

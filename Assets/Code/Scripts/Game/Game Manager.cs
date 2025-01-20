@@ -6,6 +6,12 @@ using UnityEngine.Events;
 public class GameManager : MonoBehaviour
 {
     [Header("Events")]
+    [Tooltip("Event triggered when the game start after dark transition")]
+    [SerializeField] private TriggerEvent _onStart = new();
+
+    [Tooltip("Event triggered when the game end")]
+    [SerializeField] private TriggerEvent _onEnd = new();
+
     [Tooltip("Event triggered when the player win")]
     [SerializeField] private TriggerEvent _onWinTrigger = new();
 
@@ -16,33 +22,46 @@ public class GameManager : MonoBehaviour
 
     private void OnEnable()
     {
-        // Win condition
-        ExitNode.Exit += Win;
-        KillHandler.OnKill += Win;
+        SceneLoader.OnSceneLoadComplete += OnStart;
 
-        // Lose condition
-        AgentsManager.OnKillPlayer += Lose;
+        // OnWin condition
+        ExitNode.Exit += OnWin;
+        KillHandler.OnKill += OnWin;
+
+        // OnLose condition
+        AgentsManager.OnKillPlayer += OnLose;
     }
 
     private void OnDisable()
     {
-        ExitNode.Exit -= Win;
-        KillHandler.OnKill -= Win;
+        SceneLoader.OnSceneLoadComplete -= OnStart;
 
-        AgentsManager.OnKillPlayer -= Lose;
+        ExitNode.Exit -= OnWin;
+        KillHandler.OnKill -= OnWin;
+
+        AgentsManager.OnKillPlayer -= OnLose;
     }
 
-    // player win
-    private void Win()
+    private void OnStart()
+    {
+        _onStart?.Invoke();
+    }
+
+    private void OnEnd()
+    {
+        _onEnd?.Invoke();
+    }
+
+    private void OnWin()
     {
         _onWinTrigger?.Invoke();
+        OnEnd();
     }
 
-    // player death
-    private void Lose()
+    private void OnLose()
     {
-        Debug.Log("Lose");
         _onLoseTrigger?.Invoke();
+        OnEnd();
     }
 
 }
