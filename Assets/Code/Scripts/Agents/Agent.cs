@@ -1,4 +1,3 @@
-using Interfaces.PathSystem;
 using PathSystem;
 using Sirenix.OdinInspector;
 using System;
@@ -43,9 +42,10 @@ namespace Agents
         private Node _startNode = null;
         private Node _endNode = null;
 
-        private void Awake()
+        private void Start()
         {
             ServiceLocator.Instance.AgentsManager.RegisterAgent(this);
+            if (isPatrol) ServiceLocator.Instance.AgentsManager.UpdatePath(this);
 
             currentNode = startNode;
 
