@@ -92,6 +92,8 @@ namespace Agents
             _isPlayerDetected = await CheckRayCast(IdleAgents.Concat(MovingAgents).ToList(), NodeCache.Nodes);
 
             Move(MovingAgents);
+
+            if(MovingAgents.Count == 0) OnAgentsEndSettingsMovement?.Invoke();
         }
 
         private void Move(List<Agent> agents)
