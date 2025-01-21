@@ -64,4 +64,8 @@ public class GameManager : MonoBehaviour
         //OnEnd();
     }
 
+    public void Pause(bool pause)
+    {
+        Time.timeScale = pause ? 0f : 1f;
+    }
 }
