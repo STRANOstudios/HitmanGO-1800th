@@ -13793,7 +13793,7 @@ MonoBehaviour:
   hub: 1
   levelData:
     levelID: 3
-    isUnlocked: 1
+    isUnlocked: 0
     achievements:
     - isCompleted: 0
     - isCompleted: 0

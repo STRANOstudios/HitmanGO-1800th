@@ -2816,7 +2816,6 @@ GameObject:
   - component: {fileID: 1709846835}
   - component: {fileID: 1709846839}
   - component: {fileID: 1709846838}
-  - component: {fileID: 1709846840}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -2866,18 +2865,6 @@ MonoBehaviour:
   _onWinTrigger:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1750897203}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
       - m_Target: {fileID: 1709846839}
         m_TargetAssemblyTypeName: Audio.AudioHandler, Assembly-CSharp
         m_MethodName: OnTrigger
@@ -2890,13 +2877,10 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-  _onLoseTrigger:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 854748578}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 1709846836}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: OnEnd
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -2905,6 +2889,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+  _onLoseTrigger:
+    m_PersistentCalls:
+      m_Calls:
       - m_Target: {fileID: 1709846838}
         m_TargetAssemblyTypeName: Audio.AudioHandler, Assembly-CSharp
         m_MethodName: OnTrigger
@@ -2945,23 +2932,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_clipName: win
   m_isMusic: 0
---- !u!114 &1709846840
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1709846833}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d82465e6bab141408e41fc204e8cf4c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hub: 
-  levelName: level 1
-  nextLevelName: 
-  achievements: []
-  m_debug: 0
 --- !u!1 &1716236069
 GameObject:
   m_ObjectHideFlags: 0

@@ -7,7 +7,7 @@ namespace DataSystem
     public class LevelData
     {
         public int levelID;
-        public bool isUnlocked;
+        public bool isUnlocked = false;
         public List<AchievementData> achievements;
 
         public LevelData(int id, bool unlocked)

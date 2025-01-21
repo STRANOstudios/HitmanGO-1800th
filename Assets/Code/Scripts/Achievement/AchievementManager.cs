@@ -64,13 +64,18 @@ namespace DataSystem
 
             if (!SaveSystem.Exists(hub + levelName))
             {
-               /* if (m_debug)*/ Debug.Log($"Level {hub + levelName} has not exists.");
+                if (m_debug) Debug.Log($"Level {hub + levelName} has not exists.");
 
                 OnDataFailed?.Invoke();
                 return;
             }
 
             levelData = SaveSystem.Load<LevelData>(hub + levelName);
+
+            for (int i = 0; i < levelData.achievements.Count; i++)
+            {
+                achievements[i].IsCompleted = levelData.achievements[i].isCompleted;
+            }
 
             OnDataLoaded?.Invoke();
             Debug.Log($"Loaded level {hub + levelName}");
@@ -87,6 +92,22 @@ namespace DataSystem
             }
 
             SaveSystem.Save(levelData, levelName);
+
+            if (nextLevelName != "" && nextLevelName != null)
+            {
+                if (!SaveSystem.Exists(hub + nextLevelName))
+                {
+                    if (m_debug) Debug.Log($"Level {hub + nextLevelName} has not exists.");
+
+                    OnDataFailed?.Invoke();
+                    return;
+                }
+            }
+
+            levelData = SaveSystem.Load<LevelData>(hub + nextLevelName);
+            levelData.isUnlocked = true;
+
+            SaveSystem.Save(levelData, nextLevelName);
 
             OnDataSaved?.Invoke();
         }

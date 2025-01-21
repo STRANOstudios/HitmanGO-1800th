@@ -53,6 +53,8 @@ namespace HUB
 
                 LevelData levelData = SaveSystem.Load<LevelData>(HUBName + level.levelName);
 
+                if(!levelData.isUnlocked) continue;
+
                 level.button.SetActive(true);
 
                 foreach (var achievement in levelData.achievements)
