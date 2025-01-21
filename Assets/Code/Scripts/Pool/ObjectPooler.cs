@@ -89,6 +89,7 @@ public class ObjectPooler : Singleton<ObjectPooler>
 
         // Disabilita il GameObject
         obj.SetActive(false);
+        obj.transform.parent = this.transform;
 
         // Rimuovi le ultime 7 lettere dal nome del GameObject (per esempio "_Pooled")
         string originalName = obj.name;
@@ -142,7 +143,7 @@ public class ObjectPooler : Singleton<ObjectPooler>
     /// </summary>
     private GameObject CreateObject(GameObject prefab)
     {
-        var newObject = Instantiate(prefab);
+        var newObject = Instantiate(prefab, this.transform);
         newObject.name = prefab.name + "_Pooled";
         return newObject;
     }

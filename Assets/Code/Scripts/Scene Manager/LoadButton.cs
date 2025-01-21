@@ -11,4 +11,9 @@ public class LoadButton : MonoBehaviour
         index--;
         SceneLoader.Instance.LoadMultipleScenes(sceneComponents.Concat(new[] { sceneNames[index] }).ToArray());
     }
+
+    public void LoadScene()
+    {
+        SceneLoader.Instance.LoadScene(sceneComponents[0]);
+    }
 }
