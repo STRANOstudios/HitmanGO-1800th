@@ -7,7 +7,7 @@ public class HiddenPlace : MonoBehaviour
 
     private void OnValidate()
     {
-        if (m_node.transform.position != transform.position)
+        if (m_node != null && m_node.transform.position != transform.position)
             transform.position = m_node.transform.position;
     }
 

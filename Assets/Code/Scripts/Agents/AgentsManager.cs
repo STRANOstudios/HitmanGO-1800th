@@ -3,7 +3,6 @@ using PathSystem;
 using PathSystem.PathFinding;
 using Player;
 using Sirenix.OdinInspector;
-using Sirenix.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,9 +13,6 @@ using UnityEngine;
 
 namespace Agents
 {
-#if UNITY_EDITOR
-    [InitializeOnLoad]
-#endif
     public class AgentsManager : MonoBehaviour
     {
         [Title("Agents")]
@@ -58,6 +54,9 @@ namespace Agents
             {
                 if (agent.StartNode == null || agent.EndNode == null) continue;
                 Pathfinding(agent, agent.StartNode, agent.EndNode);
+
+                EditorUtility.SetDirty(agent);
+                AssetDatabase.SaveAssets();
             }
         }
 
@@ -208,7 +207,7 @@ namespace Agents
             {
                 Node StartNode = agent.StartNode;
 
-                if (!agent.Path.IsNullOrEmpty())
+                if (!agent.Path.Count.Equals(0))
                 {
                     StartNode = agent.Path[agent.Index];
                 }
@@ -239,7 +238,7 @@ namespace Agents
                 if (!MovingAgents.Contains(agent))
                 {
                     MovingAgents.Add(agent);
-                    Pathfinding(agent, agent.StartNode, agent.EndNode);
+                    //Pathfinding(agent, agent.StartNode, agent.EndNode);
                 }
             }
             else
@@ -481,7 +480,8 @@ namespace Agents
                 size.z = Mathf.Clamp(Mathf.Abs(Vector3.Dot(agent.transform.forward, Vector3.forward)) * this.size.z, 1f, this.size.z);
 
                 // Disegna il cubo con la posizione e la dimensione calcolate
-                Gizmos.DrawWireCube(agent.CurrentNode.transform.position + agent.transform.forward, size);
+                if (agent.CurrentNode != null)
+                    Gizmos.DrawWireCube(agent.CurrentNode.transform.position + agent.transform.forward, size);
             }
 
             // Gizmo path

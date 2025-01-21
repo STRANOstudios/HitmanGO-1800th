@@ -21,17 +21,17 @@ namespace Managers
 
         private void OnEnable()
         {
-            ServiceLocator.OnServiceLoactorCreated += OnServerInitialized;
+            ServiceLocator.OnServiceLoactorCreated += OnInitialized;
         }
 
         private void OnDisable()
         {
-            ServiceLocator.OnServiceLoactorCreated += OnServerInitialized;
+            ServiceLocator.OnServiceLoactorCreated += OnInitialized;
         }
 
-        private void OnServerInitialized()
+        private void OnInitialized()
         {
-            if (ServiceLocator.Instance.AgentsManager.AgentsCount < m_deathPositions.Count)
+            if (ServiceLocator.Instance.AgentsManager.AgentsCount > m_deathPositions.Count)
             {
                 Debug.LogError("Not enough death positions");
             }

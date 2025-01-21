@@ -27,9 +27,16 @@ public class ExitNode : MonoBehaviour
 
     private void CheckPlayerPresence()
     {
-        if (m_node.Storages.Any(obj => obj.CompareTag("Player")))
+        if (m_node.Storages.Contains(ServiceLocator.Instance.Player.gameObject))
         {
+            Debug.Log("Exit");
             Exit?.Invoke();
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(transform.position, transform.position + Vector3.up);
     }
 }

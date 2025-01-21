@@ -6,13 +6,15 @@ using UnityEngine.Rendering.Universal;
 [RequireComponent(typeof(Camera))]
 public class OverlayCamera : MonoBehaviour
 {
+    public bool debug = false;
+
     void Start()
     {
         // Trova la Main Camera
         Camera mainCamera = Camera.main;
         if (mainCamera == null)
         {
-            Debug.LogError("Main Camera not found!");
+            if (debug) Debug.LogError("Main Camera not found!");
             return;
         }
 
@@ -30,7 +32,7 @@ public class OverlayCamera : MonoBehaviour
         Camera overlayCamera = GameObject.FindWithTag("Loading")?.GetComponent<Camera>();
         if (overlayCamera == null)
         {
-            Debug.LogError("Overlay Camera not found!");
+            if (debug) Debug.LogError("Overlay Camera not found!");
             return;
         }
 
@@ -48,11 +50,11 @@ public class OverlayCamera : MonoBehaviour
         if (!mainCameraData.cameraStack.Contains(overlayCamera))
         {
             mainCameraData.cameraStack.Add(overlayCamera);
-            Debug.Log("Overlay Camera added to the Main Camera stack.");
+            if (debug) Debug.Log("Overlay Camera added to the Main Camera stack.");
         }
         else
         {
-            Debug.Log("Overlay Camera is already in the stack.");
+            if (debug) Debug.Log("Overlay Camera is already in the stack.");
         }
     }
 }

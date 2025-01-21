@@ -2,14 +2,10 @@ using PathSystem;
 using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 namespace Agents
 {
-#if UNITY_EDITOR
-    [InitializeOnLoad]
-#endif
     public class Agent : MonoBehaviour
     {
         [Title("Settings")]
@@ -34,8 +30,7 @@ namespace Agents
         [ShowIfGroup("_debug")]
         [ReadOnly] public bool HasReachedTarget = false;
 
-        [ShowIfGroup("_debug")]
-        [ReadOnly] public List<Node> Path = new();
+        public List<Node> Path = new();
 
         public static event Action OnEndMovement;
 

@@ -36,7 +36,7 @@ namespace PathSystem
 
         private void OnValidate()
         {
-            if(pathDesign == null) return;
+            if (pathDesign == null) return;
             EditorUtility.SetDirty(pathDesign);
         }
 

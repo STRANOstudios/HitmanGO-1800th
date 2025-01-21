@@ -60,7 +60,7 @@ namespace DataSystem
         private void LoadData()
         {
             OnDataLoading?.Invoke();
-            Debug.Log($"Loading level {hub + levelName}");
+            if (m_debug) Debug.Log($"Loading level {hub + levelName}");
 
             if (!SaveSystem.Exists(hub + levelName))
             {
@@ -78,7 +78,7 @@ namespace DataSystem
             }
 
             OnDataLoaded?.Invoke();
-            Debug.Log($"Loaded level {hub + levelName}");
+            if (m_debug) Debug.Log($"Loaded level {hub + levelName}");
         }
 
         private void SaveData()
@@ -91,7 +91,7 @@ namespace DataSystem
                     levelData.achievements[i].isCompleted = true;
             }
 
-            SaveSystem.Save(levelData, levelName);
+            SaveSystem.Save(levelData, hub + levelName);
 
             if (nextLevelName != "" && nextLevelName != null)
             {
@@ -107,9 +107,11 @@ namespace DataSystem
             levelData = SaveSystem.Load<LevelData>(hub + nextLevelName);
             levelData.isUnlocked = true;
 
-            SaveSystem.Save(levelData, nextLevelName);
+            SaveSystem.Save(levelData, hub + nextLevelName);
 
             OnDataSaved?.Invoke();
+            if (m_debug) Debug.Log($"Saved level {hub + levelName}");
+            if (m_debug) Debug.Log($"Saved level {hub + nextLevelName}");
         }
 
         #region METHODS FOR ACHIEVEMENT 
