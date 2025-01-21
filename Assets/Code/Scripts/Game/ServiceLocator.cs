@@ -1,4 +1,5 @@
 using Agents;
+using DataSystem;
 using Managers;
 using Player;
 using Sirenix.OdinInspector;
@@ -27,6 +28,9 @@ public class ServiceLocator : Singleton<ServiceLocator>
 
     [ShowIfGroup("m_debug")]
     [ShowInInspector, ReadOnly] private StyleManager pathDesign = null;
+
+    [ShowIfGroup("m_debug")]
+    [ShowInInspector, ReadOnly] private AchievementManager achievementManager = null;
 
     // DATI SALVATI
 
@@ -57,7 +61,7 @@ public class ServiceLocator : Singleton<ServiceLocator>
         //    if (player == null) Debug.LogError("Missing reference Player");
         //}
 
-        if (agentsManager != null && nodeCache != null && nodeManager != null && deathManager != null && player != null && pathDesign != null && !hasNotified)
+        if (agentsManager != null && nodeCache != null && nodeManager != null && deathManager != null && player != null && pathDesign != null && achievementManager != null && !hasNotified)
         {
             hasNotified = true;
             OnServiceLoactorCreated?.Invoke();
@@ -145,6 +149,19 @@ public class ServiceLocator : Singleton<ServiceLocator>
             }
         }
         get { return pathDesign; }
+    }
+
+    public AchievementManager AchievementManager
+    {
+        set
+        {
+            if (achievementManager == null)
+            {
+                achievementManager = value;
+                CheckCreateProgress();
+            }
+        }
+        get { return achievementManager; }
     }
 
     #endregion

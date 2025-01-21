@@ -47,5 +47,9 @@ namespace Managers
 
             AudioManager.Instance.PlaySFX(m_clipName);
         }
+
+        public bool IsFull() => m_deathCount >= m_deathPositions.Count;
+
+        public bool IsEmpty() => m_deathCount == 0;
     }
 }

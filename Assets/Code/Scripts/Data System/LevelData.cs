@@ -8,15 +8,21 @@ namespace DataSystem
     {
         public int levelID;
         public bool isUnlocked;
-        public bool isCompleted;
-        public List<string> achievements;
+        public List<AchievementData> achievements;
 
-        public LevelData(int id, bool unlocked, bool completed)
+        public LevelData(int id, bool unlocked)
         {
             levelID = id;
             isUnlocked = unlocked;
-            isCompleted = completed;
-            achievements = new List<string>();
+            achievements = new List<AchievementData>();
         }
+
+        public LevelData() { }
+    }
+
+    [Serializable]
+    public class AchievementData
+    {
+        public bool isCompleted;
     }
 }

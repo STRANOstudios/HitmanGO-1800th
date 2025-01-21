@@ -17,6 +17,8 @@ public class GameManager : MonoBehaviour
     public static event Action OnStartGame;
     public static event Action OnEndGame;
 
+    public static event Action OnWinCondition;
+
     private void OnEnable()
     {
         SceneLoader.OnSceneLoadComplete += OnStart;
@@ -51,6 +53,7 @@ public class GameManager : MonoBehaviour
 
     private void OnWin()
     {
+        OnWinCondition?.Invoke();
         _onWinTrigger?.Invoke();
         //OnEnd();
     }

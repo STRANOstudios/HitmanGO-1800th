@@ -1,41 +1,119 @@
+using Player;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Achievement
+namespace DataSystem
 {
     public class AchievementManager : MonoBehaviour
     {
-        private List<Achievement> unlockedAchievements = new List<Achievement>();
-        //private LocalizationManager localizationManager;
+        public string hub;
+        public string levelName;
+        public string nextLevelName;
 
-        void Start()
+        public List<AchievementBase> achievements = new();
+
+        [Header("Debug")]
+        [SerializeField] private bool m_debug = false;
+
+        public static event Action OnDataLoading;
+        public static event Action OnDataLoaded;
+        public static event Action OnDataSaving;
+        public static event Action OnDataSaved;
+
+        public static event Action OnDataFailed;
+
+        private LevelData levelData;
+
+        private int counter = 0;
+        private bool isCompleted = false;
+        private bool isCollected = false;
+
+        private void Awake()
         {
-            //localizationManager = FindObjectOfType<LocalizationManager>();
+            LoadData();
         }
 
-        // Method to unlock an achievement
-        public void UnlockAchievement(Achievement achievement)
+        private void Start()
         {
-            if (!unlockedAchievements.Contains(achievement))
+            ServiceLocator.Instance.AchievementManager = this;
+        }
+
+        private void OnEnable()
+        {
+            GameManager.OnEndGame += SaveData;
+
+            PlayerController.OnPlayerMove += AddCount;
+            GameManager.OnWinCondition += Complete;
+            Collectibles.OnCollectibleCollected += OnCollectibleCollected;
+        }
+
+        private void OnDisable()
+        {
+            GameManager.OnEndGame -= SaveData;
+
+            PlayerController.OnPlayerMove -= AddCount;
+            GameManager.OnWinCondition -= Complete;
+            Collectibles.OnCollectibleCollected -= OnCollectibleCollected;
+        }
+
+        private void LoadData()
+        {
+            OnDataLoading?.Invoke();
+            Debug.Log($"Loading level {hub + levelName}");
+
+            if (!SaveSystem.Exists(hub + levelName))
             {
-                unlockedAchievements.Add(achievement);
-                //string localizedName = localizationManager.GetLocalizedText(achievement.NameKey);
-                //Debug.Log($"Achievement Unlocked: {localizedName}");
-                // Here you could update the UI or trigger a sound
+               /* if (m_debug)*/ Debug.Log($"Level {hub + levelName} has not exists.");
+
+                OnDataFailed?.Invoke();
+                return;
             }
+
+            levelData = SaveSystem.Load<LevelData>(hub + levelName);
+
+            OnDataLoaded?.Invoke();
+            Debug.Log($"Loaded level {hub + levelName}");
         }
 
-        // Check if an achievement has been unlocked
-        public bool IsAchievementUnlocked(Achievement achievement)
+        private void SaveData()
         {
-            return unlockedAchievements.Contains(achievement);
+            OnDataSaving?.Invoke();
+
+            for (int i = 0; i < levelData.achievements.Count; i++)
+            {
+                if (achievements[i].CheckCondition())
+                    levelData.achievements[i].isCompleted = true;
+            }
+
+            SaveSystem.Save(levelData, levelName);
+
+            OnDataSaved?.Invoke();
         }
 
-        // Reset all achievements
-        public void ResetAchievements()
+        #region METHODS FOR ACHIEVEMENT 
+
+        private void AddCount()
         {
-            unlockedAchievements.Clear();
-            Debug.Log("All achievements have been reset.");
+            counter++;
         }
+
+        public int GetStepCount => counter;
+
+        private void Complete()
+        {
+            isCompleted = true;
+        }
+
+        public bool GetCompleteState => isCompleted;
+
+        private void OnCollectibleCollected()
+        {
+            isCollected = true;
+        }
+
+        public bool GetCollectibleState => isCollected;
+
+        #endregion
     }
 }

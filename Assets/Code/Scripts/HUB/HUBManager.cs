@@ -1,4 +1,4 @@
-using PathSystem;
+using DataSystem;
 using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
@@ -10,10 +10,11 @@ namespace HUB
     public class HUBManager : MonoBehaviour
     {
         [Title("Settings")]
-        [SerializeField] private string HUBName = "Level";
-        [SerializeField] private List<LevelData> Levels = new();
+        [SerializeField] private string HUBName = "1";
+        [SerializeField] private List<LevelDataHUB> Levels = new();
 
-        [SerializeField, ColorPalette] private Color m_challengeLockedColor = Color.gray;
+        [SerializeField] private GameObject achievementIndicator;
+
         [SerializeField, ColorPalette] private Color m_challengeCompletedColor = Color.white;
 
         [Title("Debug")]
@@ -22,7 +23,7 @@ namespace HUB
         [SerializeField]
         private List<GameObject> activeObjects = new();
 
-        private bool[] unlocked;
+        private LevelData levelData;
 
         public static event Action OnDataLoaded;
 
@@ -30,7 +31,7 @@ namespace HUB
         {
             if (Levels.Count == 0) return;
 
-            foreach (LevelData level in Levels)
+            foreach (LevelDataHUB level in Levels)
             {
                 level.button.SetActive(false);
             }
@@ -38,39 +39,33 @@ namespace HUB
             CheckUnlockLevel();
         }
 
-        private void OnValidate()
-        {
-            foreach (LevelData level in Levels)
-            {
-                SaveSystem.Save(level, HUBName + level.levelName);
-            }
-        }
-
         private void CheckUnlockLevel()
         {
             if (Levels.Count == 0) return;
 
-            foreach (LevelData level in Levels)
+            foreach (LevelDataHUB level in Levels)
             {
                 if (!SaveSystem.Exists(HUBName + level.levelName))
                 {
                     if (_debug) Debug.Log($"Level {level.levelName} has not exists.");
-                    return;
+                    continue;
                 }
 
                 LevelData levelData = SaveSystem.Load<LevelData>(HUBName + level.levelName);
 
                 level.button.SetActive(true);
 
-                level.unlocked = levelData.unlocked;
-
-                for (int i = 0; i < level.challengeSprites.Count; i++)
+                foreach (var achievement in levelData.achievements)
                 {
-                    if (level.challengeSprites[i] != null)
-                        level.challengeSprites[i].color = i < level.challengesCompleted ? m_challengeCompletedColor : m_challengeLockedColor;
+                    if (achievementIndicator == null) continue;
+
+                    var indicator = Instantiate(achievementIndicator, level.achievementContainer.transform);
+
+                    if (achievement.isCompleted)
+                        indicator.GetComponent<Image>().color = m_challengeCompletedColor;
                 }
 
-                if (level.unlocked)
+                if (levelData.isUnlocked)
                     activeObjects.AddRange(level.root);
             }
 
@@ -81,14 +76,11 @@ namespace HUB
     }
 
     [Serializable]
-    public class LevelData
+    public class LevelDataHUB
     {
         public string levelName;
         public GameObject button;
-        public List<Image> challengeSprites;
+        public GameObject achievementContainer;
         public List<GameObject> root;
-
-        public bool unlocked = false;
-        public int challengesCompleted = 0;
     }
 }

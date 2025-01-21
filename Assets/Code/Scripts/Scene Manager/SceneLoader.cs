@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Sirenix.OdinInspector;
 using HUB;
+using DataSystem;
 
 public class SceneLoader : Singleton<SceneLoader>
 {
@@ -33,14 +34,14 @@ public class SceneLoader : Singleton<SceneLoader>
     private void OnEnable()
     {
         OnSwitchScene += LoadScene;
-        DataManager.OnDataLoaded += DataLoaded;
+        AchievementManager.OnDataLoaded += DataLoaded;
         HUBManager.OnDataLoaded += DataLoaded;
     }
 
     private void OnDisable()
     {
         OnSwitchScene -= LoadScene;
-        DataManager.OnDataLoaded -= DataLoaded;
+        AchievementManager.OnDataLoaded -= DataLoaded;
         HUBManager.OnDataLoaded -= DataLoaded;
 
     }
