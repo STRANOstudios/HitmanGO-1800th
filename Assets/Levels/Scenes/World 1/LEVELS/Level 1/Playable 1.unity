@@ -176,7 +176,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 966239533}
+  - {fileID: 971733578}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -338,7 +338,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 966239533}
+  - {fileID: 971733578}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -518,7 +518,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 966239533}
+  - {fileID: 971733578}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -623,7 +623,7 @@ GameObject:
   m_Component:
   - component: {fileID: 675117831}
   - component: {fileID: 675117833}
-  - component: {fileID: 675117832}
+  - component: {fileID: 675117834}
   m_Layer: 0
   m_Name: '- Achievement Manager'
   m_TagString: Untagged
@@ -646,22 +646,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 385119439}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &675117832
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 675117830}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8aea647058da5e14c80fbe04a9d2f48b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  nameKey: Finish Level
-  icon: {fileID: 0}
-  isCompleted: 0
-  Value: 0
 --- !u!114 &675117833
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -678,8 +662,23 @@ MonoBehaviour:
   levelName: 1
   nextLevelName: 2
   achievements:
-  - {fileID: 675117832}
+  - {fileID: 675117834}
   m_debug: 0
+--- !u!114 &675117834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 675117830}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d72503e189a3a014f984e30bd1e8da68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nameKey: 'finish the level '
+  icon: {fileID: 0}
+  isCompleted: 0
 --- !u!1 &789939718
 GameObject:
   m_ObjectHideFlags: 0
@@ -802,7 +801,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 966239533}
+  - {fileID: 971733578}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -849,7 +848,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1914535435}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!21 &966239533
+--- !u!21 &971733578
 Material:
   serializedVersion: 8
   m_ObjectHideFlags: 0
@@ -943,7 +942,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 966239533}
+  - {fileID: 971733578}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
