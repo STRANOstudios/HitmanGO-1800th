@@ -27,7 +27,6 @@ public class ButtonAnimation : MonoBehaviour, IPointerEnterHandler, IPointerExit
     {
         target.DOScale(scaleUp, effectDuration);
         button.DOFade(1f, effectDuration);
-        button.DOFade(0f, effectDuration).SetDelay(effectDuration);
     }
 
     /// <summary>
@@ -44,6 +43,7 @@ public class ButtonAnimation : MonoBehaviour, IPointerEnterHandler, IPointerExit
     public void OnPointerDown(PointerEventData eventData)
     {
         target.DOScale(scaleUp, effectDuration);
+        button.DOFade(0f, effectDuration).SetDelay(effectDuration);
     }
 
     /// <summary>
