@@ -29,14 +29,10 @@ namespace DataSystem
         private bool isCompleted = false;
         private bool isCollected = false;
 
-        private void Awake()
-        {
-            LoadData();
-        }
-
         private void Start()
         {
             ServiceLocator.Instance.AchievementManager = this;
+            LoadData();
         }
 
         private void OnEnable()

@@ -8,6 +8,8 @@ public class ObjectPooler : Singleton<ObjectPooler>
     [ShowInInspector]
     private Dictionary<GameObject, Queue<GameObject>> poolDictionary = new();
 
+    private List<GameObject> poolList = new();
+
     /// <summary>
     /// Initialize a pool for a given prefab with a specified amount.
     /// </summary>
@@ -35,6 +37,7 @@ public class ObjectPooler : Singleton<ObjectPooler>
         {
             var obj = poolDictionary[prefab].Dequeue();
             obj.SetActive(true);
+            poolList.Add(obj);
             return obj;
         }
 
@@ -58,6 +61,8 @@ public class ObjectPooler : Singleton<ObjectPooler>
         if (obj == null) obj = CreateObject(prefab);
 
         StartCoroutine(DisableObject(obj, delay));
+
+        poolList.Add(obj);
 
         return obj;
     }
@@ -118,6 +123,8 @@ public class ObjectPooler : Singleton<ObjectPooler>
             }
             poolDictionary[obj].Enqueue(obj);
         }
+
+        poolList.Remove(obj);
     }
 
     /// <summary>
@@ -135,7 +142,15 @@ public class ObjectPooler : Singleton<ObjectPooler>
 
             poolDictionary.Remove(obj);
         }
+
+        for (int i = poolList.Count - 1; i >= 0; i--)
+        {
+            var tmp = poolList[i];
+            poolList.RemoveAt(i);
+            Destroy(tmp);
+        }
     }
+
 
 
     /// <summary>
