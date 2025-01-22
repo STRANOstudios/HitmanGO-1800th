@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using Sirenix.OdinInspector;
 using HUB;
 using DataSystem;
+using System.Collections.Generic;
 
 public class SceneLoader : Singleton<SceneLoader>
 {
@@ -67,6 +68,22 @@ public class SceneLoader : Singleton<SceneLoader>
     public void ReLoadScene(string sceneName)
     {
         StartCoroutine(TransitionToScene(sceneName, false));
+    }
+
+    public void ReLoadMultiScene()
+    {
+        List<string> sceneNames = new ();
+
+        for (int i = 0; i < SceneManager.sceneCount; i++)
+        {
+            Scene activeScene = SceneManager.GetSceneAt(i);
+            if (activeScene.isLoaded)
+            {
+                sceneNames.Add(activeScene.name);
+            }
+        }
+
+        StartCoroutine(LoadMultipleScenesAsync(sceneNames.ToArray()));
     }
 
     private void DataLoaded()

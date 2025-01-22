@@ -19,6 +19,6 @@ public class LoadButton : MonoBehaviour
 
     public void ReloadScene()
     {
-
+        SceneLoader.Instance.ReLoadMultiScene();
     }
 }
