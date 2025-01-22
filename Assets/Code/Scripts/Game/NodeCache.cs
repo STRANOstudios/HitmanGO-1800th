@@ -18,6 +18,11 @@ public class NodeCache : MonoBehaviour
     {
         RefreshNodes();
     }
+    [Button]
+    public void Clear()
+    {
+        nodes.Clear();
+    }
 
     // Public property to access the nodes list (read-only)
     public static List<Node> Nodes => nodes;

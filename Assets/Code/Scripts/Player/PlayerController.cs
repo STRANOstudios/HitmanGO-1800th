@@ -123,7 +123,7 @@ namespace Player
 
             //PlayerEndTurn();
 
-            StoreNode(node, tmp);
+            StoreNode(node, !tmp);
         }
 
         private void CalculateAngle()
@@ -156,11 +156,12 @@ namespace Player
 
             if (check)
             {
-                for (int i = 0; i < node.Storages.Count; i++)
+                for (int i = node.Storages.Count - 1; i >= 0; i--)
                 {
                     if (node.Storages[i].CompareTag("Enemy"))
                     {
                         node.Storages[i].GetComponent<Agent>().Death();
+                        continue;
                     }
                     if (node.Storages[i].CompareTag("Distractor"))
                     {

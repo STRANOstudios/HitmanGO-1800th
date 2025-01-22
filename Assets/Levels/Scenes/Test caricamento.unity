@@ -391,7 +391,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &249455968
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3518,6 +3518,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00f94b81d775b7f4da6f6bb2c72905a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  title: {fileID: 288123642}
   achivementUIContainer: {fileID: 601410250}
   prefabs: {fileID: 2483448778930767066, guid: 9f81d5d7c55c6e641ab13e2565821e3e, type: 3}
 --- !u!1 &1872028655

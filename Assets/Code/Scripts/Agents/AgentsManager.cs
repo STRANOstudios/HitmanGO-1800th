@@ -61,7 +61,6 @@ namespace Agents
             }
         }
 #endif
-
         public static event Action OnKillPlayer;
         public static event Action OnAgentsEndSettingsMovement;
         private int _endMovmentCounter = 0;
@@ -93,9 +92,11 @@ namespace Agents
         {
             _isPlayerDetected = await CheckRayCast(IdleAgents.Concat(MovingAgents).ToList(), NodeCache.Nodes);
 
+            Debug.Log("Is player detected: " + _isPlayerDetected);
+
             Move(MovingAgents);
 
-            if(MovingAgents.Count == 0) OnAgentsEndSettingsMovement?.Invoke();
+            if (MovingAgents.Count == 0) OnAgentsEndSettingsMovement?.Invoke();
         }
 
         private void Move(List<Agent> agents)
@@ -175,6 +176,11 @@ namespace Agents
         {
             Debug.Log("Check");
 
+            if (!ServiceLocator.Instance.Player.IsVisible) return false;
+
+            bool sawPlayer = false;
+            List<Agent> agentTriggered = new();
+
             foreach (Agent agent in agents)
             {
                 Vector3 size = this.size;
@@ -183,13 +189,21 @@ namespace Agents
 
                 if (Utils.CheckGameObjectsInBox(agent.CurrentNode.transform.position + agent.transform.forward, size, new List<PlayerController> { ServiceLocator.Instance.Player }).Count > 0)
                 {
-                    if (!agent.CurrentNode.neighbours.Contains(ServiceLocator.Instance.Player.CurrentNode)) return false;
-                    return ServiceLocator.Instance.Player.IsVisible;
+                    Debug.Log("Detected");
+
+                    if (!agent.CurrentNode.neighbours.Contains(ServiceLocator.Instance.Player.CurrentNode))
+                        continue;
+
+                    sawPlayer = true;
+                    agentTriggered.Add(agent);
                 }
 
                 await Task.Yield();
             }
-            return false;
+
+            if (sawPlayer) SetTarget(ServiceLocator.Instance.Player.CurrentNode, agentTriggered);
+
+            return sawPlayer;
         }
 
         #endregion
