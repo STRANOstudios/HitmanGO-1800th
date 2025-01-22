@@ -13,6 +13,7 @@ namespace Player
     {
         [Title("Settings")]
         [SerializeField] private Node m_startNode;
+        [SerializeField] private GameObject m_mesh;
 
         [SerializeField, Range(0, 360)] private float maxAllowedAngle = 45f;
 
@@ -43,6 +44,8 @@ namespace Player
         private void Awake()
         {
             ServiceLocator.Instance.Player = this;
+
+            if (m_mesh == null) m_mesh = transform.Find("Mesh").gameObject;
 
             currentNode = m_startNode;
 
@@ -103,6 +106,10 @@ namespace Player
         {
             OnPlayerMove?.Invoke();
 
+            bool tmp = NodeStored(node, "HiddenPlace");
+            m_visibilityState = tmp ? PlayerVisibilityState.Hidden : PlayerVisibilityState.Visible;
+            m_mesh.SetActive(!tmp);
+
             while (Vector3.Distance(transform.position, node.transform.position) > 0.1f)
             {
                 yield return null;
@@ -116,7 +123,7 @@ namespace Player
 
             //PlayerEndTurn();
 
-            StoreNode(node);
+            StoreNode(node, tmp);
         }
 
         private void CalculateAngle()
@@ -143,29 +150,24 @@ namespace Player
             else OnDistractor = false;
         }
 
-        public void StoreNode(Node node)
+        public void StoreNode(Node node, bool check = true)
         {
             Distractor tmp = null;
 
-            m_visibilityState = PlayerVisibilityState.Visible;
-
-            for (int i = 0; i < node.Storages.Count; i++)
+            if (check)
             {
-                if (node.Storages[i].CompareTag("Enemy"))
+                for (int i = 0; i < node.Storages.Count; i++)
                 {
-                    node.Storages[i].GetComponent<Agent>().Death();
-                    continue;
-                }
-                else if (node.Storages[i].CompareTag("Distractor"))
-                {
-                    OnPlayerDistractionReady?.Invoke();
-                    OnDistractor = true;
-                    tmp = node.Storages[i].GetComponent<Distractor>();
-                }
-
-                if (node.Storages[i].CompareTag("HiddenPlace"))
-                {
-                    m_visibilityState = PlayerVisibilityState.Hidden;
+                    if (node.Storages[i].CompareTag("Enemy"))
+                    {
+                        node.Storages[i].GetComponent<Agent>().Death();
+                    }
+                    if (node.Storages[i].CompareTag("Distractor"))
+                    {
+                        OnPlayerDistractionReady?.Invoke();
+                        OnDistractor = true;
+                        tmp = node.Storages[i].GetComponent<Distractor>();
+                    }
                 }
             }
 
@@ -178,6 +180,19 @@ namespace Player
                 tmp.Spawn();
 
             PlayerEndTurn();
+        }
+
+        private bool NodeStored(Node node, string tag)
+        {
+            for (int i = 0; i < node.Storages.Count; i++)
+            {
+                if (node.Storages[i].CompareTag(tag))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public Node CurrentNode => currentNode;

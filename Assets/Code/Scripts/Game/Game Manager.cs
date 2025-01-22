@@ -12,6 +12,9 @@ public class GameManager : MonoBehaviour
     [Tooltip("Event triggered when the player lose")]
     [SerializeField] private TriggerEvent _onLoseTrigger = new();
 
+    [Tooltip("Event triggered at the end of the game")]
+    [SerializeField] private TriggerEvent OnEndTrigger = new();
+
     [Serializable] public class TriggerEvent : UnityEvent { }
 
     public static event Action OnStartGame;
@@ -48,6 +51,7 @@ public class GameManager : MonoBehaviour
 
     public void OnEnd()
     {
+        OnEndTrigger?.Invoke();
         OnEndGame?.Invoke();
     }
 
@@ -55,13 +59,13 @@ public class GameManager : MonoBehaviour
     {
         OnWinCondition?.Invoke();
         _onWinTrigger?.Invoke();
-        //OnEnd();
+        OnEnd();
     }
 
     private void OnLose()
     {
         _onLoseTrigger?.Invoke();
-        //OnEnd();
+        OnEnd();
     }
 
     public void Pause(bool pause)

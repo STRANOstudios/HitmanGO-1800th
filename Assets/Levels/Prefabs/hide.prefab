@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1302722958140161924}
   m_Layer: 0
   m_Name: hide
-  m_TagString: Untagged
+  m_TagString: HiddenPlace
   m_Icon: {fileID: 2800000, guid: 8008767850e870a4e8baaf5a6fc8b35c, type: 3}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -28,12 +28,16 @@ namespace Player.VFX
         {
             GameStatusManager.OnPlayerTurn += Active;
             PlayerController.OnPlayerMove += DeActivate;
+
+            GameManager.OnEndGame += DeActivate;
         }
 
         private void OnDisable()
         {
             GameStatusManager.OnPlayerTurn -= Active;
             PlayerController.OnPlayerMove -= DeActivate;
+
+            GameManager.OnEndGame -= DeActivate;
         }
 
         private void Active()

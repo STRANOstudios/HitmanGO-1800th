@@ -1,6 +1,5 @@
 using PathSystem;
 using System;
-using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(Node))]
