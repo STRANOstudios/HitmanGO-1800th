@@ -47,6 +47,7 @@ namespace Agents
         [FoldoutGroup("Gizmos"), ShowIf("_drawGizmos")]
         [SerializeField, ColorPalette] private Color _nextPathColor = Color.magenta;
 
+#if UNITY_EDITOR
         [Button("Bake Paths")]
         public void BakePaths()
         {
@@ -59,6 +60,7 @@ namespace Agents
                 AssetDatabase.SaveAssets();
             }
         }
+#endif
 
         public static event Action OnKillPlayer;
         public static event Action OnAgentsEndSettingsMovement;

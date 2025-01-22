@@ -28,7 +28,7 @@ public class SceneLoader : Singleton<SceneLoader>
 #if UNITY_EDITOR
         Application.targetFrameRate = 60;
 #else
-    Application.targetFrameRate = 20;
+    Application.targetFrameRate = 40;
 #endif
     }
 
