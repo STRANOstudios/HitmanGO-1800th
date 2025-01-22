@@ -14624,12 +14624,12 @@ GameObject:
   - component: {fileID: 1988805984}
   - component: {fileID: 1988805983}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: Level Data Inizializer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1988805983
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14642,14 +14642,89 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3d742e28c6ea5445bf71fa009566742, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hub: 1
-  levelData:
-    levelID: 15
-    isUnlocked: 0
-    achievements:
-    - isCompleted: 0
-    - isCompleted: 0
-    - isCompleted: 0
+  hubLevelDatas:
+  - hub: 1
+    levelDatas:
+    - levelID: 1
+      isUnlocked: 1
+      achievements:
+      - isCompleted: 0
+    - levelID: 2
+      isUnlocked: 0
+      achievements:
+      - isCompleted: 0
+    - levelID: 3
+      isUnlocked: 0
+      achievements:
+      - isCompleted: 0
+    - levelID: 4
+      isUnlocked: 0
+      achievements:
+      - isCompleted: 0
+    - levelID: 5
+      isUnlocked: 0
+      achievements:
+      - isCompleted: 0
+    - levelID: 6
+      isUnlocked: 0
+      achievements:
+      - isCompleted: 0
+      - isCompleted: 0
+      - isCompleted: 0
+    - levelID: 7
+      isUnlocked: 0
+      achievements:
+      - isCompleted: 0
+      - isCompleted: 0
+      - isCompleted: 0
+    - levelID: 8
+      isUnlocked: 0
+      achievements:
+      - isCompleted: 0
+      - isCompleted: 0
+      - isCompleted: 0
+    - levelID: 9
+      isUnlocked: 0
+      achievements:
+      - isCompleted: 0
+      - isCompleted: 0
+      - isCompleted: 0
+    - levelID: 10
+      isUnlocked: 0
+      achievements:
+      - isCompleted: 0
+      - isCompleted: 0
+      - isCompleted: 0
+    - levelID: 11
+      isUnlocked: 0
+      achievements:
+      - isCompleted: 0
+      - isCompleted: 0
+      - isCompleted: 0
+    - levelID: 12
+      isUnlocked: 0
+      achievements:
+      - isCompleted: 0
+      - isCompleted: 0
+      - isCompleted: 0
+    - levelID: 13
+      isUnlocked: 0
+      achievements:
+      - isCompleted: 0
+      - isCompleted: 0
+      - isCompleted: 0
+    - levelID: 14
+      isUnlocked: 0
+      achievements:
+      - isCompleted: 0
+      - isCompleted: 0
+      - isCompleted: 0
+    - levelID: 15
+      isUnlocked: 0
+      achievements:
+      - isCompleted: 0
+      - isCompleted: 0
+      - isCompleted: 0
 --- !u!4 &1988805984
 Transform:
   m_ObjectHideFlags: 0
@@ -16370,5 +16445,5 @@ SceneRoots:
   - {fileID: 1053065864}
   - {fileID: 1890557394}
   - {fileID: 1416621787}
-  - {fileID: 1988805984}
   - {fileID: 1982846434}
+  - {fileID: 1988805984}
