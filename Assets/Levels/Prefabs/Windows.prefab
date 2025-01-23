@@ -49,7 +49,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7483110469612687909
 Transform:
   m_ObjectHideFlags: 0
@@ -76,8 +76,8 @@ Light:
   serializedVersion: 10
   m_Type: 0
   m_Shape: 0
-  m_Color: {r: 1, g: 0.93465996, b: 0, a: 1}
-  m_Intensity: 1
+  m_Color: {r: 1, g: 0.75214595, b: 0, a: 1}
+  m_Intensity: 3
   m_Range: 3.4869137
   m_SpotAngle: 102.478806
   m_InnerSpotAngle: 54.46405
@@ -116,7 +116,7 @@ Light:
     serializedVersion: 2
     m_Bits: 497
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 1
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
