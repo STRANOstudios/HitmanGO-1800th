@@ -13,20 +13,20 @@ MonoBehaviour:
   m_Name: HUB Desing
   m_EditorClassIdentifier: 
   yOffset: 0.01
-  _width: 0.1
+  _width: 0.5
   _stoppingDistance: 0
-  linkColor: {r: 1, g: 1, b: 1, a: 1}
-  spriteNode: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  _nodeScale: {x: 1, y: 1}
-  nodeColor: {r: 1, g: 1, b: 1, a: 1}
+  linkColor: {r: 0.6855345, g: 0.6855345, b: 0.6855345, a: 1}
+  spriteNode: {fileID: 1126548047, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
+  _nodeScale: {x: 0.5, y: 0.5}
+  nodeColor: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
   exitSpriteNode: {fileID: 0}
   _exitNodeScale: {x: 1, y: 1}
   exitNodeColor: {r: 0, g: 0, b: 0, a: 1}
   playerIndicator: {fileID: 0}
   _playerIndicatorDistance: 0
-  _unlockWidth: 0.1
+  _unlockWidth: 0.5
   _unlockStoppingDistance: 0
-  unlockLinkColor: {r: 0, g: 0, b: 0, a: 1}
-  unlockSpriteNode: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  unlockLinkColor: {r: 0.408805, g: 0, b: 0, a: 1}
+  unlockSpriteNode: {fileID: 1126548047, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
   _unlockNodeScale: {x: 1, y: 1}
-  unlockNodeColor: {r: 0, g: 0, b: 0, a: 1}
+  unlockNodeColor: {r: 0.40784314, g: 0, b: 0, a: 1}

@@ -53,7 +53,7 @@ namespace HUB
 
                 LevelData levelData = SaveSystem.Load<LevelData>(HUBName + level.levelName);
 
-                if(!levelData.isUnlocked) continue;
+                if (!levelData.isUnlocked) continue;
 
                 level.button.SetActive(true);
 
@@ -63,8 +63,7 @@ namespace HUB
 
                     var indicator = Instantiate(achievementIndicator, level.achievementContainer.transform);
 
-                    if (achievement.isCompleted)
-                        indicator.GetComponent<Image>().color = m_challengeCompletedColor;
+                    indicator.GetComponent<ChallengeIndicator>().isComplete.SetActive(achievement.isCompleted);
                 }
 
                 if (levelData.isUnlocked)
