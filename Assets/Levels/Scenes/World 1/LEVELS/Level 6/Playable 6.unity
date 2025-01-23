@@ -262,7 +262,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 1367602462}
+  - {fileID: 2133711474}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -596,7 +596,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 1367602462}
+  - {fileID: 2133711474}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -801,7 +801,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 1367602462}
+  - {fileID: 2133711474}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -942,7 +942,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 1367602462}
+  - {fileID: 2133711474}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1043,7 +1043,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 1367602462}
+  - {fileID: 2133711474}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1779,7 +1779,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 1367602462}
+  - {fileID: 2133711474}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1961,6 +1961,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 855085372}
     m_Modifications:
+    - target: {fileID: 2476272389901677996, guid: cec84280495d3704aba54041ccacd9f9,
+        type: 3}
+      propertyPath: m_CullingMask.m_Bits
+      value: 497
+      objectReference: {fileID: 0}
     - target: {fileID: 5592615528526685957, guid: cec84280495d3704aba54041ccacd9f9,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2163,7 +2168,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 1367602462}
+  - {fileID: 2133711474}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2422,7 +2427,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 1367602462}
+  - {fileID: 2133711474}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3232,7 +3237,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 1367602462}
+  - {fileID: 2133711474}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3402,7 +3407,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 1367602462}
+  - {fileID: 2133711474}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3578,7 +3583,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 1367602462}
+  - {fileID: 2133711474}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3897,7 +3902,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 1367602462}
+  - {fileID: 2133711474}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4572,7 +4577,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 1367602462}
+  - {fileID: 2133711474}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5150,7 +5155,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 1367602462}
+  - {fileID: 2133711474}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5436,7 +5441,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 1367602462}
+  - {fileID: 2133711474}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5596,7 +5601,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 1367602462}
+  - {fileID: 2133711474}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5759,7 +5764,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 1367602462}
+  - {fileID: 2133711474}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6018,46 +6023,6 @@ MonoBehaviour:
   - {fileID: 1119065969}
   m_heightSpawn: 0
   m_clipName: death
---- !u!21 &1367602462
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Sprites/Default
-  m_Shader: {fileID: 10753, guid: 0000000000000000f000000000000000, type: 0}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _AlphaTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats:
-    - PixelSnap: 0
-    - _EnableExternalAlpha: 0
-    m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Flip: {r: 1, g: 1, b: 1, a: 1}
-    - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
-  m_BuildTextureStacks: []
 --- !u!1 &1388213222
 GameObject:
   m_ObjectHideFlags: 0
@@ -6115,7 +6080,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 1367602462}
+  - {fileID: 2133711474}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6323,7 +6288,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 1367602462}
+  - {fileID: 2133711474}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6483,7 +6448,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 1367602462}
+  - {fileID: 2133711474}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7039,7 +7004,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 1367602462}
+  - {fileID: 2133711474}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7202,7 +7167,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 1367602462}
+  - {fileID: 2133711474}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7602,7 +7567,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 1367602462}
+  - {fileID: 2133711474}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7799,7 +7764,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 1367602462}
+  - {fileID: 2133711474}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -8011,7 +7976,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 1367602462}
+  - {fileID: 2133711474}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -8171,7 +8136,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 1367602462}
+  - {fileID: 2133711474}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -8744,7 +8709,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 1367602462}
+  - {fileID: 2133711474}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9010,7 +8975,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 1367602462}
+  - {fileID: 2133711474}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9317,6 +9282,46 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2029549037}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!21 &2133711474
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Sprites/Default
+  m_Shader: {fileID: 10753, guid: 0000000000000000f000000000000000, type: 0}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _AlphaTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - PixelSnap: 0
+    - _EnableExternalAlpha: 0
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Flip: {r: 1, g: 1, b: 1, a: 1}
+    - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
+  m_BuildTextureStacks: []
 --- !u!1001 &5460286090966531106
 PrefabInstance:
   m_ObjectHideFlags: 0
