@@ -15,10 +15,10 @@ MonoBehaviour:
   yOffset: 0.01
   _width: 0.1
   _stoppingDistance: 0.26
-  linkColor: {r: 0, g: 0, b: 0, a: 1}
+  linkColor: {r: 0.11949676, g: 0, b: 0, a: 1}
   spriteNode: {fileID: -313926082, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
   _nodeScale: {x: 0.5, y: 0.5}
-  nodeColor: {r: 0, g: 0, b: 0, a: 1}
+  nodeColor: {r: 0.12156863, g: 0, b: 0, a: 1}
   exitSpriteNode: {fileID: -313926082, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
   _exitNodeScale: {x: 0.5, y: 0.5}
   exitNodeColor: {r: 0.6792453, g: 0, b: 0, a: 1}
