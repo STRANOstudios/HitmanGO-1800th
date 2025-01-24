@@ -28,7 +28,7 @@ public class Collectibles : MonoBehaviour
 
     private void CheckPlayerPresence()
     {
-        Debug.Log("CheckPlayerPresence");
+        //Debug.Log("CheckPlayerPresence");
 
         if (m_node.Storages.Any(obj => obj.CompareTag("Player")))
         {

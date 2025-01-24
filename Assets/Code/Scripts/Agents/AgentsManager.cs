@@ -92,18 +92,20 @@ namespace Agents
         {
             _isPlayerDetected = await CheckRayCast(IdleAgents.Concat(MovingAgents).ToList(), NodeCache.Nodes);
 
-            Debug.Log("Is player detected: " + _isPlayerDetected);
+            if (_debugLog) Debug.Log("Is player detected: " + _isPlayerDetected);
 
             Move(MovingAgents);
 
             if (MovingAgents.Count == 0) OnAgentsEndSettingsMovement?.Invoke();
         }
 
-        private void Move(List<Agent> agents)
+        private async void Move(List<Agent> agents)
         {
             for (int i = agents.Count - 1; i >= 0; i--)
             {
                 Agent agent = agents[i];
+
+                if (_debugLog) Debug.Log("============================== " + agent.name + " ==============================");
 
                 agent.Index++;
 
@@ -111,18 +113,22 @@ namespace Agents
                 {
                     if (agent.IsPatrol)
                     {
+                        if (_debugLog) Debug.Log("Patrol");
+
                         if (!agent.HasReachedTarget)
                         {
                             if (_debugLog) Debug.Log("Has Reached Target");
 
                             agent.HasReachedTarget = true;
 
-                            NodeFinder(agent);
+                            await NodeFinder(agent);
 
                             agent.Index = agent.Path.IndexOf(agent.CurrentNode) + 1;
 
-                            if (agent.Index >= agent.Path.Count - 1)
+                            if (agent.Index >= agent.Path.Count)
                             {
+                                Debug.Log("Reversing path" + agent.Path.Count);
+
                                 agent.Path.Reverse();
                                 agent.Index = 1;
                             }
@@ -131,13 +137,14 @@ namespace Agents
                         {
                             if (_debugLog) Debug.Log("Reversing path");
 
+                            agent.HasReachedTarget = false;
+
                             agent.Path.Reverse();
                             agent.Index = 1;
                         }
                     }
                     else
                     {
-                        agent.HasReachedTarget = false;
                         agent.StartNode = agent.CurrentNode;
                         IdleAgents.Add(agent);
                         MovingAgents.Remove(agent);
@@ -165,7 +172,7 @@ namespace Agents
 
                 if (_isPlayerDetected)
                 {
-                    Debug.Log("Kill player");
+                    if (_debugLog) Debug.Log("Kill player");
                     OnKillPlayer?.Invoke();
                 }
 
@@ -180,7 +187,7 @@ namespace Agents
 
         private async Task<bool> CheckRayCast(List<Agent> agents, List<Node> nodes)
         {
-            Debug.Log("Check");
+            if (_debugLog) Debug.Log("Check");
 
             if (!ServiceLocator.Instance.Player.IsVisible) return false;
 
@@ -195,7 +202,7 @@ namespace Agents
 
                 if (Utils.CheckGameObjectsInBox(agent.CurrentNode.transform.position + agent.transform.forward, size, new List<PlayerController> { ServiceLocator.Instance.Player }).Count > 0)
                 {
-                    Debug.Log("Detected");
+                    if (_debugLog) Debug.Log("Detected");
 
                     if (!agent.CurrentNode.neighbours.Contains(ServiceLocator.Instance.Player.CurrentNode))
                         continue;
@@ -391,7 +398,7 @@ namespace Agents
         /// considering both forward and backward directions along the dominant axis. 
         /// Ensures that the nodes are reachable via their connections.
         /// </summary>
-        private async void NodeFinder(Agent agent)
+        private async Task NodeFinder(Agent agent)
         {
             Vector3 forwardDirection = agent.transform.forward;
             bool isForwardAlongZ = Mathf.Abs(forwardDirection.x) < Mathf.Abs(forwardDirection.z);
@@ -412,7 +419,12 @@ namespace Agents
 
             if (_debugLog) Debug.Log("nodeForward: " + nodeForward + ", nodeBackward: " + nodeBackward);
 
+            if (_debugLog) Debug.DrawLine(nodeForward.transform.position, nodeForward.transform.position + Vector3.up * 2, Color.green, 5f);
+            if (_debugLog) Debug.DrawLine(nodeBackward.transform.position, nodeBackward.transform.position + Vector3.up * 2, Color.magenta, 5f);
+
             Pathfinding(agent, nodeForward, nodeBackward);
+
+            await Task.Yield();
         }
 
         private async Task<Node> FindFurthestConnectedNodeRecursivelyAsync(Agent agent, Node currentNode, HashSet<Node> visited, bool isForwardAlongZ, bool isForward)
@@ -455,13 +467,13 @@ namespace Agents
             return furthestNode;
         }
 
-        private bool IsAlignedWithAxis(Agent agent, Node node, bool isForwardAlongZ, float tolerance = 0.1f)
+        private bool IsAlignedWithAxis(Agent agent, Node node, bool isForwardAlongZ, float tolerance = 1f)
         {
             float diff = isForwardAlongZ ? node.transform.position.x - agent.transform.position.x : node.transform.position.z - agent.transform.position.z;
             return Mathf.Abs(diff) < tolerance;
         }
 
-        private bool IsInDirection(Agent agent, Node node, bool isForwardAlongZ, bool isForward, float tolerance = 0.1f)
+        private bool IsInDirection(Agent agent, Node node, bool isForwardAlongZ, bool isForward, float tolerance = 1f)
         {
             Node currentNode = agent.Path[agent.Index - 1];
             float diff = isForwardAlongZ ? node.transform.position.z - currentNode.transform.position.z : node.transform.position.x - currentNode.transform.position.x;
