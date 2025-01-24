@@ -43,6 +43,7 @@ namespace Agents
         {
             ServiceLocator.Instance.AgentsManager.RegisterAgent(this);
 
+            _isPatrol = isPatrol;
             currentNode = startNode;
 
             currentNode.Storages.Add(gameObject);
@@ -120,6 +121,8 @@ namespace Agents
         #region Getters and Setters
 
         public bool IsPatrol => isPatrol;
+
+        public bool InPatrol { get => _isPatrol; set => _isPatrol = value; }
 
         public Node StartNode
         {

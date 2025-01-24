@@ -134,9 +134,11 @@ public class MovementManager : MonoBehaviour
             bool flag = true;
 
             int index = agent.Index + 1;
-            if (agent.Index >= agent.Path.Count - 1)
+
+            if (index >= agent.Path.Count)
             {
                 if (!agent.IsPatrol) flag = false;
+                if (!agent.InPatrol) flag = false;
 
                 index = agent.Index - 1;
             }

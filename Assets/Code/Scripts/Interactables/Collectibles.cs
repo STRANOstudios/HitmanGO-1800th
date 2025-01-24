@@ -1,5 +1,4 @@
 using PathSystem;
-using Player;
 using System;
 using System.Linq;
 using UnityEngine;
@@ -18,17 +17,17 @@ public class Collectibles : MonoBehaviour
 
     private void OnEnable()
     {
-        PlayerController.OnPlayerEndTurn += CheckPlayerPresence;
+        GameStatusManager.OnEnemyTurn += CheckPlayerPresence;
     }
 
     private void OnDisable()
     {
-        PlayerController.OnPlayerEndTurn -= CheckPlayerPresence;
+        GameStatusManager.OnEnemyTurn -= CheckPlayerPresence;
     }
 
     private void CheckPlayerPresence()
     {
-        //Debug.Log("CheckPlayerPresence");
+        Debug.Log("CheckPlayerPresence");
 
         if (m_node.Storages.Any(obj => obj.CompareTag("Player")))
         {

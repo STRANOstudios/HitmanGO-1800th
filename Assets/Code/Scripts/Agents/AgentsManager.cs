@@ -115,11 +115,12 @@ namespace Agents
                     {
                         if (_debugLog) Debug.Log("Patrol");
 
-                        if (!agent.HasReachedTarget)
+                        if (!agent.HasReachedTarget && !agent.InPatrol)
                         {
                             if (_debugLog) Debug.Log("Has Reached Target");
 
                             agent.HasReachedTarget = true;
+                            agent.InPatrol = true;
 
                             await NodeFinder(agent);
 
@@ -132,6 +133,8 @@ namespace Agents
                                 agent.Path.Reverse();
                                 agent.Index = 1;
                             }
+
+                            Debug.DrawLine(agent.Path[agent.Index].transform.position, agent.Path[agent.Index].transform.position + Vector3.up * 5, Color.cyan, 5f);
                         }
                         else
                         {
@@ -236,6 +239,8 @@ namespace Agents
 
             foreach (Agent agent in agents)
             {
+                agent.InPatrol = false; // test
+
                 Node StartNode = agent.StartNode;
 
                 if (!agent.Path.Count.Equals(0))
