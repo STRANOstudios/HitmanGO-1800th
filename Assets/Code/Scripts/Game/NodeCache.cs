@@ -1,6 +1,8 @@
+using Agents;
 using PathSystem;
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 /// <summary>
@@ -23,6 +25,17 @@ public class NodeCache : MonoBehaviour
     {
         nodes.Clear();
     }
+#if UNITY_EDITOR
+    [Button]
+    public void Save()
+    {
+        foreach (Node node in FindObjectsOfType<Node>())
+        {
+            EditorUtility.SetDirty(node);
+            AssetDatabase.SaveAssets();
+        }
+    }
+#endif
 
     // Public property to access the nodes list (read-only)
     public static List<Node> Nodes => nodes;
