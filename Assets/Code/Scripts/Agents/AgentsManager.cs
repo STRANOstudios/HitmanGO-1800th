@@ -137,6 +137,7 @@ namespace Agents
                     }
                     else
                     {
+                        agent.HasReachedTarget = false;
                         agent.StartNode = agent.CurrentNode;
                         IdleAgents.Add(agent);
                         MovingAgents.Remove(agent);

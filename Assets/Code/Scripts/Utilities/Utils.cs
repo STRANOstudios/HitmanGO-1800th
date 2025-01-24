@@ -45,9 +45,10 @@ public static class Utils
     public static float CalculateQuaternionRotationDifference(Transform obj, Vector3 targetPosition, Vector3 defaultPos, Vector3 nodePosition)
     {
         Debug.DrawLine(obj.position, obj.position + Vector3.up, Color.red, 5f);
-        Debug.DrawLine(obj.position + Vector3.up, targetPosition+ Vector3.up, Color.yellow, 5f);
+        Debug.DrawLine(obj.position + Vector3.up, targetPosition + Vector3.up, Color.yellow, 5f);
         Debug.DrawLine(targetPosition, targetPosition + Vector3.up, Color.magenta, 5f);
         Debug.DrawLine(defaultPos, defaultPos + Vector3.up, Color.blue, 5f);
+        Debug.DrawLine(defaultPos + Vector3.up, nodePosition + Vector3.up, Color.white, 5f);
         Debug.DrawLine(nodePosition, nodePosition + Vector3.up, Color.green, 5f);
 
         Vector3 directionToTarget = targetPosition - defaultPos;

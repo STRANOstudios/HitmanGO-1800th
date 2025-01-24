@@ -37,19 +37,19 @@ namespace DataSystem
 
         private void OnEnable()
         {
+            GameManager.OnWinCondition += Complete;
             GameManager.OnWinCondition += SaveData;
 
             PlayerController.OnPlayerMove += AddCount;
-            GameManager.OnWinCondition += Complete;
             Collectibles.OnCollectibleCollected += OnCollectibleCollected;
         }
 
         private void OnDisable()
         {
+            GameManager.OnWinCondition -= Complete;
             GameManager.OnWinCondition -= SaveData;
 
             PlayerController.OnPlayerMove -= AddCount;
-            GameManager.OnWinCondition -= Complete;
             Collectibles.OnCollectibleCollected -= OnCollectibleCollected;
         }
 

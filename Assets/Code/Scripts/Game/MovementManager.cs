@@ -104,7 +104,7 @@ public class MovementManager : MonoBehaviour
                 Utils.CalculateQuaternionRotationDifference(
                     obj,
                     targetPosition,
-                    transform.position,
+                    obj.position,
                     agent.CurrentNode.transform.position
                     )
                 );
