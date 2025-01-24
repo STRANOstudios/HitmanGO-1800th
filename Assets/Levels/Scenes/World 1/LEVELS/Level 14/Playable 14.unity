@@ -317,7 +317,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -338,8 +338,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: -313926082, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
-  m_Color: {r: 0.12156863, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: 1126548047, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
+  m_Color: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -492,7 +492,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -514,8 +514,8 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Positions:
-  - {x: 5.24, y: 0.01, z: 2}
-  - {x: 2.76, y: 0.01, z: 2}
+  - {x: 5.5, y: 0.01, z: 2}
+  - {x: 2.5, y: 0.01, z: 2}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -524,7 +524,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -533,7 +533,7 @@ LineRenderer:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -545,8 +545,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.11764706, g: 0, b: 0, a: 1}
-      key1: {r: 0.11764706, g: 0, b: 0, a: 1}
+      key0: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
+      key1: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -720,6 +720,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wall (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 687496799314076591, guid: 29463cca393c72d448cb3c50114bbe00,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: af33f7aac1df54d449255c083cc6a512, type: 2}
     - target: {fileID: 4041930139138898329, guid: 29463cca393c72d448cb3c50114bbe00,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1367,7 +1372,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1389,8 +1394,8 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Positions:
-  - {x: -6.5, y: 0.01, z: 1.74}
-  - {x: -6.5, y: 0.01, z: -0.74}
+  - {x: -6.5, y: 0.01, z: 2}
+  - {x: -6.5, y: 0.01, z: -1}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -1399,7 +1404,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -1408,7 +1413,7 @@ LineRenderer:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -1420,8 +1425,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.11764706, g: 0, b: 0, a: 1}
-      key1: {r: 0.11764706, g: 0, b: 0, a: 1}
+      key0: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
+      key1: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -1530,7 +1535,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1551,8 +1556,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: -313926082, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
-  m_Color: {r: 0.12156863, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: 1126548047, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
+  m_Color: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -1718,7 +1723,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1739,8 +1744,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: -313926082, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
-  m_Color: {r: 0.12156863, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: 1126548047, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
+  m_Color: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -1819,7 +1824,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1841,8 +1846,8 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Positions:
-  - {x: -3.76, y: 0.01, z: 2}
-  - {x: -6.24, y: 0.01, z: 2}
+  - {x: -3.5, y: 0.01, z: 2}
+  - {x: -6.5, y: 0.01, z: 2}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -1851,7 +1856,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -1860,7 +1865,7 @@ LineRenderer:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -1872,8 +1877,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.11764706, g: 0, b: 0, a: 1}
-      key1: {r: 0.11764706, g: 0, b: 0, a: 1}
+      key0: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
+      key1: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -1983,7 +1988,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2004,8 +2009,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: -313926082, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
-  m_Color: {r: 0.12156863, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: 1126548047, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
+  m_Color: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -2043,6 +2048,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wall (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 687496799314076591, guid: 29463cca393c72d448cb3c50114bbe00,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: af33f7aac1df54d449255c083cc6a512, type: 2}
     - target: {fileID: 4041930139138898329, guid: 29463cca393c72d448cb3c50114bbe00,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2148,6 +2158,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wall (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 1090798330918021435, guid: 32582791d7932014488bb66b4735ccf7,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: af33f7aac1df54d449255c083cc6a512, type: 2}
     - target: {fileID: 4521301716644262669, guid: 32582791d7932014488bb66b4735ccf7,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2266,7 +2281,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2287,8 +2302,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: -313926082, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
-  m_Color: {r: 0.12156863, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: 1126548047, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
+  m_Color: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -2370,7 +2385,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2391,8 +2406,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: -313926082, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
-  m_Color: {r: 0.12156863, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: 1126548047, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
+  m_Color: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -2474,7 +2489,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2495,8 +2510,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: -313926082, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
-  m_Color: {r: 0.12156863, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: 1126548047, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
+  m_Color: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -2579,7 +2594,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2600,8 +2615,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: -313926082, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
-  m_Color: {r: 0.12156863, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: 1126548047, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
+  m_Color: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -2911,7 +2926,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2933,8 +2948,8 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Positions:
-  - {x: -3.24, y: 0.01, z: -1}
-  - {x: -0.76, y: 0.01, z: -1}
+  - {x: -3.5, y: 0.01, z: -1}
+  - {x: -0.5, y: 0.01, z: -1}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -2943,7 +2958,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -2952,7 +2967,7 @@ LineRenderer:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -2964,8 +2979,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.11764706, g: 0, b: 0, a: 1}
-      key1: {r: 0.11764706, g: 0, b: 0, a: 1}
+      key0: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
+      key1: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -3030,6 +3045,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wall Window
       objectReference: {fileID: 0}
+    - target: {fileID: 687496799314076591, guid: 29463cca393c72d448cb3c50114bbe00,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: af33f7aac1df54d449255c083cc6a512, type: 2}
     - target: {fileID: 4041930139138898329, guid: 29463cca393c72d448cb3c50114bbe00,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3145,7 +3165,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3167,8 +3187,8 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Positions:
-  - {x: -3.5, y: 0.01, z: -3.74}
-  - {x: -3.5, y: 0.01, z: -1.26}
+  - {x: -3.5, y: 0.01, z: -4}
+  - {x: -3.5, y: 0.01, z: -1}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -3177,7 +3197,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -3186,7 +3206,7 @@ LineRenderer:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -3198,8 +3218,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.11764706, g: 0, b: 0, a: 1}
-      key1: {r: 0.11764706, g: 0, b: 0, a: 1}
+      key0: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
+      key1: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -3307,7 +3327,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3328,8 +3348,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: -313926082, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
-  m_Color: {r: 0.12156863, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: 1126548047, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
+  m_Color: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -3620,7 +3640,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3642,8 +3662,8 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Positions:
-  - {x: -0.5, y: 0.01, z: 4.74}
-  - {x: -0.5, y: 0.01, z: 2.26}
+  - {x: -0.5, y: 0.01, z: 5}
+  - {x: -0.5, y: 0.01, z: 2}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -3652,7 +3672,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -3661,7 +3681,7 @@ LineRenderer:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -3673,8 +3693,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.11764706, g: 0, b: 0, a: 1}
-      key1: {r: 0.11764706, g: 0, b: 0, a: 1}
+      key0: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
+      key1: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -3739,6 +3759,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wall (10)
       objectReference: {fileID: 0}
+    - target: {fileID: 1090798330918021435, guid: 32582791d7932014488bb66b4735ccf7,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: af33f7aac1df54d449255c083cc6a512, type: 2}
     - target: {fileID: 4521301716644262669, guid: 32582791d7932014488bb66b4735ccf7,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3937,7 +3962,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3959,8 +3984,8 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Positions:
-  - {x: 5.24, y: 0.01, z: 5}
-  - {x: 2.76, y: 0.01, z: 5}
+  - {x: 5.5, y: 0.01, z: 5}
+  - {x: 2.5, y: 0.01, z: 5}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -3969,7 +3994,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -3978,7 +4003,7 @@ LineRenderer:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -3990,8 +4015,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.11764706, g: 0, b: 0, a: 1}
-      key1: {r: 0.11764706, g: 0, b: 0, a: 1}
+      key0: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
+      key1: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -4180,7 +4205,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4202,8 +4227,8 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Positions:
-  - {x: 5.5, y: 0.01, z: -3.74}
-  - {x: 5.5, y: 0.01, z: -1.26}
+  - {x: 5.5, y: 0.01, z: -4}
+  - {x: 5.5, y: 0.01, z: -1}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -4212,7 +4237,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -4221,7 +4246,7 @@ LineRenderer:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -4233,8 +4258,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.11764706, g: 0, b: 0, a: 1}
-      key1: {r: 0.11764706, g: 0, b: 0, a: 1}
+      key0: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
+      key1: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -4299,6 +4324,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wall Window (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 687496799314076591, guid: 29463cca393c72d448cb3c50114bbe00,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: af33f7aac1df54d449255c083cc6a512, type: 2}
     - target: {fileID: 4041930139138898329, guid: 29463cca393c72d448cb3c50114bbe00,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4905,6 +4935,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wall (7)
       objectReference: {fileID: 0}
+    - target: {fileID: 1090798330918021435, guid: 32582791d7932014488bb66b4735ccf7,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: af33f7aac1df54d449255c083cc6a512, type: 2}
     - target: {fileID: 4521301716644262669, guid: 32582791d7932014488bb66b4735ccf7,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5337,7 +5372,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5358,8 +5393,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: -313926082, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
-  m_Color: {r: 0.12156863, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: 1126548047, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
+  m_Color: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -5438,7 +5473,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5460,8 +5495,8 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Positions:
-  - {x: -3.24, y: 0.01, z: -4}
-  - {x: -0.76, y: 0.01, z: -4}
+  - {x: -3.5, y: 0.01, z: -4}
+  - {x: -0.5, y: 0.01, z: -4}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -5470,7 +5505,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -5479,7 +5514,7 @@ LineRenderer:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -5491,8 +5526,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.11764706, g: 0, b: 0, a: 1}
-      key1: {r: 0.11764706, g: 0, b: 0, a: 1}
+      key0: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
+      key1: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -5598,7 +5633,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5620,8 +5655,8 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Positions:
-  - {x: 5.5, y: 0.01, z: -0.74}
-  - {x: 5.5, y: 0.01, z: 1.74}
+  - {x: 5.5, y: 0.01, z: -1}
+  - {x: 5.5, y: 0.01, z: 2}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -5630,7 +5665,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -5639,7 +5674,7 @@ LineRenderer:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -5651,8 +5686,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.11764706, g: 0, b: 0, a: 1}
-      key1: {r: 0.11764706, g: 0, b: 0, a: 1}
+      key0: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
+      key1: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -5876,7 +5911,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5898,8 +5933,8 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Positions:
-  - {x: -0.5, y: 0.01, z: -1.26}
-  - {x: -0.5, y: 0.01, z: -3.74}
+  - {x: -0.5, y: 0.01, z: -1}
+  - {x: -0.5, y: 0.01, z: -4}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -5908,7 +5943,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -5917,7 +5952,7 @@ LineRenderer:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -5929,8 +5964,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.11764706, g: 0, b: 0, a: 1}
-      key1: {r: 0.11764706, g: 0, b: 0, a: 1}
+      key0: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
+      key1: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -6067,7 +6102,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6089,8 +6124,8 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Positions:
-  - {x: -0.76, y: 0.01, z: 8}
-  - {x: -3.24, y: 0.01, z: 8}
+  - {x: -0.5, y: 0.01, z: 8}
+  - {x: -3.5, y: 0.01, z: 8}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -6099,7 +6134,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -6108,7 +6143,7 @@ LineRenderer:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -6120,8 +6155,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.11764706, g: 0, b: 0, a: 1}
-      key1: {r: 0.11764706, g: 0, b: 0, a: 1}
+      key0: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
+      key1: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -6784,7 +6819,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6805,8 +6840,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: -313926082, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
-  m_Color: {r: 0.12156863, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: 1126548047, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
+  m_Color: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -7089,7 +7124,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7110,8 +7145,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: -313926082, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
-  m_Color: {r: 0.12156863, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: 1126548047, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
+  m_Color: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -7194,7 +7229,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7215,8 +7250,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: -313926082, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
-  m_Color: {r: 0.12156863, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: 1126548047, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
+  m_Color: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -7394,7 +7429,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7415,8 +7450,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: -313926082, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
-  m_Color: {r: 0.6792453, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: 1126548047, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
+  m_Color: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -8036,7 +8071,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -8058,8 +8093,8 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Positions:
-  - {x: -3.5, y: 0.01, z: 7.74}
-  - {x: -3.5, y: 0.01, z: 5.26}
+  - {x: -3.5, y: 0.01, z: 8}
+  - {x: -3.5, y: 0.01, z: 5}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -8068,7 +8103,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -8077,7 +8112,7 @@ LineRenderer:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -8089,8 +8124,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.11764706, g: 0, b: 0, a: 1}
-      key1: {r: 0.11764706, g: 0, b: 0, a: 1}
+      key0: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
+      key1: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -8196,7 +8231,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -8218,8 +8253,8 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Positions:
-  - {x: -0.24000001, y: 0.01, z: -4}
-  - {x: 2.24, y: 0.01, z: -4}
+  - {x: -0.5, y: 0.01, z: -4}
+  - {x: 2.5, y: 0.01, z: -4}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -8228,7 +8263,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -8237,7 +8272,7 @@ LineRenderer:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -8249,8 +8284,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.11764706, g: 0, b: 0, a: 1}
-      key1: {r: 0.11764706, g: 0, b: 0, a: 1}
+      key0: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
+      key1: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -8596,7 +8631,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -8618,8 +8653,8 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Positions:
-  - {x: -6.24, y: 0.01, z: -4}
-  - {x: -3.76, y: 0.01, z: -4}
+  - {x: -6.5, y: 0.01, z: -4}
+  - {x: -3.5, y: 0.01, z: -4}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -8628,7 +8663,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -8637,7 +8672,7 @@ LineRenderer:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -8649,8 +8684,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.11764706, g: 0, b: 0, a: 1}
-      key1: {r: 0.11764706, g: 0, b: 0, a: 1}
+      key0: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
+      key1: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -8885,6 +8920,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wall (9)
       objectReference: {fileID: 0}
+    - target: {fileID: 1090798330918021435, guid: 32582791d7932014488bb66b4735ccf7,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: af33f7aac1df54d449255c083cc6a512, type: 2}
     - target: {fileID: 4521301716644262669, guid: 32582791d7932014488bb66b4735ccf7,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -9441,7 +9481,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9462,8 +9502,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: -313926082, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
-  m_Color: {r: 0.12156863, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: 1126548047, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
+  m_Color: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -9546,7 +9586,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9567,8 +9607,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: -313926082, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
-  m_Color: {r: 0.12156863, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: 1126548047, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
+  m_Color: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -9606,6 +9646,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wall (8)
       objectReference: {fileID: 0}
+    - target: {fileID: 1090798330918021435, guid: 32582791d7932014488bb66b4735ccf7,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: af33f7aac1df54d449255c083cc6a512, type: 2}
     - target: {fileID: 4521301716644262669, guid: 32582791d7932014488bb66b4735ccf7,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -9720,7 +9765,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9741,8 +9786,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: -313926082, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
-  m_Color: {r: 0.12156863, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: 1126548047, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
+  m_Color: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -9946,7 +9991,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9968,8 +10013,8 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Positions:
-  - {x: -6.5, y: 0.01, z: -1.26}
-  - {x: -6.5, y: 0.01, z: -3.74}
+  - {x: -6.5, y: 0.01, z: -1}
+  - {x: -6.5, y: 0.01, z: -4}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -9978,7 +10023,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -9987,7 +10032,7 @@ LineRenderer:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -9999,8 +10044,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.11764706, g: 0, b: 0, a: 1}
-      key1: {r: 0.11764706, g: 0, b: 0, a: 1}
+      key0: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
+      key1: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -10106,7 +10151,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -10128,8 +10173,8 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Positions:
-  - {x: -0.76, y: 0.01, z: 2}
-  - {x: -3.24, y: 0.01, z: 2}
+  - {x: -0.5, y: 0.01, z: 2}
+  - {x: -3.5, y: 0.01, z: 2}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -10138,7 +10183,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -10147,7 +10192,7 @@ LineRenderer:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -10159,8 +10204,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.11764706, g: 0, b: 0, a: 1}
-      key1: {r: 0.11764706, g: 0, b: 0, a: 1}
+      key0: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
+      key1: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -10349,7 +10394,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -10371,8 +10416,8 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Positions:
-  - {x: 2.5, y: 0.01, z: -0.74}
-  - {x: 2.5, y: 0.01, z: 1.74}
+  - {x: 2.5, y: 0.01, z: -1}
+  - {x: 2.5, y: 0.01, z: 2}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -10381,7 +10426,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -10390,7 +10435,7 @@ LineRenderer:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -10402,8 +10447,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.11764706, g: 0, b: 0, a: 1}
-      key1: {r: 0.11764706, g: 0, b: 0, a: 1}
+      key0: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
+      key1: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -10897,7 +10942,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -10919,8 +10964,8 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Positions:
-  - {x: 2.24, y: 0.01, z: 8}
-  - {x: -0.24000001, y: 0.01, z: 8}
+  - {x: 2.5, y: 0.01, z: 8}
+  - {x: -0.5, y: 0.01, z: 8}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -10929,7 +10974,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -10938,7 +10983,7 @@ LineRenderer:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -10950,8 +10995,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.11764706, g: 0, b: 0, a: 1}
-      key1: {r: 0.11764706, g: 0, b: 0, a: 1}
+      key0: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
+      key1: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -11200,7 +11245,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -11222,8 +11267,8 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Positions:
-  - {x: -0.24000001, y: 0.01, z: -1}
-  - {x: 2.24, y: 0.01, z: -1}
+  - {x: -0.5, y: 0.01, z: -1}
+  - {x: 2.5, y: 0.01, z: -1}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -11232,7 +11277,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -11241,7 +11286,7 @@ LineRenderer:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -11253,8 +11298,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.11764706, g: 0, b: 0, a: 1}
-      key1: {r: 0.11764706, g: 0, b: 0, a: 1}
+      key0: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
+      key1: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -11491,7 +11536,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -11513,8 +11558,8 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Positions:
-  - {x: 2.24, y: 0.01, z: 5}
-  - {x: -0.24000001, y: 0.01, z: 5}
+  - {x: 2.5, y: 0.01, z: 5}
+  - {x: -0.5, y: 0.01, z: 5}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -11523,7 +11568,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -11532,7 +11577,7 @@ LineRenderer:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -11544,8 +11589,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.11764706, g: 0, b: 0, a: 1}
-      key1: {r: 0.11764706, g: 0, b: 0, a: 1}
+      key0: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
+      key1: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -11654,7 +11699,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -11675,8 +11720,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: -313926082, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
-  m_Color: {r: 0.12156863, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: 1126548047, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
+  m_Color: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -11755,7 +11800,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -11777,8 +11822,8 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Positions:
-  - {x: -0.5, y: 0.01, z: 7.74}
-  - {x: -0.5, y: 0.01, z: 5.26}
+  - {x: -0.5, y: 0.01, z: 8}
+  - {x: -0.5, y: 0.01, z: 5}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -11787,7 +11832,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -11796,7 +11841,7 @@ LineRenderer:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -11808,8 +11853,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.11764706, g: 0, b: 0, a: 1}
-      key1: {r: 0.11764706, g: 0, b: 0, a: 1}
+      key0: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
+      key1: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -12026,7 +12071,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -12048,8 +12093,8 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Positions:
-  - {x: 2.24, y: 0.01, z: 2}
-  - {x: -0.24000001, y: 0.01, z: 2}
+  - {x: 2.5, y: 0.01, z: 2}
+  - {x: -0.5, y: 0.01, z: 2}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -12058,7 +12103,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -12067,7 +12112,7 @@ LineRenderer:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -12079,8 +12124,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.11764706, g: 0, b: 0, a: 1}
-      key1: {r: 0.11764706, g: 0, b: 0, a: 1}
+      key0: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
+      key1: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -12190,7 +12235,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -12211,8 +12256,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: -313926082, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
-  m_Color: {r: 0.12156863, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: 1126548047, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
+  m_Color: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -12531,7 +12576,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -12553,8 +12598,8 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Positions:
-  - {x: -3.24, y: 0.01, z: 5}
-  - {x: -0.76, y: 0.01, z: 5}
+  - {x: -3.5, y: 0.01, z: 5}
+  - {x: -0.5, y: 0.01, z: 5}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -12563,7 +12608,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -12572,7 +12617,7 @@ LineRenderer:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -12584,8 +12629,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.11764706, g: 0, b: 0, a: 1}
-      key1: {r: 0.11764706, g: 0, b: 0, a: 1}
+      key0: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
+      key1: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -12816,6 +12861,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wall (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 687496799314076591, guid: 29463cca393c72d448cb3c50114bbe00,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: af33f7aac1df54d449255c083cc6a512, type: 2}
     - target: {fileID: 4041930139138898329, guid: 29463cca393c72d448cb3c50114bbe00,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -13572,7 +13622,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -13594,8 +13644,8 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Positions:
-  - {x: -6.24, y: 0.01, z: -1}
-  - {x: -3.76, y: 0.01, z: -1}
+  - {x: -6.5, y: 0.01, z: -1}
+  - {x: -3.5, y: 0.01, z: -1}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -13604,7 +13654,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -13613,7 +13663,7 @@ LineRenderer:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -13625,8 +13675,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.11764706, g: 0, b: 0, a: 1}
-      key1: {r: 0.11764706, g: 0, b: 0, a: 1}
+      key0: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
+      key1: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -13810,7 +13860,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -13831,8 +13881,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: -313926082, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
-  m_Color: {r: 0.12156863, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: 1126548047, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
+  m_Color: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -13870,6 +13920,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wall (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 687496799314076591, guid: 29463cca393c72d448cb3c50114bbe00,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: af33f7aac1df54d449255c083cc6a512, type: 2}
     - target: {fileID: 4041930139138898329, guid: 29463cca393c72d448cb3c50114bbe00,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -14061,7 +14116,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -14082,8 +14137,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: -313926082, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
-  m_Color: {r: 0.12156863, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: 1126548047, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
+  m_Color: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -14288,7 +14343,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -14310,8 +14365,8 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Positions:
-  - {x: 5.24, y: 0.01, z: 8}
-  - {x: 2.76, y: 0.01, z: 8}
+  - {x: 5.5, y: 0.01, z: 8}
+  - {x: 2.5, y: 0.01, z: 8}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -14320,7 +14375,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -14329,7 +14384,7 @@ LineRenderer:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1
-        value: 0.1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -14341,8 +14396,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.11764706, g: 0, b: 0, a: 1}
-      key1: {r: 0.11764706, g: 0, b: 0, a: 1}
+      key0: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
+      key1: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -14394,46 +14449,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NodeFrom: {fileID: 1166661299}
   NodeTo: {fileID: 1118020275}
---- !u!21 &2133711474
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Sprites/Default
-  m_Shader: {fileID: 10753, guid: 0000000000000000f000000000000000, type: 0}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _AlphaTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats:
-    - PixelSnap: 0
-    - _EnableExternalAlpha: 0
-    m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Flip: {r: 1, g: 1, b: 1, a: 1}
-    - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
-  m_BuildTextureStacks: []
 --- !u!1 &2138204188
 GameObject:
   m_ObjectHideFlags: 0
@@ -14658,7 +14673,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -14679,8 +14694,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: -313926082, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
-  m_Color: {r: 0.12156863, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: 1126548047, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
+  m_Color: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -14764,7 +14779,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2133711474}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -14785,8 +14800,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: -313926082, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
-  m_Color: {r: 0.12156863, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: 1126548047, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
+  m_Color: {r: 0.6862745, g: 0.6862745, b: 0.6862745, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -14874,6 +14889,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wall
       objectReference: {fileID: 0}
+    - target: {fileID: 687496799314076591, guid: 29463cca393c72d448cb3c50114bbe00,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: af33f7aac1df54d449255c083cc6a512, type: 2}
     - target: {fileID: 4041930139138898329, guid: 29463cca393c72d448cb3c50114bbe00,
         type: 3}
       propertyPath: m_LocalPosition.x
