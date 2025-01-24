@@ -18,14 +18,14 @@ public class AchievementUIController : MonoBehaviour
     {
         AchievementManager.OnDataLoaded += Inizializer;
 
-        GameManager.OnEndGame += RefreshUI;
+        AchievementManager.OnDataSaved += RefreshUI;
     }
 
     private void OnDisable()
     {
         AchievementManager.OnDataLoaded -= Inizializer;
 
-        GameManager.OnEndGame -= RefreshUI;
+        AchievementManager.OnDataSaved -= RefreshUI;
     }
 
     private void Inizializer()
