@@ -1,7 +1,14 @@
 # Hitman Go: 1800th README
 
 ## Overview
-...
+**Elevator Pitch**
+Hitman GO: 1800th is a gothic Victorian puzzle game set in foggy London, where players navigate as Jack the Ripper. Combining turn-based strategy, complex puzzles, and atmospheric design, the game provides an intellectually stimulating experience for fans of stealth and tactical gameplay.
+
+**Style**
+The game is a mobile puzzle experience with a gothic Victorian theme. Players control Jack the Ripper as he executes calculated assassinations through fog-covered streets. The turn-based gameplay requires precise planning to navigate puzzles while avoiding detection. Dark visuals and immersive sound enhance the eerie mood.
+
+**Targeting**
+The game appeals to fans of strategic, gothic, and horror genres. It caters to casual and hardcore gamers, offering short, engaging sessions suitable for quick breaks or commutes.
 
 ## Table of Contents
 - [Key Features](#Key-Features)
@@ -18,15 +25,53 @@
 
 ### Player Modules
 
-- ...
+**Movement and Interaction**
+- **Path Lines**: Define movement routes for tokens.
+- **Checkpoints**: Mark where the Main token can stop.
+- **Objective**: The final point in a level; reaching it ends the stage.
+- **Hiding Spots**: Tokens can become invisible in designated locations.
+- **Kills**: Enemies can be eliminated when approached from behind.
+
+**Game Turns**
+Each turn begins with a movement by the player and potentially enemy tokens, ending when the player reaches a checkpoint. Game turns progress until a win or loss condition is met.
+**Win and Loss Conditions**
+**Winning**: Reaching objectives or eliminating targets.
+**Losing**: Entering an enemy's field of view and triggering a kill.
 
 ### Enemies
 
-- ...
+**Policemen**
+- Static enemies facing a single direction.
+- Their field of view covers adjacent checkpoints.
+
+**Guard Dogs**
+- Moving enemies that patrol fixed lines.
+- Turn around at endpoints or dead ends.
+- Move one checkpoint per turn.
+
+**Distraction Mechanics**
+- Objects like bottles create a noise radius, drawing enemies toward a target location.
+- Affected enemies adjust their movement to investigate the distraction.
+
+**Enemy Interactions**
+- Killing the player: Enemies trigger game over upon detecting the player.
+- Turns: Enemies act immediately after the player, following predictable patterns.
 
 ### Puzzles and Zones
 
-- ...
+**Level Progression**
+Levels gradually introduce new mechanics:
+1- Basic movement tutorial.
+2- Introduction of static enemies.
+3- Use of distractions.
+4- Moving enemies and collectibles.
+5- Hiding mechanics.
+
+**Challenges**
+Optional objectives for replayability, such as completing levels within a set number of turns or without killing anyone.
+
+**Collectibles**
+Items like fans, bowler hats, and high heels are purely for bonus objectives.
 
 ### Interface
 
