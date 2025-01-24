@@ -16,7 +16,6 @@ The game appeals to fans of strategic, gothic, and horror genres. It caters to c
 - [Installation](#Installation-Instructions)
 - [Build](#Or-take-the-last-Build)
 - [Credits](#Credits)
-- [License](#license)
 
 ## Key Features
 
