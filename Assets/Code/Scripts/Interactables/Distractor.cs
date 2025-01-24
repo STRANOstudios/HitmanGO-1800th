@@ -5,6 +5,7 @@ using Sirenix.Utilities;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace Interactables
 {
@@ -69,8 +70,8 @@ namespace Interactables
         {
             foreach (Node node in nodes)
             {
-                if (!node.Storages.IsNullOrEmpty())
-                    continue;
+                // esclude node if contains enemies
+                if (node.Storages.Any(item => item.CompareTag("Enemy"))) continue;
 
                 GameObject gameObject = ObjectPooler.Instance.Get(m_nameTargets);
                 gameObject.transform.position = node.transform.position;
