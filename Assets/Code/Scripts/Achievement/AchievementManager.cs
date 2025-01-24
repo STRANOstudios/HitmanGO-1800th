@@ -37,7 +37,7 @@ namespace DataSystem
 
         private void OnEnable()
         {
-            GameManager.OnEndGame += SaveData;
+            GameManager.OnWinCondition += SaveData;
 
             PlayerController.OnPlayerMove += AddCount;
             GameManager.OnWinCondition += Complete;
@@ -46,7 +46,7 @@ namespace DataSystem
 
         private void OnDisable()
         {
-            GameManager.OnEndGame -= SaveData;
+            GameManager.OnWinCondition -= SaveData;
 
             PlayerController.OnPlayerMove -= AddCount;
             GameManager.OnWinCondition -= Complete;
