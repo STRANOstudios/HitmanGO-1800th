@@ -19,7 +19,36 @@ The game appeals to fans of strategic, gothic, and horror genres. It caters to c
 - [License](#license)
 
 ## Key Features
-- ...
+
+- **Turn-Based Strategy**  
+  Plan each move carefully in a tactical, turn-based system, navigating intricate puzzles that challenge both logic and foresight.
+
+- **Gothic Victorian Atmosphere**  
+  Experience the foggy streets of 19th-century London with immersive visuals and sound design, creating a dark and mysterious tone.
+
+- **Stealth-Based Gameplay**  
+  Avoid detection by enemies with strategic positioning and use of hiding spots, while eliminating foes when approaching from blind spots.
+
+- **Unique Enemy Mechanics**  
+  Face distinct challenges with static policemen and patrolling guard dogs, each requiring different strategies to overcome.
+
+- **Distraction System**  
+  Use objects like bottles to lure enemies away from key areas, opening up new paths for progression.
+
+- **Level Challenges**  
+  Complete optional objectives, such as finishing within a specific number of turns or avoiding kills, to add replayability and difficulty.
+
+- **Interactive Environments**  
+  Navigate through movement elements like path lines, checkpoints, hiding spots, and objectives, all integrated into the game board.
+
+- **Accessible Yet Deep Gameplay**  
+  Enjoy short, intuitive levels for quick sessions, while strategic depth keeps hardcore players engaged.
+
+- **Collectibles and Easter Eggs**  
+  Discover hidden items and fun cameos, including nods to the development team.
+
+- **Dynamic Camera System**  
+  A cinematic camera frames the game board seamlessly, enhancing immersion and clarity during gameplay.
 
 ## Mechanics
 
