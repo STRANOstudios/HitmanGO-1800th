@@ -28,5 +28,5 @@ MonoBehaviour:
   _unlockStoppingDistance: 0
   unlockLinkColor: {r: 0.408805, g: 0, b: 0, a: 1}
   unlockSpriteNode: {fileID: 1126548047, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
-  _unlockNodeScale: {x: 1, y: 1}
+  _unlockNodeScale: {x: 0.5, y: 0.5}
   unlockNodeColor: {r: 0.40784314, g: 0, b: 0, a: 1}
