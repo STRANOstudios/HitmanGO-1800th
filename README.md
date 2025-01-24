@@ -1,4 +1,4 @@
-# PIGEON GO README
+# Hitman Go: 1800th README
 
 ## Overview
 ...
