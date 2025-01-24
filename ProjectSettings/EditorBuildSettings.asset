@@ -63,6 +63,8 @@ EditorBuildSettings:
     path: Assets/Levels/Scenes/World 1/LEVELS/Level 15/Playable 15.unity
     guid: 687d7aa38d9f8164487e430f5fb8e377
   m_configObjects:
+    com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: c9db25bd1c861eb4d869993c3ed1e8f0,
+      type: 2}
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000,
       guid: be35a643367049649bbb564827ed23d3, type: 2}
     com.unity.addressableassets: {fileID: 11400000, guid: 046fd728dc9c1a6478a9be4a5f20d825,
