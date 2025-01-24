@@ -14,10 +14,24 @@ public class PoolInitializer : MonoBehaviour
 
     private void Start()
     {
+        Initialize();
+    }
+
+    public void Initialize()
+    {
         foreach (var item in itemsToPool)
         {
             if (item.prefab != null)
                 ObjectPooler.Instance.InitializePool(item.prefab, item.amount);
+        }
+    }
+
+    public void ClearPool()
+    {
+        foreach (var item in itemsToPool)
+        {
+            if (item.prefab != null)
+                ObjectPooler.Instance.RemoveObjectFromPool(item.prefab);
         }
     }
 }

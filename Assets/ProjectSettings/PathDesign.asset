@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4078452102ffa27489a1b0730edd27a0, type: 3}
+  m_Name: PathDesign
+  m_EditorClassIdentifier: 
+  yOffset: 0.01
+  _width: 0.1
+  _stoppingDistance: 0.26
+  linkColor: {r: 0.11949676, g: 0, b: 0, a: 1}
+  spriteNode: {fileID: -313926082, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
+  _nodeScale: {x: 0.5, y: 0.5}
+  nodeColor: {r: 0.12156863, g: 0, b: 0, a: 1}
+  exitSpriteNode: {fileID: -313926082, guid: 0c722661bc467be4da7b61315fe327de, type: 3}
+  _exitNodeScale: {x: 0.5, y: 0.5}
+  exitNodeColor: {r: 0.6792453, g: 0, b: 0, a: 1}
+  playerIndicator: {fileID: 723451024597819381, guid: 9c65bdbfacb86da43a3f153a4a4c2cba,
+    type: 3}
+  _playerIndicatorDistance: 1

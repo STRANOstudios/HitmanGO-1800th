@@ -2,12 +2,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using System.Collections;
-using System;
 
 public class ObjectPooler : Singleton<ObjectPooler>
 {
     [ShowInInspector]
     private Dictionary<GameObject, Queue<GameObject>> poolDictionary = new();
+
+    private List<GameObject> poolList = new();
 
     /// <summary>
     /// Initialize a pool for a given prefab with a specified amount.
@@ -36,6 +37,7 @@ public class ObjectPooler : Singleton<ObjectPooler>
         {
             var obj = poolDictionary[prefab].Dequeue();
             obj.SetActive(true);
+            poolList.Add(obj);
             return obj;
         }
 
@@ -59,6 +61,8 @@ public class ObjectPooler : Singleton<ObjectPooler>
         if (obj == null) obj = CreateObject(prefab);
 
         StartCoroutine(DisableObject(obj, delay));
+
+        poolList.Add(obj);
 
         return obj;
     }
@@ -90,6 +94,7 @@ public class ObjectPooler : Singleton<ObjectPooler>
 
         // Disabilita il GameObject
         obj.SetActive(false);
+        obj.transform.parent = this.transform;
 
         // Rimuovi le ultime 7 lettere dal nome del GameObject (per esempio "_Pooled")
         string originalName = obj.name;
@@ -118,7 +123,34 @@ public class ObjectPooler : Singleton<ObjectPooler>
             }
             poolDictionary[obj].Enqueue(obj);
         }
+
+        poolList.Remove(obj);
     }
+
+    /// <summary>
+    /// Removes an prefab from the poolDictionary and destroys all object from the pool.
+    /// </summary>
+    /// <param name="obj"></param>
+    public void RemoveObjectFromPool(GameObject obj)
+    {
+        if (poolDictionary.TryGetValue(obj, out Queue<GameObject> objectPool))
+        {
+            while (objectPool.Count > 0)
+            {
+                Destroy(objectPool.Dequeue());
+            }
+
+            poolDictionary.Remove(obj);
+        }
+
+        for (int i = poolList.Count - 1; i >= 0; i--)
+        {
+            var tmp = poolList[i];
+            poolList.RemoveAt(i);
+            Destroy(tmp);
+        }
+    }
+
 
 
     /// <summary>
@@ -126,7 +158,7 @@ public class ObjectPooler : Singleton<ObjectPooler>
     /// </summary>
     private GameObject CreateObject(GameObject prefab)
     {
-        var newObject = Instantiate(prefab);
+        var newObject = Instantiate(prefab, this.transform);
         newObject.name = prefab.name + "_Pooled";
         return newObject;
     }

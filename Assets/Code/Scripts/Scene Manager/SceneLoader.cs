@@ -4,11 +4,12 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Sirenix.OdinInspector;
+using HUB;
+using DataSystem;
+using System.Collections.Generic;
 
 public class SceneLoader : Singleton<SceneLoader>
 {
-    public static SceneLoader instance;
-
     [Title("UI Settings")]
     [SerializeField, Required] private Image blackScreen;
     [SerializeField, MinValue(0f)] private float fadeDuration = 1f;
@@ -18,25 +19,32 @@ public class SceneLoader : Singleton<SceneLoader>
     [SerializeField, Required] private GameObject loadingScreen; // Loading screen GameObject
 
     public static Action<string> OnSwitchScene;
+    public static Action OnSceneLoaded;
     public static Action OnSceneLoadComplete;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
 #if UNITY_EDITOR
         Application.targetFrameRate = 60;
 #else
-        Application.targetFrameRate = 30;
+    Application.targetFrameRate = 40;
 #endif
     }
 
     private void OnEnable()
     {
         OnSwitchScene += LoadScene;
+        AchievementManager.OnDataLoaded += DataLoaded;
+        HUBManager.OnDataLoaded += DataLoaded;
     }
 
     private void OnDisable()
     {
         OnSwitchScene -= LoadScene;
+        AchievementManager.OnDataLoaded -= DataLoaded;
+        HUBManager.OnDataLoaded -= DataLoaded;
+
     }
 
     private void Start()
@@ -62,6 +70,27 @@ public class SceneLoader : Singleton<SceneLoader>
         StartCoroutine(TransitionToScene(sceneName, false));
     }
 
+    public void ReLoadMultiScene()
+    {
+        List<string> sceneNames = new ();
+
+        for (int i = 0; i < SceneManager.sceneCount; i++)
+        {
+            Scene activeScene = SceneManager.GetSceneAt(i);
+            if (activeScene.isLoaded)
+            {
+                sceneNames.Add(activeScene.name);
+            }
+        }
+
+        StartCoroutine(LoadMultipleScenesAsync(sceneNames.ToArray()));
+    }
+
+    private void DataLoaded()
+    {
+        StartCoroutine(EndTransition());
+    }
+
     private IEnumerator TransitionToScene(string sceneName, bool isFadeIn = true)
     {
         if (isFadeIn) yield return StartCoroutine(FadeIn());
@@ -76,8 +105,6 @@ public class SceneLoader : Singleton<SceneLoader>
         yield return StartCoroutine(FadeOut());
 
         loadingScreen?.SetActive(false);
-
-        OnSceneLoadComplete?.Invoke();
     }
 
     private IEnumerator FadeIn()
@@ -106,8 +133,19 @@ public class SceneLoader : Singleton<SceneLoader>
         blackScreen.color = new Color(0, 0, 0, 0);
     }
 
+    private IEnumerator EndTransition()
+    {
+        yield return StartCoroutine(FadeOut());
+
+        loadingScreen?.SetActive(false);
+
+        OnSceneLoadComplete?.Invoke();
+    }
+
     private IEnumerator LoadSceneAsync(string sceneName)
     {
+        yield return StartCoroutine(FadeIn());
+
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
         asyncLoad.allowSceneActivation = false;
 
@@ -130,8 +168,7 @@ public class SceneLoader : Singleton<SceneLoader>
             yield return null;
         }
 
-        // Hide the loading screen once the scene is activated
-        loadingScreen?.SetActive(false);
+        OnSceneLoaded?.Invoke();
     }
 
     /// <summary>
@@ -145,9 +182,15 @@ public class SceneLoader : Singleton<SceneLoader>
 
     private IEnumerator LoadMultipleScenesAsync(string[] sceneNames)
     {
+        bool isFirstScene = true;
+
+        yield return StartCoroutine(FadeIn());
+
         foreach (string sceneName in sceneNames)
         {
-            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+            LoadSceneMode loadMode = isFirstScene ? LoadSceneMode.Single : LoadSceneMode.Additive;
+
+            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName, loadMode);
             asyncLoad.allowSceneActivation = false;
 
             while (!asyncLoad.isDone)
@@ -158,6 +201,10 @@ public class SceneLoader : Singleton<SceneLoader>
                 }
                 yield return null;
             }
+
+            isFirstScene = false;
         }
+
+        OnSceneLoaded?.Invoke();
     }
 }
