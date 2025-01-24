@@ -113,6 +113,8 @@ namespace Agents
                     {
                         if (!agent.HasReachedTarget)
                         {
+                            if (_debugLog) Debug.Log("Has Reached Target");
+
                             agent.HasReachedTarget = true;
 
                             NodeFinder(agent);
@@ -142,7 +144,10 @@ namespace Agents
                         continue;
                     }
                 }
+            }
 
+            foreach (Agent agent in MovingAgents)
+            {
                 AudioManager.Instance.PlaySFX(m_clipNameMove);
 
                 agent.Move();

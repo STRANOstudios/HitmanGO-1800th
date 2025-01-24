@@ -6,6 +6,8 @@ namespace DataSystem
     {
         public override bool CheckCondition()
         {
+            if (IsCompleted) return true;
+
             Debug.Log("Finish Level");
             IsCompleted = ServiceLocator.Instance.AchievementManager.GetCompleteState;
             return IsCompleted;

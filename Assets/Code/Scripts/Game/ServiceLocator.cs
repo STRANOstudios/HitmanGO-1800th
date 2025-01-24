@@ -39,7 +39,7 @@ public class ServiceLocator : Singleton<ServiceLocator>
     //flag
     private bool hasNotified = false;
 
-    public static event Action OnServiceLoactorCreated;
+    public static event Action OnServiceLocatorCreated;
 
     protected override void Awake()
     {
@@ -64,7 +64,7 @@ public class ServiceLocator : Singleton<ServiceLocator>
         if (agentsManager != null && nodeCache != null && nodeManager != null && deathManager != null && player != null && pathDesign != null && achievementManager != null && !hasNotified)
         {
             hasNotified = true;
-            OnServiceLoactorCreated?.Invoke();
+            OnServiceLocatorCreated?.Invoke();
         }
     }
 

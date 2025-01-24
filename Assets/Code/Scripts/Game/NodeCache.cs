@@ -29,10 +29,8 @@ public class NodeCache : MonoBehaviour
 
     private void Awake()
     {
+        RefreshNodes();
         ServiceLocator.Instance.NodeCache = this;
-
-        if(nodes.Count == 0) 
-            RefreshNodes();
     }
 
     /// <summary>

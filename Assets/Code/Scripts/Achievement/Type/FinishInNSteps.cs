@@ -9,6 +9,8 @@ namespace DataSystem
 
         public override bool CheckCondition()
         {
+            if (IsCompleted) return true;
+
             Debug.Log($"Finish In {Value} Steps");
             IsCompleted = ServiceLocator.Instance.AchievementManager.GetStepCount <= Value;
             return IsCompleted;

@@ -127,6 +127,8 @@ namespace Agents
             set
             {
                 startNode = value;
+
+                if (Application.isPlaying) return;
                 transform.position = startNode.transform.position;
             }
         }

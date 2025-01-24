@@ -9,6 +9,8 @@ namespace DataSystem
 
         public override bool CheckCondition()
         {
+            if (IsCompleted) return true;
+
             string tmp = AllKill ? "All Kill" : "No Kill";
             Debug.Log(tmp);
             IsCompleted = AllKill ? ServiceLocator.Instance.DeathManager.IsFull() : ServiceLocator.Instance.DeathManager.IsEmpty();
