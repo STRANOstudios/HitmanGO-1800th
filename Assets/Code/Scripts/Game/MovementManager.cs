@@ -85,7 +85,7 @@ public class MovementManager : MonoBehaviour
 
     private IEnumerator Movement(Transform obj, Vector3 targetPosition, Action onComplete)
     {
-        if (obj.position == targetPosition)
+        if (Vector3.Distance(obj.position, targetPosition) < 0.1f)
         {
             onComplete?.Invoke();
             yield break;
@@ -93,7 +93,28 @@ public class MovementManager : MonoBehaviour
 
         obj.GetPositionAndRotation(out Vector3 startPosition, out Quaternion startRotation);
 
-        float elapsedTime = 0f;
+        bool isAgent = false;
+
+        if (obj.TryGetComponent(out Agent agent)) isAgent = true;
+
+        if (isAgent && Vector3.Dot(obj.forward, (agent.CurrentNode.transform.position - obj.position).normalized) < 0.1f && Vector3.Distance(obj.position, targetPosition) > 1f)
+        {
+            yield return Rotation(
+                agent,
+                Utils.CalculateQuaternionRotationDifference(
+                    obj,
+                    targetPosition,
+                    transform.position,
+                    agent.CurrentNode.transform.position
+                    )
+                );
+        }
+        else
+        {
+            yield return new WaitForSeconds(rotateSpeed);
+        }
+
+        float elapsedTime = 0;
 
         // Perform smooth movement from the start position to the target position.
         while (elapsedTime < moveSpeed)
@@ -108,42 +129,55 @@ public class MovementManager : MonoBehaviour
 
         obj.position = targetPosition;
 
-        if (obj.TryGetComponent(out Agent agent))
+        if (isAgent && agent.Path.Count > 0)
         {
-            if (agent.Path.Count > 0)
+            bool flag = true;
+
+            int index = agent.Index + 1;
+            if (agent.Index >= agent.Path.Count - 1)
             {
-                int index = agent.Index + 1;
-                if (agent.Index >= agent.Path.Count - 1)
-                {
-                    index = agent.Index - 1;
-                }
+                if (!agent.IsPatrol) flag = false;
 
-                Debug.DrawLine(agent.Path[index].transform.position, agent.Path[index].transform.position + Vector3.up * 2, Color.blue, 2f);
-
-                Quaternion targetRotation = Utils.CalculateTargetRotation(obj.position, agent.Path[index].transform.position);
-
-                if (targetRotation != startRotation)
-                {
-                    elapsedTime = 0;
-
-                    while (elapsedTime < moveSpeed)
-                    {
-                        elapsedTime += Time.deltaTime;
-                        float t = Mathf.Clamp01(elapsedTime / rotateSpeed);
-
-                        // Rotate the agent smoothly towards the target position.
-                        Quaternion smoothedRotation = Quaternion.Slerp(startRotation, targetRotation, t);
-                        obj.rotation = Quaternion.Euler(0, smoothedRotation.eulerAngles.y, 0);
-                        yield return null; // Wait for the next frame to continue movement.
-                    }
-
-                    obj.rotation = targetRotation;
-                }
+                index = agent.Index - 1;
             }
 
+            if (flag)
+            {
+                yield return Rotation(
+                    agent,
+                    Utils.CalculateQuaternionRotationDifference(
+                        obj,
+                        agent.Path[index].transform.position,
+                        obj.position,
+                        agent.Path[index].transform.position
+                        )
+                    );
+            }
         }
 
         onComplete?.Invoke();
+    }
+
+    private IEnumerator Rotation(Agent agent, float targetYRotation)
+    {
+        float startYRotation = agent.transform.eulerAngles.y;
+
+        float angleDifference = Mathf.Abs(startYRotation) - targetYRotation;
+
+        float elapsedTime = 0f;
+        while (elapsedTime < rotateSpeed)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsedTime / rotateSpeed);
+
+            float currentYRotation = Mathf.Lerp(startYRotation, angleDifference, t);
+
+            agent.transform.rotation = Quaternion.Euler(0, currentYRotation, 0);
+
+            yield return null;
+        }
+
+        agent.transform.rotation = Quaternion.Euler(0, angleDifference, 0);
     }
 
     #endregion

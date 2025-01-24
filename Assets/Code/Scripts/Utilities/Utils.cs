@@ -1,6 +1,6 @@
 using PathSystem;
 using System.Collections.Generic;
-using System.Reflection;
+
 //using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine;
 
@@ -40,6 +40,24 @@ public static class Utils
         direction.y = 0;
 
         return Quaternion.LookRotation(direction);
+    }
+
+    public static float CalculateQuaternionRotationDifference(Transform obj, Vector3 targetPosition, Vector3 defaultPos, Vector3 nodePosition)
+    {
+        Vector3 directionToTarget = targetPosition - defaultPos;
+        directionToTarget.y = 0;
+
+        float dotProduct = Vector3.Dot(obj.forward, (nodePosition - obj.position).normalized);
+
+        float targetAngle = 0;
+        if (dotProduct < -0.5f)
+            targetAngle = 180;
+
+        if (dotProduct <= 0.5f && dotProduct >= -0.5f)
+            targetAngle = Vector3.Cross(obj.forward, directionToTarget).y > 0 ? -90 : 90;
+
+
+        return targetAngle;
     }
 
     /// <summary>
