@@ -79,13 +79,15 @@ These steps should allow you to copy a Unity project from GitHub, set it up in U
 
 ### Project Management
 
-**Project Manager**: 
+**Project Manager**: Silvia Monfredoni
 
 ### Game Design
 
-**Lead Designer**: 
+**Lead Designer**: Alessandro Torbinio
 
 **Game Designer**: 
+Altea Melfa,
+Simone Pacucci
 
 ### Programming
 
@@ -93,13 +95,18 @@ These steps should allow you to copy a Unity project from GitHub, set it up in U
 
 ### Concept Art
 
-**Lead Artist**: 
+**Lead Artist**: Emanuele Dimaculangan
 
 **Artists**: 
+Riccardo Rigolli,
+Sara Pavan,
+Pietro Vigani,
+Cinzia Martone,
+Davide Consoli
 
 ### 3D Art
 
-Lead Artist: Luca Borsi
+**Lead Artist**: Luca Borsi
 
-Artist: 
+**Artist**: Mattia Esposito
 
