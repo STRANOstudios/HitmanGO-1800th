@@ -1,5 +1,4 @@
 using Sirenix.OdinInspector;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -13,9 +12,25 @@ namespace Audio
         [Title("Debug")]
         [SerializeField] private bool _debug;
 
+        [ShowIfGroup("_debug")]
+        [ShowInInspector, ReadOnly] private AudioSource _soundtrack = null;
+
+        [SerializeField] private string _currentMusic;
+
+        private void Start()
+        {
+            _soundtrack = gameObject.AddComponent<AudioSource>();
+
+            if (_currentMusic != "")
+            {
+                ChangeMusic(_currentMusic);
+            }
+        }
+
         /// <summary>
         /// Play a Music clip by its unique key.
         /// </summary>
+        /// <param name="key">name of the clip</param>
         public void PlayMusic(string key)
         {
             if (key == null) return;
@@ -33,6 +48,8 @@ namespace Audio
         /// <summary>
         /// Play an Sfx clip by its unique key.
         /// </summary>
+        /// <param name="key">name of the clip</param>
+        /// <param name="parent">parent transform</param>
         public void PlaySFX(string key, Transform parent = null)
         {
             if (key is null or "") return;
@@ -52,15 +69,19 @@ namespace Audio
         /// <summary>
         /// Play an Sfx clip by its unique key.
         /// </summary>
+        /// <param name="key">name of the clip</param>
         public void PlaySfx(string key)
         {
-            if (_debug) Debug.Log($"Playing SFX: {key}");
+            if (_debug) Debug.Log($"Playing sfx: {key}");
             PlaySFX(key);
         }
 
         /// <summary>
         /// Plays a given AudioClip using a pooled AudioSource.
         /// </summary>
+        /// <param name="clip">AudioClip to play</param>
+        /// <param name="group">AudioMixerGroup to use</param>
+        /// <param name="parent">Parent transform</param>
         private void PlayAudio(AudioClip clip, AudioMixerGroup group, Transform parent = null)
         {
             if (_debug) Debug.Log($"Playing Audio: {clip.name}");
@@ -74,5 +95,24 @@ namespace Audio
             audioSource.outputAudioMixerGroup = group ?? null;
             audioSource.Play();
         }
+
+        /// <summary>
+        /// Change the current music clip
+        /// </summary>
+        /// <param name="key">name of the clip</param>
+        public void ChangeMusic(string key)
+        {
+            if (_soundtrack != null)
+            {
+                _currentMusic = key;
+                _soundtrack.clip = audioData.GetMusicClip(key);
+            }
+        }
+
+        /// <summary>
+        /// Get the name of the current music clip
+        /// </summary>
+        /// <returns>name of the clip</returns>
+        public string GetCurrentMusic => _currentMusic;
     }
 }

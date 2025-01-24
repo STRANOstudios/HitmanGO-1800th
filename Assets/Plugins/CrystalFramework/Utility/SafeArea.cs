@@ -104,6 +104,8 @@ namespace Crystal
         [SerializeField] bool ConformY = true;  // Conform to screen safe area on Y-axis (default true, disable to ignore)
         [SerializeField] bool Logging = false;  // Conform to screen safe area on Y-axis (default true, disable to ignore)
 
+        [SerializeField] bool InvertSafeArea = false; // Invert safe area (default false, disable to ignore)
+
         void Awake ()
         {
             Panel = GetComponent<RectTransform> ();
@@ -180,6 +182,25 @@ namespace Crystal
                 }
 
                 safeArea = new Rect (Screen.width * nsa.x, Screen.height * nsa.y, Screen.width * nsa.width, Screen.height * nsa.height);
+            }
+
+            if (InvertSafeArea)
+            {
+                float left = 0f;
+                float right = Screen.width;
+                float top = 0f;
+                float bottom = Screen.height;
+
+                if (safeArea.x > left)
+                    left = safeArea.x;
+                if (safeArea.x + safeArea.width < right)
+                    right = safeArea.x + safeArea.width;
+                if (safeArea.y > top)
+                    top = safeArea.y;
+                if (safeArea.y + safeArea.height < bottom)
+                    bottom = safeArea.y + safeArea.height;
+
+                return new Rect(/*left*/0, top, /*right -*/ left, bottom - top);
             }
 
             return safeArea;
